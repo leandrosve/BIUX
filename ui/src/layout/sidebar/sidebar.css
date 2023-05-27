@@ -1,0 +1,67 @@
+.sidebar-item {
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: 10px;
+  transition: color 200ms;
+}
+
+.sidebar-item::before {
+  content: ' ';
+  top: 0;
+  left: 0;
+  position: absolute;
+  z-index: -1;
+  height: 100%;
+  width: 100%;
+}
+
+.sidebar-item:not(.selected)::before {
+  background-color: var(--primary-400);
+  opacity: 0;
+  transition: opacity 200ms;
+}
+
+.sidebar-item.selected {
+  color: var(--primary-500);
+  font-weight: bold;
+}
+
+.sidebar-item.selected:not(:first-child) {
+  margin: 3px 0px;
+}
+
+.sidebar-item.selected::before {
+  opacity: 1;
+  background-color: var(--primary-100);
+}
+
+.sidebar-item:not(.selected):hover {
+  color: var(--text-500);
+}
+
+.sidebar-item:not(.selected):hover::before {
+  opacity: 0.1;
+}
+
+.sidebar-item:not(.selected):active::before {
+  opacity: 0.2;
+}
+
+html[data-theme='light'] .sidebar-item-icon {
+  color: var(--primary-500);
+  background: var(--primary-50);
+}
+
+html[data-theme='dark'] .sidebar-item.selected {
+  color: white;
+}
+
+html[data-theme='dark'] .sidebar-item.selected .sidebar-item-icon {
+  color: white;
+}
+html[data-theme='dark'] .sidebar-item.selected::before {
+  opacity: 0.4;
+  background-color: var(--primary-600);
+}

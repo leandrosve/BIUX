@@ -1,0 +1,17 @@
+.toast-progress-fullwidth {
+  width: 100%;
+}
+
+.toast-progress-anim {
+  animation: progress-countdown var(--toast-progress-duration) linear;
+}
+
+@keyframes progress-countdown {
+  from {
+    width: 100%;
+  }
+
+  to {
+    width: 0%;
+  }
+}
