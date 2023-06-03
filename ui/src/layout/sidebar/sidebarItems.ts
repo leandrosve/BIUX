@@ -1,4 +1,4 @@
-import { HouseIcon, StudentIcon } from '../../components/common/Icons';
+import { BikeIcon, HouseIcon, StudentIcon } from '../../components/common/Icons';
 import { SettingsIcon } from '@chakra-ui/icons';
 
 const items = [
@@ -13,6 +13,12 @@ const items = [
     icon: StudentIcon,
     iconSize: 5,
     path:'/alumnos'
+  },
+  {
+    label: 'Rutinas',
+    icon: BikeIcon,
+    iconSize: 5,
+    path:'/rutinas'
   },
   {
     label: 'Configuracion',

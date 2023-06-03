@@ -2,7 +2,7 @@ import { Alert, AlertIcon, AlertProps, Box, Button, Flex, Icon, useMediaQuery } 
 import { useRef, useEffect } from 'react';
 
 import { CloseIcon } from '../Icons';
-import './alertToast.css'
+import './alertToast.css';
 
 interface Props extends AlertProps {
   duration?: number;
@@ -14,8 +14,8 @@ interface Props extends AlertProps {
 
 const AlertToast = ({ duration = 0, hasIcon, hasProgress, children, colorScheme = 'primary', isClosable, onClose, ...rest }: Props) => {
   const progressRef = useRef<HTMLDivElement>(null);
+  const alertRef = useRef<HTMLDivElement>(null);
   const [mobile] = useMediaQuery('(max-width: 500px)', { ssr: false, fallback: false });
-
 
   const onEnter = () => {
     if (!progressRef?.current) return;
@@ -36,8 +36,13 @@ const AlertToast = ({ duration = 0, hasIcon, hasProgress, children, colorScheme 
     progressRef.current.style.setProperty('--toast-progress-duration', `${duration}ms`);
     progressRef.current.classList.add('toast-progress-anim');
   }, [duration, hasProgress, progressRef]);
+
+  useEffect(() => {
+    alertRef.current?.focus();
+  }, []);
+
   return (
-    <Flex direction={'column'} onPointerEnter={onEnter} onPointerLeave={onPointerLeave}>
+    <Flex direction={'column'} onPointerEnter={onEnter} onPointerLeave={onPointerLeave} autoFocus ref={alertRef}>
       <Box bgColor={'gray.700'} overflow='hidden' borderTopRadius={5} borderBottomRadius={hasProgress ? 0 : 5}>
         <Alert colorScheme={colorScheme} {...rest}>
           {hasIcon && !mobile && <AlertIcon />}
@@ -60,7 +65,7 @@ const AlertToast = ({ duration = 0, hasIcon, hasProgress, children, colorScheme 
       </Box>
       {duration && hasProgress && (
         <>
-          <Flex width='auto' height={.5} background='whiteAlpha.300'>
+          <Flex width='auto' height={0.5} background='whiteAlpha.300'>
             <Flex ref={progressRef} background={`${colorScheme}.200`} height={'100%'}></Flex>
           </Flex>
         </>

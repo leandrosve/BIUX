@@ -17,14 +17,24 @@ const STYLES: CSSProperties = {
 };
 
 const theme = {
-  dark: ['var(--primary-500)', 'var(--primary-300)'],
-  light: ['var(--primary-200)', 'var(--primary-500)'],
+  dark: ['var(--primary-500)', 'var(--primary-300)', 'black'],
+  light: ['var(--primary-300)', 'var(--primary-500)', 'white'],
 };
 
 const Footer = () => {
   const { colorMode } = useColorMode();
   return (
-    <Flex width={'100vw'} zIndex={1} position='relative' alignItems='flex-end' overflow='hidden' alignContent='center' height='130px' marginTop={-30}>
+    <Flex
+      as={'footer'}
+      width={'100vw'}
+      zIndex={1}
+      position='relative'
+      alignItems='flex-end'
+      overflow='hidden'
+      alignContent='center'
+      height='130px'
+      marginTop={-30}
+    >
       <div style={{ ...STYLES }}>
         <svg
           style={STYLES}
@@ -42,9 +52,9 @@ const Footer = () => {
           />
         </svg>
       </div>
-      <Flex grow={1} alignItems='center' justifyContent='center' color='primary.100' gap={3} marginBottom={4}>
+      <Flex grow={1} alignItems='center' bg={theme[colorMode][1]} justifyContent='center' color={theme[colorMode][2]} gap={3} marginBottom={4}>
         <Icon as={ArgentinaFlagIcon} width={7} height={7} />
-        <Text fontWeight='bold'>DEDU 2023</Text>
+        <Text fontWeight='bold' as='h1'>DEDU 2023</Text>
       </Flex>
     </Flex>
   );

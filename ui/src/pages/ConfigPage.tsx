@@ -24,12 +24,10 @@ import { MoonIcon, SunIcon, UndoIcon } from '../components/common/Icons';
 import AlertToast from '../components/common/alert-toast/AlertToast';
 import { ChevronRightIcon } from '@chakra-ui/icons';
 
-const initialSettings = AccesibilityService.getLocalSettings();
-
 const ConfigPage = () => {
-  const [fontFamily, setFontFamily] = useState<string>(initialSettings.fontFamily);
-  const [fontSize, setFontSize] = useState<string>(initialSettings.fontSize);
-  const [color, setColor] = useState<string>(initialSettings.color);
+  const [fontFamily, setFontFamily] = useState<string>(AccesibilityService.getLocalSettings().fontFamily);
+  const [fontSize, setFontSize] = useState<string>(AccesibilityService.getLocalSettings().fontSize);
+  const [color, setColor] = useState<string>(AccesibilityService.getLocalSettings().color);
   const [previousSettings, setPreviousSettings] = useState<AccesibilitySettings>(AccesibilityService.getLocalSettings());
   const { colorMode, setColorMode } = useColorMode();
   const toast = useToast();
@@ -88,7 +86,7 @@ const ConfigPage = () => {
   }, []);
 
   return (
-    <Flex direction='column' padding={{md: 5, sm: 0}} >
+    <Flex direction='column' padding={{ md: 5, sm: 0 }}>
       <Breadcrumb separator={<ChevronRightIcon />}>
         <BreadcrumbItem>
           <BreadcrumbLink href='www.google.com'>Inicio</BreadcrumbLink>
@@ -143,11 +141,14 @@ const ConfigPage = () => {
                 <option label='Sans Serif' value='sans-serif' />
                 <option label='Verdana' value='Verdana' />
                 <option label='Montserrat' value='Montserrat' />
+                <option label='Poppins' value='Poppins' />
               </Select>
             </FormControl>
 
             <FormControl>
-              <FormLabel fontWeight={'semibold'}>Tamaño de fuente</FormLabel>
+              <FormLabel fontWeight={'semibold'} as='span'>
+                Tamaño de fuente
+              </FormLabel>
               <ButtonSelect value={fontSize} onChange={(value) => setFontSize(value)} checkIcon>
                 <ButtonSelectItem value='14px' label='Pequeño' fontSize={14} width={150} />
                 <ButtonSelectItem value='18px' label='Mediano' fontSize={18} width={150} />
@@ -156,12 +157,16 @@ const ConfigPage = () => {
             </FormControl>
 
             <FormControl>
-              <FormLabel fontWeight={'semibold'}>Color principal</FormLabel>
-              <ColorPicker onChange={(c) => setColor(c)} color={color} />
+              <FormLabel fontWeight={'semibold'} as='legend'>
+                Color principal
+              </FormLabel>
+              <ColorPicker onChange={(c) => setColor(c)} value={color} />
             </FormControl>
 
             <FormControl>
-              <FormLabel fontWeight={'semibold'}>Tema</FormLabel>
+              <FormLabel fontWeight={'semibold'} as='span'>
+                Tema
+              </FormLabel>
               <ButtonSelect value={colorMode} onChange={(v) => setColorMode(v)} checkIcon>
                 <ButtonSelectItem value='light' width={150}>
                   <Icon as={SunIcon} w={6} h={6} /> Claro

@@ -38,7 +38,7 @@ const Sidebar = (props: Props) => {
   const currentPath = useCurrentPath();
   if (!desktop) return <SidebarDrawer {...props} currentPath={currentPath?.path} />;
   return (
-    <Flex alignSelf='stretch' background='bg.300' width={260} padding={2}>
+    <Flex alignSelf='stretch' background='bg.300' minWidth={260} padding={2}>
       <SidebarContent currentPath={currentPath?.path} />
     </Flex>
   );

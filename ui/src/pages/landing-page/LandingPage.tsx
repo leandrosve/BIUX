@@ -8,7 +8,7 @@ const LandingPage = () => {
   return (
     <Flex alignItems='center' justifyContent='center' grow={1}>
       <Flex className='landing-page-content' direction='column' gap={5} padding={5} maxWidth={650} justifyContent='center'>
-        <Heading as='h1' size='4xl' fontWeight='bold' >
+        <Heading as='h1' size='4xl' fontWeight='200' >
           BIUX
         </Heading>
         <Heading as='h1' size='3xl' fontWeight='light'>

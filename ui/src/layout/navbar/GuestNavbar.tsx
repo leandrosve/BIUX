@@ -42,7 +42,7 @@ const GuestNavbar = () => {
       <Link to={BRoutes.HOME}>
         <Flex alignItems='flex-end' gap={3}>
           <Icon as={BrandIcon} height={'40px'} width={'40px'} />
-          <Heading as='span' fontWeight='light' fontSize={30} color='primary.950'>
+          <Heading as='h1' fontWeight='light' fontSize={30} color='primary.950'>
             BIUX
           </Heading>
         </Flex>
@@ -50,7 +50,7 @@ const GuestNavbar = () => {
 
       <Flex gap={3}>
         <Tooltip hasArrow label={`Cambiar a tema ${colorMode == 'light' ? 'oscuro' : 'claro'}`} aria-label='A tooltip'>
-          <Button
+          <IconButton
             onClick={toggleColorMode}
             variant='ghost'
             colorScheme='primary'
@@ -59,9 +59,9 @@ const GuestNavbar = () => {
             display='flex'
             alignItems='center'
             justifyContent='center'
-          >
-            <Icon as={colorMode == 'light' ? SunIcon : MoonIcon} />
-          </Button>
+            aria-label='toggle color mode'
+            icon={<Icon as={colorMode == 'light' ? SunIcon : MoonIcon} />}
+          />
         </Tooltip>
         {renderMenu()}
       </Flex>

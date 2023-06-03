@@ -1,5 +1,6 @@
 import { As, Flex, Icon, Tag, Text } from '@chakra-ui/react';
 import { ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface SidebarItemProps {
   label?: string;
@@ -10,9 +11,16 @@ interface SidebarItemProps {
   onClick?: () => void;
   children?: ReactNode;
 }
-const SidebarItem = ({ label, icon, iconSize = 6, selected, onClick, children }: SidebarItemProps) => {
+const SidebarItem = ({ label, icon, iconSize = 6, selected, onClick, path, children }: SidebarItemProps) => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    onClick?.();
+    if (path) {
+      navigate(path);
+    }
+  };
   return (
-    <Flex padding={2} color='text.300' className={`sidebar-item  ${selected ? 'selected' : ''}`} gap={2} alignItems='center' onClick={onClick}>
+    <Flex padding={2} color='text.300' className={`sidebar-item  ${selected ? 'selected' : ''}`} gap={2} alignItems='center' onClick={handleClick}>
       {!!icon && (
         <Tag
           className='sidebar-item-icon'
@@ -29,7 +37,7 @@ const SidebarItem = ({ label, icon, iconSize = 6, selected, onClick, children }:
           <Icon as={icon} fill='text.300' boxSize={iconSize} />
         </Tag>
       )}
-      {!!label && <Text>{label}</Text>}
+      {!!label && <Text as='h1'>{label}</Text>}
       {children}
     </Flex>
   );

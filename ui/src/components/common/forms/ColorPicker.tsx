@@ -1,45 +1,73 @@
-import { Box, Flex, Wrap, WrapItem } from '@chakra-ui/react';
-import { KeyboardEvent } from 'react';
+import { Box, HStack, RadioGroup, RadioProps, VisuallyHidden, useRadio, useRadioGroup } from '@chakra-ui/react';
 
 interface Props {
   onChange: (color: string) => void;
-  color: string;
+  value: string;
 }
 
 // Color Schemes from Chakra UI
 const COLORS = ['biux', 'red', 'orange', 'yellow', 'green', 'teal', 'blue', 'cyan', 'pink'];
-const t = ['predeterminado', 'rojo', 'naranja', 'amarillo', 'verde', 'turquesa', 'azul', 'celeste', 'rosa'];
 
-const ColorPicker = ({ onChange, color }: Props) => {
-  const getKeyDownHandler = (color: string) => {
-    return (event: KeyboardEvent) => {
-      // Para que sea accesible y se pueda seleccionar con Enter
-      if (event.key !== 'Enter') return;
-      event.preventDefault();
-      onChange?.(color);
-    };
-  };
+const t: {[key: string]: string } = ({
+  biux: 'predeterminado',
+  red: 'rojo',
+  orange: 'naranja',
+  yellow: 'amarillo',
+  green: 'verde',
+  teal: 'turquesa',
+  blue: 'azul',
+  cyan: 'celeste',
+  pink: 'rosa',
+});;
+
+const ColorPicker = ({ onChange, value }: Props) => {
+  const { getRootProps, getRadioProps } = useRadioGroup({
+    name: 'Esquema de colores',
+    onChange: onChange,
+    defaultValue: 'biux',
+    value,
+  });
+
+  const group = getRootProps();
   return (
-    <Wrap gap={3}>
-      {COLORS.map((c, i) => (
-        <WrapItem
-          key={c}
-          onKeyDown={getKeyDownHandler(c)}
-          tabIndex={0}
-          borderRadius='50%'
-          border={`10px solid`}
-          borderColor={`${c}.500`}
-          background={`${c}.${c == color ? 50 : 500}`}
-          width={8}
-          height={8}
-          title={t[i]}
-          cursor='pointer'
-          onClick={() => onChange(c)}
-          transition={'200ms'}
-          _hover={{ filter: 'brightness(1.2)' }}
-        />
-      ))}
-    </Wrap>
+    <RadioGroup>
+      <HStack {...group}>
+        {COLORS.map((c) => {
+          const radio = getRadioProps({ value: c });
+          return <ColorRadioOption key={c} {...radio} />;
+        })}
+      </HStack>
+    </RadioGroup>
+  );
+};
+
+const ColorRadioOption = (props: RadioProps) => {
+  const { getInputProps, getRadioProps } = useRadio(props);
+
+  const input = getInputProps();
+  const checkbox = getRadioProps();
+
+  return (
+    <Box as='label'>
+      <input {...input} />
+      <Box
+        {...checkbox}
+        borderRadius='50%'
+        border={`10px solid`}
+        borderColor={`${props.value}.500`}
+        background={`${props.value}.500`}
+        _hover={{ filter: 'brightness(1.2)' }}
+        _checked={{ bg: 'white' }}
+        _focus={{
+          boxShadow: 'outline',
+        }}
+        width={8}
+        height={8}
+        cursor='pointer'
+        transition={'100ms'}
+      />
+      <VisuallyHidden>{t[props.value || ""]}</VisuallyHidden>
+    </Box>
   );
 };
 

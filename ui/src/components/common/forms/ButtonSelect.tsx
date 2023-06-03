@@ -1,4 +1,4 @@
-import { Box, BoxProps, Flex, Icon } from '@chakra-ui/react';
+import { Box, BoxProps, Button, ButtonProps, Flex, Icon } from '@chakra-ui/react';
 import { FocusEventHandler, KeyboardEvent, ReactElement, cloneElement } from 'react';
 import { CheckIcon } from '../Icons';
 
@@ -9,7 +9,7 @@ interface Props {
   checkIcon?: boolean;
 }
 
-interface ButtonSelectItemProps extends Omit<BoxProps, 'onClick'> {
+interface ButtonSelectItemProps extends Omit<ButtonProps, 'onClick'> {
   value: string;
   selected?: string;
   label?: string;
@@ -35,17 +35,10 @@ export const ButtonSelectItem = ({ value, selected, onClick, label, first, last,
   const handleClick = (v: string) => {
     if (isSelected) return;
     onClick?.(v);
-  }
-
-  const keyDownHandler = (event: KeyboardEvent) => {
-    // Para que sea accesible y se pueda seleccionar con Enter
-    if (event.key !== 'Enter') return;
-    event.preventDefault();
-    handleClick?.(value);
   };
 
   return (
-    <Box
+    <Button
       background={`primary.${isSelected ? 500 : 50}`}
       color={isSelected ? 'white' : 'gray.600'}
       cursor={'pointer'}
@@ -64,7 +57,6 @@ export const ButtonSelectItem = ({ value, selected, onClick, label, first, last,
       borderColor='#a4a4a430'
       tabIndex={0}
       transition={'200ms'}
-      onKeyDown={keyDownHandler}
       position='relative'
       {...rest}
     >
@@ -73,11 +65,11 @@ export const ButtonSelectItem = ({ value, selected, onClick, label, first, last,
         {children}
       </Flex>
       {isSelected && checkIcon && (
-        <Flex position='absolute' bottom={.5} right={.5}>
+        <Flex position='absolute' bottom={0.5} right={0.5}>
           <Icon as={CheckIcon} w={4} h={4} />
         </Flex>
       )}
-    </Box>
+    </Button>
   );
 };
 

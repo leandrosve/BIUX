@@ -7,12 +7,14 @@ import LoginPage from '../pages/LoginPage';
 import PrivateLayout from '../layout/PrivateLayout';
 import GuestLayout from '../layout/GuestLayout';
 import NotFoundPage from '../pages/not-found-page/NotFoundPage';
+import RoutineForm from '../features/routines/RoutineForm';
 
 export enum BRoutes {
   HOME = '/',
   CONFIG = '/config',
   SIGNUP = '/registro',
   LOGIN = '/login',
+  RUTINES = '/rutinas',
 }
 
 const router = createBrowserRouter([
@@ -22,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: '/config',
         element: <ConfigPage />,
+      },
+      {
+        path: '/rutinas',
+        element: <RoutineForm />,
       },
     ],
   },

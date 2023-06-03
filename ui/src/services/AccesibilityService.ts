@@ -6,7 +6,7 @@ export interface AccesibilitySettings {
 }
 
 const hues:Record<string, number> = {
-  'pink': 30,
+  'pink': 50,
   'red': 110,
   'orange': 130,
   'yellow': 150,
