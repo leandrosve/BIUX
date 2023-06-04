@@ -1,5 +1,6 @@
 import {
   Button,
+  Divider,
   Flex,
   Heading,
   Icon,
@@ -13,29 +14,40 @@ import {
   useMediaQuery,
 } from '@chakra-ui/react';
 import { BrandIcon, MoonIcon, SunIcon } from '../../components/common/Icons';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { BRoutes } from '../../router/router';
 import { HamburgerIcon } from '@chakra-ui/icons';
+import { CSSProperties } from 'react';
 
+interface IPropsGuestNavbarDropdown{
+  pathname: string
+}
+const STYLES: CSSProperties = {
+  backgroundColor: 'var(--primary-400)'
+};
 const GuestNavbar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const [desktop] = useMediaQuery('(min-width: 992px)', { ssr: false, fallback: true });
+  let location = useLocation();
+
+
+  
 
   const renderMenu = () => {
     if (desktop)
       return (
         <>
           <Link to={BRoutes.LOGIN}>
-            <Button colorScheme='primary' variant={'ghost'}>
+            <Button colorScheme='primary' variant={location.pathname !== BRoutes.LOGIN ? 'ghost' : undefined}   >
               Iniciar Sesión
             </Button>
           </Link>
           <Link to={BRoutes.SIGNUP}>
-            <Button colorScheme='primary'>Registrarme</Button>
+            <Button colorScheme='primary' variant={location.pathname !== BRoutes.SIGNUP ? 'ghost' : undefined}>Registrarme</Button>
           </Link>
         </>
       );
-    return <GuestNavbarDropdown />;
+    return <GuestNavbarDropdown pathname={location.pathname} />;
   };
   return (
     <Flex align='center' justify='space-between' alignSelf='stretch' paddingX={5} paddingY={2} background='transparent'>
@@ -69,18 +81,20 @@ const GuestNavbar = () => {
   );
 };
 
-const GuestNavbarDropdown = () => (
+const GuestNavbarDropdown = ({pathname}:IPropsGuestNavbarDropdown) => { 
+  return(
   <Menu>
+  
     <MenuButton as={IconButton} aria-label='Options' icon={<HamburgerIcon width={30} height={30} />} variant='outline' />
     <MenuList>
       <Link to={BRoutes.SIGNUP}>
-        <MenuItem>Registrarme</MenuItem>
+        <MenuItem style={pathname === BRoutes.SIGNUP ? { ...STYLES } : undefined}   mb={2}>Registrarme</MenuItem>
       </Link>
       <Link to={BRoutes.LOGIN}>
-        <MenuItem>Iniciar Sesión</MenuItem>
+        <MenuItem style={pathname === BRoutes.LOGIN ? { ...STYLES } : undefined} >Iniciar Sesión</MenuItem>
       </Link>
     </MenuList>
   </Menu>
-);
+)};
 
 export default GuestNavbar;
