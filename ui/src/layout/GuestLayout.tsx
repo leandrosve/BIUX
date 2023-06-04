@@ -15,7 +15,7 @@ const GuestLayout = ({ children }: Props) => {
 
       <Flex alignItems='center' justifyContent='center' grow={1} padding={5} paddingBottom={50}>
         {children}
-        <Outlet/>
+        <Outlet />
       </Flex>
       <Footer />
     </Flex>

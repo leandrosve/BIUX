@@ -1,22 +1,6 @@
-import { ArrowDownIcon, ArrowUpDownIcon, ChatIcon, DragHandleIcon, EditIcon } from '@chakra-ui/icons';
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Divider,
-  Flex,
-  FlexProps,
-  Grid,
-  GridItem,
-  Icon,
-  IconButton,
-  Tag,
-  Text,
-  Tooltip,
-  background,
-  useMediaQuery,
-} from '@chakra-ui/react';
-import { DistanceIcon, FootIcon, HeartIcon, StopwatchIcon } from '../../components/common/Icons';
+import { ChatIcon, ChevronDownIcon, ChevronUpIcon, DeleteIcon, DragHandleIcon, EditIcon } from '@chakra-ui/icons';
+import { Flex, FlexProps, Grid, GridItem, Icon, IconButton, Tag, Text, Tooltip, useMediaQuery } from '@chakra-ui/react';
+import { DistanceIcon, StopwatchIcon } from '../../components/common/Icons';
 import { DraggableProvidedDragHandleProps } from '@hello-pangea/dnd';
 
 const items = [
@@ -24,7 +8,7 @@ const items = [
     icon: StopwatchIcon,
     label: '',
     description: 'Duración en minutos',
-    decorate: (value: number) => `${value} min`,
+    decorate: (value?: number) => `${value} min`,
     colorScheme: 'blue',
     key: 'duration',
     accesor: (s: RoutineSegment) => s.duration,
@@ -33,7 +17,7 @@ const items = [
     icon: DistanceIcon,
     label: '',
     description: 'Distancia (metros)',
-    decorate: (value: number) => `${value} m`,
+    decorate: (value?: number) => `${value} m`,
     colorScheme: 'orange',
     key: 'metres',
     accesor: (s: RoutineSegment) => s.distance,
@@ -43,23 +27,23 @@ const items = [
     description: 'Frecuencia Cardíaca',
     colorScheme: 'pink',
     key: 'fc',
-    accesor: (s: RoutineSegment) => s.fc,
+    accesor: (s: RoutineSegment) => s.pulseRate,
   },
   {
     label: 'CAD',
     description: 'Cadencia',
     colorScheme: 'teal',
     key: 'cad',
-    accesor: (s: RoutineSegment) => s.cad,
+    accesor: (s: RoutineSegment) => s.cadence,
   },
 ];
 
 export interface RoutineSegment {
-  distance: number;
-  cad: number;
-  fc: number;
+  distance?: number;
+  cadence: number;
+  pulseRate: number;
   duration: number;
-  extra?: string;
+  description?: string;
   id: string;
 }
 
@@ -69,11 +53,14 @@ interface Props extends FlexProps {
   onOrderChange: (previousIndex: number, newIndex: number) => void;
   dragHandleProps?: DraggableProvidedDragHandleProps | null;
   lastElement?: boolean;
+  orderMethod?: 'drag' | 'buttons';
+  onRemove: (removedItem: RoutineSegment) => void;
+  onEdit:  (removedItem: RoutineSegment) => void;
+
 }
 
-const RoutineSegmentListItem = ({ index, segment, onOrderChange, dragHandleProps, lastElement }: Props) => {
+const RoutineSegmentListItem = ({ index, segment, onOrderChange, onRemove, onEdit, dragHandleProps, lastElement, orderMethod = 'drag' }: Props) => {
   const [mobile] = useMediaQuery('(max-width: 992px)', { ssr: false, fallback: true });
-  const allowDragAndDrop = true;
   return (
     <Flex gap={2} alignItems='center' padding={2} background={'bg.300'} borderRadius='sm' borderBottom='1px solid' borderColor='chakra-border-color'>
       <Tooltip hasArrow label={`Orden de segmento: ${index + 1}`} aria-label='A tooltip' openDelay={600}>
@@ -92,19 +79,20 @@ const RoutineSegmentListItem = ({ index, segment, onOrderChange, dragHandleProps
         </Tag>
       </Tooltip>
       <Flex direction='column' gap={1} grow={1}>
-        {segment.extra && (
+        {segment.description && (
           <div>
             <Tag gap={2} borderRadius='lg' boxShadow='sm' maxWidth='400px'>
               <Icon as={ChatIcon} boxSize={3} />
               <Text fontSize='sm' noOfLines={1}>
-                {segment.extra}
+                {segment.description}
               </Text>
             </Tag>
           </div>
         )}
         <Grid templateColumns={mobile ? 'repeat(2, 2fr)' : 'repeat(4, 1fr)'} gap={2}>
           {items.map((item) => {
-            const decorate = item.decorate ?? ((v: number) => v);
+            const decorate = item.decorate ?? ((v?: number) => v);
+            if (!item.accesor(segment)) return null;
             return (
               <GridItem key={item.key}>
                 <Tooltip hasArrow label={item.description} aria-label='A tooltip' openDelay={600}>
@@ -125,35 +113,42 @@ const RoutineSegmentListItem = ({ index, segment, onOrderChange, dragHandleProps
           })}
         </Grid>
       </Flex>
-      <Tooltip hasArrow label='Editar segmento' aria-label='A tooltip' openDelay={600}>
-        <IconButton icon={<EditIcon />} aria-label='Editar segmento' />
-      </Tooltip>
+      <Flex alignItems='center' gap={2} justifyContent='center' direction={{ base: 'column-reverse', md: 'row' }}>
+        <Tooltip hasArrow label='Eliminar segmento' aria-label='A tooltip' openDelay={600} >
+          <IconButton icon={<DeleteIcon />} aria-label='Eliminar segmento' variant='ghost' colorScheme='red' onClick={() => onRemove(segment)}/>
+        </Tooltip>
+        <Tooltip hasArrow label='Editar segmento' aria-label='A tooltip' openDelay={600}>
+          <IconButton icon={<EditIcon />} aria-label='Editar segmento' onClick={() => onEdit(segment)}/>
+        </Tooltip>
+      </Flex>
 
-      {!allowDragAndDrop && (
-        <ButtonGroup isAttached>
-          <Tooltip hasArrow label='Mover arriba' aria-label='A tooltip' openDelay={300}>
+      {orderMethod == 'buttons' && (
+        <Flex direction='column'>
+          <Tooltip hasArrow label='Mover hacia arriba' aria-label='A tooltip' placement='left' openDelay={800}>
             <IconButton
               variant='ghost'
               isDisabled={!index}
               onClick={() => onOrderChange(index, index - 1)}
-              minWidth='25px'
-              icon={<ArrowDownIcon transform='rotate(180deg)' />}
+              icon={<ChevronUpIcon />}
               aria-label='Mover arriba'
+              height='25px'
+              borderBottomRadius={0}
             />
           </Tooltip>
-          <Tooltip hasArrow label='Mover abajo' aria-label='A tooltip' openDelay={300}>
+          <Tooltip hasArrow label='Mover hacia abajo' aria-label='A tooltip' placement='left' openDelay={800}>
             <IconButton
               variant='ghost'
               onClick={() => onOrderChange(index, index + 1)}
-              minWidth='25px'
-              icon={<ArrowDownIcon />}
+              icon={<ChevronDownIcon />}
               aria-label='Mover abajo'
+              height='25px'
               isDisabled={lastElement}
+              borderTopRadius={0}
             />
           </Tooltip>
-        </ButtonGroup>
+        </Flex>
       )}
-      {allowDragAndDrop && (
+      {orderMethod == 'drag' && (
         <Tooltip hasArrow label='Arrastra y suelta para ordenar' aria-label='A tooltip' placement='right' openDelay={1000}>
           <IconButton
             icon={<DragHandleIcon />}

@@ -1,10 +1,14 @@
 import {
   Box,
   Button,
-  Card, FormControl,
+  Card,
+  Flex,
+  FormControl,
+  FormErrorMessage,
   FormLabel,
   Heading,
-  Input, Step,
+  Input,
+  Step,
   StepDescription,
   StepIcon,
   StepIndicator,
@@ -12,10 +16,13 @@ import {
   StepSeparator,
   StepStatus,
   Stepper,
+  Text,
   Textarea,
-  useSteps
+  Tooltip,
+  useSteps,
 } from '@chakra-ui/react';
 import RoutineFormSegmentsStep from './RoutineFormSegmentsStep';
+import { useState, useMemo } from 'react';
 
 const RoutineForm = () => {
   const { activeStep, goToNext, goToPrevious } = useSteps({
@@ -28,50 +35,79 @@ const RoutineForm = () => {
       boxShadow='base'
       background='bg.300'
       p='6'
-      rounded={{ lg: 40, md: 0, base: 0 }}
-      alignSelf={{ base: 'stretch', md: 'stretch', lg: 'center' }}
+      rounded={{ lg: 40, md: 40, base: 0 }}
+      minWidth={{ lg: 710, md: 710, base: '100%' }}
+      alignSelf='center'
       display='flex'
-      mt={2}
+      m={5}
+      position='relative'
       flexDirection={'column'}
+      minHeight={650}
     >
       <RutineStepper index={1} />
       <Heading mt={2} as='h1'>
         Nueva Rutina
       </Heading>
-      {activeStep === 0 && <Step1 onSubmit={goToNext} />}
-      {activeStep === 1 && <RoutineFormSegmentsStep onPrevious={goToPrevious} />}
+      <Flex direction='column' position='relative' grow={1}>
+        {activeStep === 0 && <Step1 onSubmit={goToNext} />}
+        {activeStep === 1 && <RoutineFormSegmentsStep onPrevious={goToPrevious} />}
+      </Flex>
     </Card>
   );
 };
 const Step1 = (props: { onSubmit: () => void }) => {
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const disableSubmit = useMemo(() => {
+    if (!name) return true;
+    if (description.length > 500 || name.length > 120) return true;
+    return false;
+  }, [description, name]);
   return (
     <>
       <Heading size='md' as='h2' color='text.300'>
         Detalles
       </Heading>
-      <form onSubmit={props.onSubmit}>
-        <FormControl>
-          <FormLabel mt={2} fontWeight='bold'>
-            Nombre
-          </FormLabel>
-          <Input type='text' boxShadow='sm' placeholder='Nombre' />
-        </FormControl>
-        <FormControl>
-          <FormLabel mt={2} fontWeight='bold'>
-            Descripción
-          </FormLabel>
-          <Textarea boxShadow='sm' placeholder='Descripcion' resize='none' />
-        </FormControl>
-        <Button colorScheme='primary' mt={5} type='submit'>
-          Siguiente
-        </Button>
-      </form>
+      <Text fontSize='sm'>
+        Los campos marcados con <b>*</b> son requeridos
+      </Text>
+      <Flex as='form' direction='column' grow={1} onSubmit={props.onSubmit}>
+        <Flex grow={1} direction='column'>
+          <FormControl isInvalid={name.length > 500}>
+            <FormLabel mt={2}>
+              Nombre de la rutina <b>*</b>
+            </FormLabel>
+            <Input type='text' boxShadow='sm' placeholder='Nombre' onChange={(e) => setName(e.target.value)} />
+            {name.length > 120 && <FormErrorMessage>La cantidad máxima de caracteres es 120</FormErrorMessage>}
+          </FormControl>
+          <FormControl isInvalid={description.length > 500}>
+            <FormLabel mt={2}>Descripción</FormLabel>
+            <Textarea boxShadow='sm' placeholder='Descripcion' resize='none' onChange={(e) => setDescription(e.target.value)} />
+            {description.length > 500 && <FormErrorMessage>La cantidad máxima de caracteres es 500</FormErrorMessage>}
+          </FormControl>
+        </Flex>
+
+        <Flex justifyContent='end'>
+          <Tooltip
+            placement='left'
+            hasArrow
+            isDisabled={!disableSubmit}
+            label='Completa los campos necesarios'
+            aria-label='A tooltip'
+            openDelay={300}
+          >
+            <Button colorScheme='primary' mt={5} type='submit' isDisabled={disableSubmit}>
+              Siguiente
+            </Button>
+          </Tooltip>
+        </Flex>
+      </Flex>
     </>
   );
 };
 
 /* Minor components */
-const steps = ['detalles', 'resultados esperados'];
+const steps = ['detalles', 'planificación'];
 const RutineStepper = (props: { index: number }) => {
   return (
     <Stepper {...props} maxWidth={400} colorScheme='primary'>

@@ -45,8 +45,7 @@ html {
 }
 html[data-theme='light'] {
   --bg-500: hsl(252, 100%, 80%);
-  --bg-400: hsl(252, 100%, 85%);
-  --bg-400: #e0d8ff; /* Skeleton */
+  --bg-400: #ffffff; /* Skeleton */
   --bg-300: #ffffff; /* Cards and Navbar*/
   --bg-200: #eeeaff;
   --bg-100: #f7f5fe; /* Background */
