@@ -1,8 +1,6 @@
 import {
   Avatar,
-  Card,
-  CardBody,
-  Drawer,
+  Card, Drawer,
   DrawerCloseButton,
   DrawerContent,
   DrawerOverlay,
@@ -10,7 +8,7 @@ import {
   Heading,
   Icon,
   Text,
-  useMediaQuery,
+  useMediaQuery
 } from '@chakra-ui/react';
 import './sidebar.css';
 import SidebarItem from './SidebarItem';

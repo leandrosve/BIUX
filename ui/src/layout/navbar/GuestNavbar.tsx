@@ -1,7 +1,5 @@
 import {
-  Button,
-  Divider,
-  Flex,
+  Button, Flex,
   Heading,
   Icon,
   IconButton,
@@ -11,7 +9,7 @@ import {
   MenuList,
   Tooltip,
   useColorMode,
-  useMediaQuery,
+  useMediaQuery
 } from '@chakra-ui/react';
 import { BrandIcon, MoonIcon, SunIcon } from '../../components/common/Icons';
 import { Link, useLocation } from 'react-router-dom';
@@ -29,10 +27,7 @@ const GuestNavbar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const [desktop] = useMediaQuery('(min-width: 992px)', { ssr: false, fallback: true });
   let location = useLocation();
-
-
   
-
   const renderMenu = () => {
     if (desktop)
       return (

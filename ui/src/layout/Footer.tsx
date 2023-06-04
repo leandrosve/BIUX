@@ -1,5 +1,5 @@
-import { Flex, Icon, Text, position, useColorMode } from '@chakra-ui/react';
-import React, { CSSProperties } from 'react';
+import { Flex, Icon, Text, useColorMode } from '@chakra-ui/react';
+import { CSSProperties } from 'react';
 import { ArgentinaFlagIcon } from '../components/common/Icons';
 
 const STYLES: CSSProperties = {

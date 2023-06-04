@@ -1,5 +1,5 @@
-import { Box, BoxProps, Button, ButtonProps, Flex, Icon } from '@chakra-ui/react';
-import { FocusEventHandler, KeyboardEvent, ReactElement, cloneElement } from 'react';
+import { Button, ButtonProps, Flex, Icon } from '@chakra-ui/react';
+import { ReactElement, cloneElement } from 'react';
 import { CheckIcon } from '../Icons';
 
 interface Props {

@@ -6,13 +6,11 @@ import {
   Icon,
   IconButton,
   Menu,
-  MenuButton,
-  MenuIcon,
-  MenuItem,
+  MenuButton, MenuItem,
   MenuList,
   Tooltip,
   useColorMode,
-  useMediaQuery,
+  useMediaQuery
 } from '@chakra-ui/react';
 import { BrandIcon, LogOutIcon, MoonIcon, SunIcon } from '../../components/common/Icons';
 import { Link } from 'react-router-dom';

@@ -1,19 +1,14 @@
 import {
-  Alert,
-  AlertIcon,
   Button,
   Card,
   Flex,
   FormControl,
   FormLabel,
   Heading,
-  Icon,
-  Image,
-  Input,
+  Icon, Input,
   Stack,
   Text,
-  Tooltip,
-  useMediaQuery,
+  Tooltip
 } from '@chakra-ui/react';
 import { BrandIcon } from '../components/common/Icons';
 import { Link, useNavigate } from 'react-router-dom';

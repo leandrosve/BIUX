@@ -1,4 +1,4 @@
-import { Button, Card, Flex, FormControl, FormLabel, Heading, Icon, Image, Input, Skeleton, Stack, Text, useMediaQuery } from '@chakra-ui/react';
+import { Button, Card, Flex, FormControl, FormLabel, Heading, Icon, Image, Input, Skeleton, Text, useMediaQuery } from '@chakra-ui/react';
 import illustration from '../assets/illustrations/bike-cut-recollored.png';
 import { BrandIcon } from '../components/common/Icons';
 import { Link } from 'react-router-dom';

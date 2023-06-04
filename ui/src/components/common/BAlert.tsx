@@ -1,5 +1,5 @@
 import { Alert, AlertDescription, AlertIcon, AlertProps, AlertTitle, CloseButton, ScaleFade } from '@chakra-ui/react';
-import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 
 interface Props extends AlertProps {
   hasIcon?: boolean;

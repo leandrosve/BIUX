@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import RoutineSegmentForm from './RoutineSegmentForm';
 
-const segmentsMock: RoutineSegment[] = [
+/*const segmentsMock: RoutineSegment[] = [
   { id: 'a', distance: 110, cadence: 80, pulseRate: 120, duration: 60, description: "parado pedales a ritmo rp2' sentado" },
   {
     id: 'b',
@@ -17,7 +17,7 @@ const segmentsMock: RoutineSegment[] = [
     description: "3x6 Sprint 200mts rp1' , pausa 10' (1 serie 53x15) (2 serie 53x14) (3 serie 53x13)",
   },
   { id: 'c', distance: 90, cadence: 40, pulseRate: 115, duration: 20 },
-];
+];*/
 
 const reorderItem = (items: RoutineSegment[], previousIndex: number, newIndex: number) => {
   const next = [...items];

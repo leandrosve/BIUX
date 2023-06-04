@@ -1,5 +1,4 @@
 import {
-  AlertIcon,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -14,7 +13,7 @@ import {
   Stack,
   Text,
   useColorMode,
-  useToast,
+  useToast
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import AccesibilityService, { AccesibilitySettings } from '../services/AccesibilityService';
