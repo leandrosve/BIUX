@@ -22,7 +22,7 @@ import {
   Tooltip,
 } from '@chakra-ui/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { RoutineSegment } from './RoutineSegmentListItem';
+import { RoutineSegment } from '../../model/routines/Routine';
 
 interface Props {
   isOpen: boolean;
@@ -35,7 +35,6 @@ interface Props {
 const RoutineSegmentForm = (props: Props) => {
   return (
     <Fade
-      tabIndex={0}
       in={props.isOpen}
       style={{ position: 'absolute', pointerEvents: 'none', bottom: 0, width: '100%', height: '100%', overflow: 'hidden', zIndex: 1 }}
     >
@@ -96,7 +95,7 @@ const RoutineSegmentFormContent = ({ onCancel, onSubmit, index, segment }: Props
       pointerEvents='all'
       overflowY='auto'
       bgGradient='linear(to-b, bg.400, bg.300)'
-      tabIndex={0}
+      tabIndex={-1}
       ref={ref}
     >
       <CloseButton position='absolute' top={3} right={5} onClick={onCancel} />
@@ -196,14 +195,21 @@ interface BasicNumberInputProps extends Omit<NumberInputFieldProps, 'onChange'> 
   value?: 'string' | number;
   onChange: (value?: number) => void;
 }
-const BasicNumberInput = ({ max, value, onChange, ...rest }: BasicNumberInputProps) => (
-  <NumberInput size='sm' min={0} max={max} value={value} _light={{ border: '0px solid' }} onChange={(v) => onChange(parseInt(v))}>
+const BasicNumberInput = ({ max, value, onChange, ...rest }: BasicNumberInputProps) => {
+  const handleChange = (value: string) => {
+    const number = parseInt(value);
+    if (number !== 0 && !number) onChange(undefined);
+    if (isNaN(number)) return;
+    onChange(number);
+  }
+  return (
+  <NumberInput size='sm' min={0} max={max} value={`${value ?? ""}`} _light={{ border: '0px solid' }} onChange={handleChange}>
     <NumberInputField {...rest} min={0} />
     <NumberInputStepper>
       <NumberIncrementStepper />
       <NumberDecrementStepper />
     </NumberInputStepper>
   </NumberInput>
-);
+)};
 
 export default RoutineSegmentForm;

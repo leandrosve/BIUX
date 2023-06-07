@@ -23,12 +23,26 @@ import {
 } from '@chakra-ui/react';
 import RoutineFormSegmentsStep from './RoutineFormSegmentsStep';
 import { useState, useMemo } from 'react';
+import Routine, { RoutineSegment } from '../../model/routines/Routine';
+import RoutineService from '../../services/api/RoutineService';
 
 const RoutineForm = () => {
   const { activeStep, goToNext, goToPrevious } = useSteps({
     index: 0,
     count: steps.length,
   });
+
+  const [routine, setRoutine] = useState<Routine>({ name: '', description: '', segments: [] });
+
+  const handleSubmitDetails = (name: string, description: string) => {
+    setRoutine((prev) => ({ ...prev, name, description }));
+    goToNext();
+  };
+
+  const handlePrevious = (segments: RoutineSegment[]) => {
+    setRoutine((prev) => ({ ...prev, segments }));
+    goToPrevious();
+  };
 
   return (
     <Card
@@ -37,27 +51,28 @@ const RoutineForm = () => {
       p='6'
       rounded={{ lg: 40, md: 40, base: 0 }}
       minWidth={{ lg: 710, md: 710, base: '100%' }}
+      minHeight={{ lg: 650, md: 650, base: 'calc(100vh - 110px)' }}
       alignSelf='center'
       display='flex'
-      m={5}
+      m={{ base: 0, md: 5 }}
       position='relative'
-      flexDirection={'column'}
-      minHeight={650}
+      flexDirection='column'
+      maxWidth='calc(100vh - 110px)'
     >
-      <RutineStepper index={1} />
+      <RutineStepper index={activeStep} />
       <Heading mt={2} as='h1'>
         Nueva Rutina
       </Heading>
       <Flex direction='column' position='relative' grow={1}>
-        {activeStep === 0 && <Step1 onSubmit={goToNext} />}
-        {activeStep === 1 && <RoutineFormSegmentsStep onPrevious={goToPrevious} />}
+        {activeStep === 0 && <Step1 initialData={routine} onSubmit={handleSubmitDetails} />}
+        {activeStep === 1 && <RoutineFormSegmentsStep routine={routine} onPrevious={handlePrevious} />}
       </Flex>
     </Card>
   );
 };
-const Step1 = (props: { onSubmit: () => void }) => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+const Step1 = (props: { initialData: Routine; onSubmit: (name: string, description: string) => void }) => {
+  const [name, setName] = useState(props.initialData.name);
+  const [description, setDescription] = useState(props.initialData.description ?? '');
   const disableSubmit = useMemo(() => {
     if (!name) return true;
     if (description.length > 500 || name.length > 120) return true;
@@ -71,18 +86,18 @@ const Step1 = (props: { onSubmit: () => void }) => {
       <Text fontSize='sm'>
         Los campos marcados con <b>*</b> son requeridos
       </Text>
-      <Flex as='form' direction='column' grow={1} onSubmit={props.onSubmit}>
+      <Flex as='form' direction='column' grow={1} onSubmit={() => props.onSubmit(name, description)}>
         <Flex grow={1} direction='column'>
           <FormControl isInvalid={name.length > 500}>
             <FormLabel mt={2}>
               Nombre de la rutina <b>*</b>
             </FormLabel>
-            <Input type='text' boxShadow='sm' placeholder='Nombre' onChange={(e) => setName(e.target.value)} />
+            <Input value={name} type='text' boxShadow='sm' placeholder='Nombre' onChange={(e) => setName(e.target.value)} />
             {name.length > 120 && <FormErrorMessage>La cantidad máxima de caracteres es 120</FormErrorMessage>}
           </FormControl>
           <FormControl isInvalid={description.length > 500}>
             <FormLabel mt={2}>Descripción</FormLabel>
-            <Textarea boxShadow='sm' placeholder='Descripcion' resize='none' onChange={(e) => setDescription(e.target.value)} />
+            <Textarea value={description} boxShadow='sm' placeholder='Descripcion' resize='none' onChange={(e) => setDescription(e.target.value)} />
             {description.length > 500 && <FormErrorMessage>La cantidad máxima de caracteres es 500</FormErrorMessage>}
           </FormControl>
         </Flex>
@@ -110,7 +125,7 @@ const Step1 = (props: { onSubmit: () => void }) => {
 const steps = ['detalles', 'planificación'];
 const RutineStepper = (props: { index: number }) => {
   return (
-    <Stepper {...props} maxWidth={400} colorScheme='primary'>
+    <Stepper {...props} maxWidth={{ base: 325, md: 400 }} colorScheme='primary'>
       {steps.map((step, index) => (
         <Step key={index}>
           <StepIndicator>
@@ -121,7 +136,7 @@ const RutineStepper = (props: { index: number }) => {
             <StepDescription>{step}</StepDescription>
           </Box>
 
-          <StepSeparator style={{ width: 60 }} />
+          <StepSeparator />
         </Step>
       ))}
     </Stepper>
