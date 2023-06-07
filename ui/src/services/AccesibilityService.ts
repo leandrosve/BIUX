@@ -5,17 +5,17 @@ export interface AccesibilitySettings {
   colorMode: string;
 }
 
-const hues:Record<string, number> = {
-  'pink': 50,
-  'red': 110,
-  'orange': 130,
-  'yellow': 150,
-  'green': 220,
-  'teal': 290,
-  'blue': 320,
-  'cyan': 310,
-  'primary': 0,
-}
+const hues: Record<string, number> = {
+  pink: 50,
+  red: 110,
+  orange: 130,
+  yellow: 150,
+  green: 220,
+  teal: 290,
+  blue: 320,
+  cyan: 310,
+  primary: 0,
+};
 
 export default class AccesibilityService {
   static DEFAULT_SETTINGS: AccesibilitySettings = {
@@ -67,7 +67,12 @@ export default class AccesibilityService {
   static getLocalSettings(): AccesibilitySettings {
     const stringSettings = localStorage.getItem('accesibilitySettings');
     if (!stringSettings) return this.DEFAULT_SETTINGS;
-    console.log(stringSettings)
     return JSON.parse(stringSettings);
+  }
+
+  // DOM Functions
+  static focusOnMainContent() {
+    const main = document.getElementById('main');
+    main?.focus();
   }
 }

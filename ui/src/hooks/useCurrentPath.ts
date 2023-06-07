@@ -6,7 +6,6 @@ const useCurrentPath = () => {
   const rou = Object.values(BRoutes).map(r => ({path: r as string}));
   const match = matchRoutes(rou, location);
 
-  console.log(match?.[0].route?.path);
   return match?.[0].route;
 };
 

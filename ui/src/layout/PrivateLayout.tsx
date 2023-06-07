@@ -11,12 +11,21 @@ interface Props {
 const PrivateLayout = ({ children }: Props) => {
   const [displaySidebar, setDisplaySidebar] = useState(false);
   return (
-    <Flex grow={1} align='center' justify='space-between' direction={'column'}>
-      <Navbar hasSidebar onOpenSidebar={() => setDisplaySidebar(true)}/>
+    <Flex grow={1} align='center' justify='space-between' direction={'column'} maxWidth='100%'>
+      <Navbar hasSidebar onOpenSidebar={() => setDisplaySidebar(true)} />
 
       <Flex grow={1} alignSelf='stretch'>
-        <Sidebar open={displaySidebar} onClose={() => setDisplaySidebar(false)}/>
-        <Flex grow={1} alignSelf='stretch' paddingBottom={30} justifyContent={{base: 'center', md: 'start'}}>
+        <Sidebar open={displaySidebar} onClose={() => setDisplaySidebar(false)} />
+        <Flex
+          id='main'
+          tabIndex={-1}
+          grow={1}
+          alignSelf='stretch'
+          paddingBottom={30}
+          maxWidth='100%'
+          justifyContent={{ base: 'center', md: 'start' }}
+          as='main'
+        >
           {children} <Outlet />
         </Flex>
       </Flex>

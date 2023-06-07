@@ -5,7 +5,6 @@ const items = [
   {
     label: 'Inicio',
     icon: HouseIcon,
-    selected: true,
     path: '/'
   },
   {

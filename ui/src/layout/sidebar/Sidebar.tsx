@@ -1,20 +1,24 @@
 import {
   Avatar,
-  Card, Drawer,
+  Card,
+  Drawer,
   DrawerCloseButton,
   DrawerContent,
   DrawerOverlay,
   Flex,
   Heading,
   Icon,
+  List,
+  ListItem,
   Text,
-  useMediaQuery
+  useMediaQuery,
 } from '@chakra-ui/react';
 import './sidebar.css';
 import SidebarItem from './SidebarItem';
 import items from './sidebarItems';
 import { BrandIcon, LogOutIcon } from '../../components/common/Icons';
 import useCurrentPath from '../../hooks/useCurrentPath';
+import AccesibilityService from '../../services/AccesibilityService';
 
 interface Props {
   open?: boolean;
@@ -23,6 +27,7 @@ interface Props {
 
 interface SidebarContentProps {
   currentPath?: string;
+  onClose: () => void;
 }
 
 interface SidebarDrawerProps {
@@ -36,19 +41,30 @@ const Sidebar = (props: Props) => {
   const currentPath = useCurrentPath();
   if (!desktop) return <SidebarDrawer {...props} currentPath={currentPath?.path} />;
   return (
-    <Flex alignSelf='stretch' background='bg.300' minWidth={260} padding={2}>
-      <SidebarContent currentPath={currentPath?.path} />
+    <Flex alignSelf='stretch' background='bg.300' minWidth={260} padding={2} as='nav'>
+      <SidebarContent currentPath={currentPath?.path} onClose={props.onClose} />
     </Flex>
   );
 };
 
-const SidebarContent = ({ currentPath }: SidebarContentProps) => (
-  <Flex direction='column' flexGrow={1} gap={1}>
-    {items.map((item) => (
-      <SidebarItem {...item} key={item.label} selected={!!(currentPath && currentPath === item.path)} />
-    ))}
-  </Flex>
-);
+const SidebarContent = ({ currentPath, onClose }: SidebarContentProps) => {
+  const handleClickLink = () => {
+    onClose();
+    AccesibilityService.focusOnMainContent();
+  };
+  return (
+    <List display='flex' flexDirection='column' flexGrow={1} gap={1}>
+      {items.map((item) => {
+        const selected = !!(currentPath && currentPath === item.path);
+        return (
+          <ListItem key={item.label} aria-current={selected}>
+            <SidebarItem {...item} selected={selected} onLinkClick={handleClickLink} />
+          </ListItem>
+        );
+      })}
+    </List>
+  );
+};
 
 const SidebarDrawer = (props: SidebarDrawerProps) => (
   <Drawer isOpen={!!props.open} onClose={props.onClose} placement='left'>
@@ -61,16 +77,16 @@ const SidebarDrawer = (props: SidebarDrawerProps) => (
           BIUX
         </Heading>
       </Flex>
-      <Flex direction='column'>
+      <Flex direction='column' as='nav'>
         <Text fontWeight='bold' color='text.300' marginBottom={3}>
           Navegación
         </Text>
-        <SidebarContent currentPath={props.currentPath} />
+        <SidebarContent currentPath={props.currentPath} onClose={props.onClose} />
 
         <Text fontWeight='bold' color='text.300' marginBottom={3} marginTop={5}>
           Panel de usuario
         </Text>
-        <Card padding={2} gap={2} _dark={{background: "bg.400"}}>
+        <Card padding={2} gap={2} _dark={{ background: 'bg.400' }}>
           <Flex alignItems='center' gap={3}>
             <Avatar name='Jon Doe' size='sm' bg='teal.500' />
             Jon Doe
