@@ -4,7 +4,7 @@ import React from 'react'
 
 const BTooltip = (props: TooltipProps) => {
   return (
-    <Tooltip {...props} maxWidth='60vw' closeDelay={1000000000} boxSizing='border-box'>
+    <Tooltip {...props} maxWidth='60vw' boxSizing='border-box'>
         {props.children}
     </Tooltip>
   )

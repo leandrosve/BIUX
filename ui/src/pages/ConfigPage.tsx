@@ -13,7 +13,7 @@ import {
   Stack,
   Text,
   useColorMode,
-  useToast
+  useToast,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import AccesibilityService, { AccesibilitySettings } from '../services/AccesibilityService';
@@ -22,6 +22,7 @@ import ColorPicker from '../components/common/forms/ColorPicker';
 import { MoonIcon, SunIcon, UndoIcon } from '../components/common/Icons';
 import AlertToast from '../components/common/alert-toast/AlertToast';
 import { ChevronRightIcon } from '@chakra-ui/icons';
+import ResponsiveCard from '../components/common/ResponsiveCard';
 
 const ConfigPage = () => {
   const [fontFamily, setFontFamily] = useState<string>(AccesibilityService.getLocalSettings().fontFamily);
@@ -86,7 +87,7 @@ const ConfigPage = () => {
 
   return (
     <Flex direction='column' padding={{ md: 5, sm: 0 }}>
-      <Breadcrumb separator={<ChevronRightIcon />}>
+      <Breadcrumb separator={<ChevronRightIcon />} padding={[3, 0]}>
         <BreadcrumbItem>
           <BreadcrumbLink href='www.google.com'>Inicio</BreadcrumbLink>
         </BreadcrumbItem>
@@ -96,17 +97,7 @@ const ConfigPage = () => {
           </BreadcrumbLink>
         </BreadcrumbItem>
       </Breadcrumb>
-      <Card
-        boxShadow='base'
-        background='bg.300'
-        p='6'
-        rounded={{ lg: 40, md: 0, base: 0 }}
-        alignSelf={{ base: 'stretch', md: 'stretch', lg: 'center' }}
-        display='flex'
-        mt={2}
-        maxWidth='95vw'
-        flexDirection={'column'}
-      >
+      <ResponsiveCard defaultWidth={500}>
         <form onSubmit={handleSave}>
           <Stack align='stretch' gap={3}>
             <Heading mt={2}>Configuración</Heading>
@@ -186,7 +177,7 @@ const ConfigPage = () => {
             </Stack>
           </Stack>
         </form>
-      </Card>
+      </ResponsiveCard>
     </Flex>
   );
 };

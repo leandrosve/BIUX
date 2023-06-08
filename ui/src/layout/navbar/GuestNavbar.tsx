@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { BrandIcon, MoonIcon, SunIcon } from '../../components/common/Icons';
 import { Link, useLocation } from 'react-router-dom';
-import { BRoutes } from '../../router/router';
+import { BRoutes } from '../../router/routes';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { CSSProperties } from 'react';
 

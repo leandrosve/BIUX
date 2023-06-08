@@ -25,6 +25,7 @@ import RoutineFormSegmentsStep from './RoutineFormSegmentsStep';
 import { useState, useMemo } from 'react';
 import Routine, { RoutineSegment } from '../../model/routines/Routine';
 import RoutineService from '../../services/api/RoutineService';
+import ResponsiveCard from '../../components/common/ResponsiveCard';
 
 const RoutineForm = () => {
   const { activeStep, goToNext, goToPrevious } = useSteps({
@@ -45,19 +46,11 @@ const RoutineForm = () => {
   };
 
   return (
-    <Card
-      boxShadow='base'
-      background='bg.300'
-      p='6'
-      rounded={{ lg: 40, md: 40, base: 0 }}
-      minWidth={{ lg: 710, md: 710, base: '100%' }}
-      minHeight={{ lg: 650, md: 650, base: 'calc(100vh - 110px)' }}
-      alignSelf='center'
-      display='flex'
-      m={{ base: 0, md: 5 }}
-      position='relative'
-      flexDirection='column'
-      maxWidth='calc(100vh - 110px)'
+    <ResponsiveCard
+   
+      defaultWidth={710}
+      defaultHeight={650}
+   
     >
       <RutineStepper index={activeStep} />
       <Heading mt={2} as='h1'>
@@ -67,7 +60,7 @@ const RoutineForm = () => {
         {activeStep === 0 && <Step1 initialData={routine} onSubmit={handleSubmitDetails} />}
         {activeStep === 1 && <RoutineFormSegmentsStep routine={routine} onPrevious={handlePrevious} />}
       </Flex>
-    </Card>
+    </ResponsiveCard>
   );
 };
 const Step1 = (props: { initialData: Routine; onSubmit: (name: string, description: string) => void }) => {

@@ -52,7 +52,7 @@ interface Props extends FlexProps {
 }
 
 const RoutineSegmentListItem = ({ index, segment, onOrderChange, onRemove, onEdit, dragHandleProps, lastIndex, orderMethod = 'drag' }: Props) => {
-  const [mobile] = useMediaQuery('(max-width: 992px)', { ssr: false, fallback: true });
+  const [mobile] = useMediaQuery('(max-width: 768px)', { ssr: false, fallback: true });
 
   const sortUpRef = useRef<HTMLButtonElement>(null);
   const sortDownRef = useRef<HTMLButtonElement>(null);
@@ -73,13 +73,14 @@ const RoutineSegmentListItem = ({ index, segment, onOrderChange, onRemove, onEdi
           color='text.500'
           variant='outline'
           gap={2}
-          padding={2}
+          size='sm'
+          padding={0}
           borderRadius='full'
           boxSize='30px'
           alignItems='center'
           justifyContent='center'
         >
-          <Text fontSize='lg'>{index + 1}</Text>
+          {index + 1}
         </Tag>
       </Tooltip>
       <Flex direction='column' gap={1} grow={1}>

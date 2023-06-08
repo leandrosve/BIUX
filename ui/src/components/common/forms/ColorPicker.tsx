@@ -31,12 +31,10 @@ const ColorPicker = ({ onChange, value }: Props) => {
   const group = getRootProps();
   return (
     <RadioGroup>
-      <HStack {...group}>
         {COLORS.map((c) => {
           const radio = getRadioProps({ value: c });
           return <ColorRadioOption key={c} {...radio} />;
         })}
-      </HStack>
     </RadioGroup>
   );
 };
@@ -48,7 +46,7 @@ const ColorRadioOption = (props: RadioProps) => {
   const checkbox = getRadioProps();
 
   return (
-    <Box as='label'>
+    <Box as='label' display='inline-flex' margin={1}>
       <input {...input} />
       <Box
         {...checkbox}
