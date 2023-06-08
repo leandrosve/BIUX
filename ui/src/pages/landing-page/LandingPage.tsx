@@ -1,7 +1,7 @@
 import { Button, Flex, Heading, Icon, Image } from '@chakra-ui/react';
 import illustration from '../../assets/illustrations/bike-female.png';
 import { Link } from 'react-router-dom';
-import { BRoutes } from '../../router/router';
+import { BRoutes } from '../../router/routes';
 import './landing-page.css';
 
 const LandingPage = () => {

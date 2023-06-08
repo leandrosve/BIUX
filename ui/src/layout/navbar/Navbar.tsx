@@ -6,16 +6,21 @@ import {
   Icon,
   IconButton,
   Menu,
-  MenuButton, MenuItem,
+  MenuButton,
+  MenuGroup,
+  MenuItem,
   MenuList,
   Tooltip,
   useColorMode,
-  useMediaQuery
+  useMediaQuery,
 } from '@chakra-ui/react';
 import { BrandIcon, LogOutIcon, MoonIcon, SunIcon } from '../../components/common/Icons';
 import { Link } from 'react-router-dom';
-import { BRoutes } from '../../router/router';
-import { ChevronDownIcon, HamburgerIcon } from '@chakra-ui/icons';
+import { BRoutes } from '../../router/routes';
+import { ChevronDownIcon, EditIcon, HamburgerIcon } from '@chakra-ui/icons';
+import SessionService from '../../services/SessionService';
+import { SessionContext } from '../../context/SessionProvider';
+import { useContext } from 'react';
 
 interface Props {
   variant?: 'transparent' | 'solid';
@@ -63,21 +68,31 @@ const Navbar = ({ onOpenSidebar }: Props) => {
   );
 };
 
-const NavbarDropdown = () => (
-  <Menu>
-    <MenuButton
-      as={Button}
-      aria-label='User Options'
-      variant='ghost'
-      rightIcon={<ChevronDownIcon />}
-      children={<Avatar name='T L' size='sm' bg='teal.700' />}
-    />
-    <MenuList minWidth={0}>
-      <MenuItem justifyContent='space-between' gap={5}>
-        Cerrar Sesión <Icon as={LogOutIcon} boxSize={5} />{' '}
-      </MenuItem>
-    </MenuList>
-  </Menu>
-);
+const NavbarDropdown = () => {
+  const { session } = useContext(SessionContext);
+  return (
+    <Menu>
+      <MenuButton
+        as={Button}
+        aria-label='User Options'
+        variant='ghost'
+        rightIcon={<ChevronDownIcon />}
+        children={<Avatar name={session?.name} size='sm' bg='teal.700' color='white' />}
+      />
+      <MenuList minWidth={200} maxWidth={300}>
+        <MenuGroup title={session?.name}>
+          <Link to={BRoutes.PROFILE}>
+            <MenuItem justifyContent='space-between' gap={5}>
+              Editar Perfil <Icon as={EditIcon} />
+            </MenuItem>
+          </Link>
+        </MenuGroup>
+        <MenuItem justifyContent='space-between' gap={5} onClick={SessionService.destroyLocalSession}>
+          Cerrar Sesión <Icon as={LogOutIcon} boxSize={5} />{' '}
+        </MenuItem>
+      </MenuList>
+    </Menu>
+  );
+};
 
 export default Navbar;

@@ -8,6 +8,7 @@ import {
   Flex,
   Heading,
   Icon,
+  IconButton,
   List,
   ListItem,
   Text,
@@ -19,6 +20,12 @@ import items from './sidebarItems';
 import { BrandIcon, LogOutIcon } from '../../components/common/Icons';
 import useCurrentPath from '../../hooks/useCurrentPath';
 import AccesibilityService from '../../services/AccesibilityService';
+import SessionService from '../../services/SessionService';
+import { useContext } from 'react';
+import { SessionContext } from '../../context/SessionProvider';
+import { Link } from 'react-router-dom';
+import { BRoutes } from '../../router/routes';
+import { EditIcon } from '@chakra-ui/icons';
 
 interface Props {
   open?: boolean;
@@ -50,7 +57,7 @@ const Sidebar = (props: Props) => {
 const SidebarContent = ({ currentPath, onClose }: SidebarContentProps) => {
   const handleClickLink = () => {
     onClose();
-    AccesibilityService.focusOnMainContent();
+    setTimeout(AccesibilityService.focusOnMainContent, 100);
   };
   return (
     <List display='flex' flexDirection='column' flexGrow={1} gap={1}>
@@ -66,40 +73,49 @@ const SidebarContent = ({ currentPath, onClose }: SidebarContentProps) => {
   );
 };
 
-const SidebarDrawer = (props: SidebarDrawerProps) => (
-  <Drawer isOpen={!!props.open} onClose={props.onClose} placement='left'>
-    <DrawerOverlay />
-    <DrawerContent background='bg.300' padding='10px' maxWidth='300px'>
-      <DrawerCloseButton />
-      <Flex alignItems='flex-end' gap={3} paddingY={5}>
-        <Icon as={BrandIcon} height={'40px'} width={'40px'} />
-        <Heading as='span' fontWeight='light' fontSize={30} color='primary.950'>
-          BIUX
-        </Heading>
-      </Flex>
-      <Flex direction='column' as='nav'>
-        <Text fontWeight='bold' color='text.300' marginBottom={3}>
-          Navegación
-        </Text>
-        <SidebarContent currentPath={props.currentPath} onClose={props.onClose} />
+const SidebarDrawer = (props: SidebarDrawerProps) => {
+  const { session } = useContext(SessionContext);
+  return (
+    <Drawer isOpen={!!props.open} onClose={props.onClose} placement='left'>
+      <DrawerOverlay />
+      <DrawerContent background='bg.300' padding='10px' maxWidth='300px'>
+        <DrawerCloseButton />
+        <Flex alignItems='flex-end' gap={3} paddingY={5}>
+          <Icon as={BrandIcon} height={'40px'} width={'40px'} />
+          <Heading as='span' fontWeight='light' fontSize={30} color='primary.950'>
+            BIUX
+          </Heading>
+        </Flex>
+        <Flex direction='column' as='nav'>
+          <Text fontWeight='bold' color='text.300' marginBottom={3}>
+            Navegación
+          </Text>
+          <SidebarContent currentPath={props.currentPath} onClose={props.onClose} />
 
-        <Text fontWeight='bold' color='text.300' marginBottom={3} marginTop={5}>
-          Panel de usuario
-        </Text>
-        <Card padding={2} gap={2} _dark={{ background: 'bg.400' }}>
-          <Flex alignItems='center' gap={3}>
-            <Avatar name='Jon Doe' size='sm' bg='teal.500' />
-            Jon Doe
-          </Flex>
-          <SidebarItem onClick={() => console.log('cerrar sesión')}>
-            <Flex grow={1} justifyContent='space-between'>
-              Cerrar Sesión <Icon as={LogOutIcon} boxSize={6} />
+          <Text fontWeight='bold' color='text.300' marginBottom={3} marginTop={5}>
+            Panel de usuario
+          </Text>
+          <Card padding={2} gap={0} _dark={{ background: 'bg.400' }}>
+            <Flex alignItems='center' justifyContent='space-between'>
+              <Flex alignItems='center' gap={3}>
+                <Avatar name={session?.name} size='sm' bg='teal.500' color='white' />
+                {session?.name}
+              </Flex>
+              <Link to={BRoutes.PROFILE}>
+                <IconButton variant='ghost' icon={<EditIcon />} aria-label='Editar Perfil' />
+              </Link>
             </Flex>
-          </SidebarItem>
-        </Card>
-      </Flex>
-    </DrawerContent>
-  </Drawer>
-);
+
+            <SidebarItem onClick={SessionService.destroyLocalSession}>
+              <Flex grow={1} justifyContent='space-between'>
+                Cerrar Sesión <Icon as={LogOutIcon} boxSize={6} />
+              </Flex>
+            </SidebarItem>
+          </Card>
+        </Flex>
+      </DrawerContent>
+    </Drawer>
+  );
+};
 
 export default Sidebar;

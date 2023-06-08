@@ -3,9 +3,11 @@ import { ChakraProvider } from '@chakra-ui/react';
 
 import theme from './lib/chakra-themes/theme';
 import { RouterProvider } from 'react-router-dom';
-import router from './router/router';
+import router from './router/routes';
 import { useEffect } from 'react';
 import AccesibilityService from './services/AccesibilityService';
+import SessionProvider from './context/SessionProvider';
+import BRouter from './router/BRouter';
 
 function App() {
   useEffect(() => {
@@ -13,7 +15,9 @@ function App() {
   }, []);
   return (
     <ChakraProvider theme={theme}>
-      <RouterProvider router={router} />
+      <SessionProvider>
+        <BRouter />
+      </SessionProvider>
     </ChakraProvider>
   );
 }

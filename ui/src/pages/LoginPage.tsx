@@ -1,21 +1,11 @@
-import {
-  Button,
-  Card,
-  Flex,
-  FormControl,
-  FormLabel,
-  Heading,
-  Icon, Input,
-  Stack,
-  Text,
-  Tooltip
-} from '@chakra-ui/react';
+import { Button, Card, Flex, FormControl, FormLabel, Heading, Icon, Input, Stack, Text, Tooltip } from '@chakra-ui/react';
 import { BrandIcon } from '../components/common/Icons';
 import { Link, useNavigate } from 'react-router-dom';
-import { BRoutes } from '../router/router';
+import { BRoutes } from '../router/routes';
 import { useMemo, useState } from 'react';
 import AuthService from '../services/api/AuthService';
 import BAlert from '../components/common/BAlert';
+import SessionService from '../services/SessionService';
 
 const LoginPage = () => {
   const [email, setEmail] = useState<string>('');
@@ -33,16 +23,12 @@ const LoginPage = () => {
     setSubmiting(true);
     const res = await AuthService.login({ email, password });
     setSubmiting(false);
-    switch (res.status) {
-      case 401:
-        setError('El email y la contraseña no coinciden');
-        break;
-      case 200:
-        navigate('/config')
-        break;
-      default:
-        break;
+    if (res.hasError) {
+      setError('El email y la contraseña no coinciden');
+      return;
     }
+    SessionService.saveLocalSession(res.data);
+    location.replace('/config');
   };
 
   return (
@@ -50,7 +36,7 @@ const LoginPage = () => {
       <Card boxShadow='lg' p='6' background='bg.300' rounded={40} display='flex' mt={10} flexDirection={'column'}>
         <Flex>
           <form onSubmit={onSubmit}>
-            <Stack align='stretch' width={'350px'}>
+            <Stack align='stretch' width={['auto', 350]}>
               <Icon margin='auto' as={BrandIcon} height={'40px'} width={'40px'} />
 
               <Heading mt={20} textAlign='center'>

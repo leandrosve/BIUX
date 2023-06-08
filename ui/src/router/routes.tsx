@@ -15,40 +15,39 @@ export enum BRoutes {
   SIGNUP = '/registro',
   LOGIN = '/login',
   RUTINES = '/rutinas',
+  DASHBOARD = '/dashboard',
+  PROFILE = '/perfil',
 }
 
-const router = createBrowserRouter([
+const routes = [
   {
-    element: <PrivateLayout />,
-    children: [
-      {
-        path: '/config',
-        element: <ConfigPage />,
-      },
-      {
-        path: '/rutinas',
-        element: <RoutineForm />,
-      },
-    ],
+    path: '/config',
+    type: 'private',
+    element: <ConfigPage />,
   },
   {
-    element: <GuestLayout />,
-    children: [
-      {
-        path: '/',
-        element: <LandingPage />,
-      },
-      {
-        path: '/registro',
-        element: <SignupPage />,
-      },
-      {
-        path: '/login',
-        element: <LoginPage />,
-      },
-    ],
-  },
-  {path:'*', element: <NotFoundPage/>}
-]);
+    path: '/rutinas',
+    type: 'private',
 
-export default router;
+    element: <RoutineForm />,
+  },
+  {
+    type: 'guest',
+    path: '/',
+    element: <LandingPage />,
+  },
+  {
+    type: 'guest',
+    path: '/registro',
+    element: <SignupPage />,
+  },
+  {
+    type: 'guest',
+    path: '/login',
+    element: <LoginPage />,
+  },
+
+  { path: '*', type: 'any', element: <NotFoundPage /> },
+];
+
+export default routes;

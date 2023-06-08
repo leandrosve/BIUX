@@ -2,15 +2,15 @@ import { Button, Card, Flex, FormControl, FormLabel, Heading, Icon, Image, Input
 import illustration from '../assets/illustrations/bike-cut-recollored.png';
 import { BrandIcon } from '../components/common/Icons';
 import { Link } from 'react-router-dom';
-import { BRoutes } from '../router/router';
+import { BRoutes } from '../router/routes';
 
 const SignupPage = () => {
   const [desktop] = useMediaQuery('(min-width: 992px)', { ssr: false, fallback: true });
   return (
     <Flex grow={1} align='center' justify='space-between' direction={'column'} className='dark'>
       <Card boxShadow='lg' p='6' background='bg.300' rounded={40} display='flex' mt={10} flexDirection={'column'}>
-        <Flex gap={5}>
-          <Flex align='stretch' direction='column' minWidth={325} gap={1}>
+        <Flex gap={5} align='stretch'>
+          <Flex align='stretch' direction='column' minWidth={['auto', 325]} gap={1}>
             <Icon as={BrandIcon} height={'60px'} width={'60px'} marginRight={3} />
             <Heading my={1}>¡Registrate!</Heading>
             <FormControl>
