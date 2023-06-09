@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import AccesibilityService from './services/AccesibilityService';
 import SessionProvider from './context/SessionProvider';
 import BRouter from './router/BRouter';
+import Layout from './layout/Layout';
 
 function App() {
   useEffect(() => {
@@ -16,7 +17,7 @@ function App() {
   return (
     <ChakraProvider theme={theme}>
       <SessionProvider>
-        <BRouter />
+          <BRouter />
       </SessionProvider>
     </ChakraProvider>
   );

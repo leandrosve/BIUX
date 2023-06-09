@@ -1,13 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom';
 import LandingPage from '../pages/landing-page/LandingPage';
-import ConfigPage from '../pages/ConfigPage';
 import SignupPage from '../pages/SignupPage';
 import LoginPage from '../pages/LoginPage';
+import { lazy } from 'react';
 
-import PrivateLayout from '../layout/PrivateLayout';
-import GuestLayout from '../layout/GuestLayout';
-import NotFoundPage from '../pages/not-found-page/NotFoundPage';
-import RoutineForm from '../features/routines/RoutineForm';
+const RoutineForm = lazy(() => import('../features/routines/RoutineForm'));
+const ConfigPage = lazy(() => import('../pages/ConfigPage'));
+const NotFoundPage = lazy(() => import('../pages/not-found-page/NotFoundPage'));
+
 
 export enum BRoutes {
   HOME = '/',

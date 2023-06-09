@@ -7,6 +7,7 @@ import { BRoutes } from '../../router/routes';
 import { SessionContext } from '../../context/SessionProvider';
 import SessionService from '../../services/SessionService';
 import { LogOutIcon } from '../../components/common/Icons';
+import LinkButton from '../../components/common/LinkButton';
 
 const NotFoundPage = () => {
   const { session } = useContext(SessionContext);
@@ -17,37 +18,29 @@ const NotFoundPage = () => {
         <Text align='center'>Lo sentimos, parece que no hemos podido encontrar la pagina solicitada...</Text>
         <Wrap justify='center' mt={5} spacing={3}>
           <WrapItem>
-            <Link to='/'>
-              <Button leftIcon={<ArrowBackIcon />} colorScheme='primary'>
-                Volver al inicio
-              </Button>
-            </Link>
+            <LinkButton to='/' leftIcon={<ArrowBackIcon />} colorScheme='primary'>
+              Volver al inicio
+            </LinkButton>
           </WrapItem>
           {!session ? (
             <>
               <WrapItem>
-                <Link to={BRoutes.LOGIN}>
-                  <Button colorScheme='primary' variant='outline'>
-                    Iniciar Sesión
-                  </Button>
-                </Link>
+                <LinkButton to={BRoutes.LOGIN} colorScheme='primary' variant='outline'>
+                  Iniciar Sesión
+                </LinkButton>
               </WrapItem>{' '}
               <WrapItem>
-                <Link to={BRoutes.SIGNUP}>
-                  <Button colorScheme='primary' variant='outline'>
-                    Registrarme
-                  </Button>
-                </Link>
+                <LinkButton to={BRoutes.SIGNUP} colorScheme='primary' variant='outline'>
+                  Registrarme
+                </LinkButton>
               </WrapItem>
             </>
           ) : (
             <>
               <WrapItem>
-                <Link to={BRoutes.CONFIG}>
-                  <Button colorScheme='primary' variant='outline' leftIcon={<SettingsIcon />}>
-                    Configuración
-                  </Button>
-                </Link>
+                <LinkButton to={BRoutes.CONFIG} colorScheme='primary' variant='outline' leftIcon={<SettingsIcon />}>
+                  Configuración
+                </LinkButton>
               </WrapItem>
               <WrapItem>
                 <Button

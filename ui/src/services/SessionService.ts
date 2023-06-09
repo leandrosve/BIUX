@@ -15,7 +15,7 @@ export default class SessionService {
 
   static destroyLocalSession() {
     localStorage.removeItem('session');
-    AccesibilityService.deleteLocalSettings();
+    AccesibilityService.restoreDefaults();
     location.replace("/login");
   }
 

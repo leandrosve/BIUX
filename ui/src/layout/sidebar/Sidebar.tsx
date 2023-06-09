@@ -57,7 +57,6 @@ const Sidebar = (props: Props) => {
 const SidebarContent = ({ currentPath, onClose }: SidebarContentProps) => {
   const handleClickLink = () => {
     onClose();
-    setTimeout(AccesibilityService.focusOnMainContent, 100);
   };
   return (
     <List display='flex' flexDirection='column' flexGrow={1} gap={1}>
@@ -102,7 +101,7 @@ const SidebarDrawer = (props: SidebarDrawerProps) => {
                 {session?.name}
               </Flex>
               <Link to={BRoutes.PROFILE}>
-                <IconButton variant='ghost' icon={<EditIcon />} aria-label='Editar Perfil' />
+                <IconButton as='span' variant='ghost' icon={<EditIcon />} aria-label='Editar Perfil' />
               </Link>
             </Flex>
 

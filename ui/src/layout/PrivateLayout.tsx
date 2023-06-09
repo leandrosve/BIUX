@@ -4,6 +4,7 @@ import Footer from './Footer';
 import { ReactNode, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './sidebar/Sidebar';
+import { SkipNavContent, SkipNavLink } from '@chakra-ui/skip-nav';
 
 interface Props {
   children?: ReactNode;
@@ -12,6 +13,8 @@ const PrivateLayout = ({ children }: Props) => {
   const [displaySidebar, setDisplaySidebar] = useState(false);
   return (
     <Flex grow={1} align='center' justify='space-between' direction={'column'} maxWidth='100%'>
+      <SkipNavLink id='contenido'>Ir al contenido</SkipNavLink>
+
       <Navbar hasSidebar onOpenSidebar={() => setDisplaySidebar(true)} />
 
       <Flex grow={1} alignSelf='stretch'>
@@ -26,6 +29,7 @@ const PrivateLayout = ({ children }: Props) => {
           justifyContent={{ base: 'center', md: 'start' }}
           as='main'
         >
+          <SkipNavContent id='contenido' />
           {children} <Outlet />
         </Flex>
       </Flex>
