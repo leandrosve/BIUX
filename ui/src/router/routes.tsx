@@ -8,11 +8,10 @@ const RoutineForm = lazy(() => import('../features/routines/RoutineForm'));
 const ConfigPage = lazy(() => import('../pages/ConfigPage'));
 const NotFoundPage = lazy(() => import('../pages/not-found-page/NotFoundPage'));
 
-
 export enum BRoutes {
   HOME = '/',
   CONFIG = '/config',
-  SIGNUP = '/registro',
+  SIGNUP = '/registrarme',
   LOGIN = '/login',
   RUTINES = '/rutinas',
   DASHBOARD = '/dashboard',
@@ -23,31 +22,36 @@ const routes = [
   {
     path: '/config',
     type: 'private',
+    title: 'Configuracion',
     element: <ConfigPage />,
   },
   {
     path: '/rutinas',
     type: 'private',
+    title: 'Rutinas',
 
     element: <RoutineForm />,
   },
   {
     type: 'guest',
     path: '/',
+    title: 'Controla el progreso de tus alumnos',
     element: <LandingPage />,
   },
   {
     type: 'guest',
-    path: '/registro',
+    path: '/registrarme',
+    title: 'Registrarme',
     element: <SignupPage />,
   },
   {
     type: 'guest',
     path: '/login',
+    title: 'Iniciar Sesión',
     element: <LoginPage />,
   },
 
-  { path: '*', type: 'any', element: <NotFoundPage /> },
+  { path: '*', type: 'any', title: 'Página no encontrada', element: <NotFoundPage /> },
 ];
 
 export default routes;
