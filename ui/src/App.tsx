@@ -2,23 +2,29 @@ import './App.css';
 import { ChakraProvider } from '@chakra-ui/react';
 
 import theme from './lib/chakra-themes/theme';
-import { RouterProvider } from 'react-router-dom';
-import router from './router/routes';
-import { useEffect } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 import AccesibilityService from './services/AccesibilityService';
 import SessionProvider from './context/SessionProvider';
 import BRouter from './router/BRouter';
-import Layout from './layout/Layout';
 
-function App() {
+const EnsureInitialized = (props: PropsWithChildren) => {
+  const [initialized, setInitialized] = useState(false);
   useEffect(() => {
     AccesibilityService.initialize();
+    setInitialized(true);
   }, []);
+  if (!initialized) return null;
+  return <>{props.children}</>;
+};
+
+function App() {
   return (
     <ChakraProvider theme={theme}>
-      <SessionProvider>
+      <EnsureInitialized>
+        <SessionProvider>
           <BRouter />
-      </SessionProvider>
+        </SessionProvider>
+      </EnsureInitialized>
     </ChakraProvider>
   );
 }

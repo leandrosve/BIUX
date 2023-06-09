@@ -1,5 +1,5 @@
 import { Alert, AlertDescription, AlertIcon, AlertProps, AlertTitle, CloseButton, ScaleFade } from '@chakra-ui/react';
-import { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import { ReactNode, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 interface Props extends AlertProps {
   hasIcon?: boolean;
@@ -22,7 +22,7 @@ const BAlert = ({ hasIcon = true, closable, autoFocus, title, description, ...re
     setHidden(empty);
   }, [empty]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!hidden && autoFocus) {
       ref.current?.focus();
     }
@@ -32,7 +32,7 @@ const BAlert = ({ hasIcon = true, closable, autoFocus, title, description, ...re
 
   return (
     <ScaleFade initialScale={0.9} in={true}>
-      <Alert {...rest} ref={ref}>
+      <Alert {...rest} ref={ref} tabIndex={-1}>
         {hasIcon && <AlertIcon />}
         {title && <AlertTitle>{title}</AlertTitle>}
         {description && <AlertDescription>{description}</AlertDescription>}

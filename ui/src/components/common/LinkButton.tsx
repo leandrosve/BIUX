@@ -1,5 +1,4 @@
 import { Button, ButtonProps } from '@chakra-ui/react';
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 interface Props extends ButtonProps {
@@ -13,6 +12,6 @@ const LinkButton = ({ to, ...props }: Props) => {
       </Button>
     </Link>
   );
-};
+}
 
 export default LinkButton;
