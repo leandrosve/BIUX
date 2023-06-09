@@ -14,10 +14,11 @@ const ResponsiveCard = ({ defaultWidth = 700, defaultHeight = 650, ...props }: P
       rounded={[0, 40]}
       minW={['100%', '100%', defaultWidth]}
       minHeight={['calc(100vh - 110px)', defaultHeight]}
-      alignSelf='center'
+      alignSelf={{ base: 'center', md: 'auto' }}
       display='flex'
-      m={[0, 5]}
-      paddingTop={[0, 6]}
+      marginX={[0, 5]}
+      marginTop={0}
+      paddingTop={6}
       position='relative'
       flexDirection='column'
       maxWidth='100vw'

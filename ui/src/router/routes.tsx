@@ -22,7 +22,7 @@ const routes = [
   {
     path: '/config',
     type: 'private',
-    title: 'Configuracion',
+    title: 'Configuración',
     element: <ConfigPage />,
   },
   {

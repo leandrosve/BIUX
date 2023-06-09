@@ -5,6 +5,7 @@ import { ReactNode, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './sidebar/Sidebar';
 import { SkipNavContent, SkipNavLink } from '@chakra-ui/skip-nav';
+import AutoBreadcrumbs from './AutoBreadcrumbs';
 
 interface Props {
   children?: ReactNode;
@@ -24,9 +25,10 @@ const PrivateLayout = ({ children }: Props) => {
           tabIndex={-1}
           grow={1}
           alignSelf='stretch'
+          direction='column'
           paddingBottom={30}
           maxWidth='100%'
-          justifyContent={{ base: 'center', md: 'start' }}
+          alignItems='start'
           as='main'
         >
           <SkipNavContent id='contenido' />

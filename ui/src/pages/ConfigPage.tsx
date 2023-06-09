@@ -1,28 +1,12 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  Button,
-  Card,
-  Flex,
-  FormControl,
-  FormLabel,
-  Heading,
-  Icon,
-  Select,
-  Stack,
-  Text,
-  useColorMode,
-  useToast,
-} from '@chakra-ui/react';
+import { Button, Card, Flex, FormControl, FormLabel, Heading, Icon, Select, Stack, Text, useColorMode, useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import AccesibilityService, { AccesibilitySettings } from '../services/AccesibilityService';
 import ButtonSelect, { ButtonSelectItem } from '../components/common/forms/ButtonSelect';
 import ColorPicker from '../components/common/forms/ColorPicker';
 import { MoonIcon, SunIcon, UndoIcon } from '../components/common/Icons';
 import AlertToast from '../components/common/alert-toast/AlertToast';
-import { ChevronRightIcon } from '@chakra-ui/icons';
 import ResponsiveCard from '../components/common/ResponsiveCard';
+import AutoBreadcrumbs from '../layout/AutoBreadcrumbs';
 
 const ConfigPage = () => {
   const [fontFamily, setFontFamily] = useState<string>(AccesibilityService.getLocalSettings().fontFamily);
@@ -86,17 +70,8 @@ const ConfigPage = () => {
   }, []);
 
   return (
-    <Flex direction='column' padding={{ md: 5, sm: 0 }}>
-      <Breadcrumb separator={<ChevronRightIcon />} padding={[3, 0]}>
-        <BreadcrumbItem>
-          <BreadcrumbLink href='www.google.com'>Inicio</BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <BreadcrumbLink isCurrentPage href='#'>
-            Configuracion
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-      </Breadcrumb>
+    <>
+      <AutoBreadcrumbs />
       <ResponsiveCard defaultWidth={500}>
         <form onSubmit={handleSave}>
           <Stack align='stretch' gap={3}>
@@ -178,7 +153,7 @@ const ConfigPage = () => {
           </Stack>
         </form>
       </ResponsiveCard>
-    </Flex>
+    </>
   );
 };
 
