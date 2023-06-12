@@ -1,3 +1,10 @@
+# You have to have a .env file with the following attributes
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=root
+DB_PASSWORD=1234
+DB_DATABASE=db_biux
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
