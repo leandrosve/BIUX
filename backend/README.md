@@ -1,13 +1,13 @@
 # You have to have a .env file with the following attributes
-DB_HOST=localhost
-DB_PORT=5432
-DB_USER=root
-DB_PASSWORD=1234
-DB_DATABASE=db_biux
+* DB_HOST=localhost
+* DB_PORT=5432
+* DB_USER=root
+* DB_PASSWORD=1234
+* DB_DATABASE=db_biux
 
-#Auth
-HASH_SALT=15
-JWT_SECRET=HOLA_mundo123
+### Auth
+* HASH_SALT=15
+* JWT_SECRET=HOLA_mundo123
 
 # para generar migraciones:
  en los archivos mode.entity.ts => cambiar en los imports a la ruta de src a ../../
