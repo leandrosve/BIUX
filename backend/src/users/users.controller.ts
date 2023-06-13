@@ -1,15 +1,19 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { UserDTO } from './dto/user.dto';
 import { UserUpdateDTO } from './dto/user.update.dto';
 import { StudentIntoRoutineDTO } from './dto/studentIntoRoutine.dto';
+import { PublicAccess } from 'src/auth/decorators/public.decorator';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
 @ApiTags('Users')
 @Controller('users')
+@UseGuards(AuthGuard)
 export class UsersController {
   constructor(private readonly usersService:UsersService){}
 
+  @PublicAccess()
   @Get()
   public async users(){
     return await this.usersService.findUsers();
