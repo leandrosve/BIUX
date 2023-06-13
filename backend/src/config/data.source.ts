@@ -13,18 +13,16 @@ ConfigModule.forRoot({
 export const DataSourceConfig:DataSourceOptions={
   type: 'postgres',
   host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
+  port: (process.env.DB_PORT),
   username:process.env.DB_USER,
   password: String(process.env.DB_PASSWORD) || '',
   database: process.env.DB_DATABASE,
-  entities: [UsersEntity,__dirname + '/../**/**/*.entity{.ts,.js}'],
+  entities: [__dirname + '/../**/**/*.entity{.ts,.js}'],
   migrations: [__dirname + '/../migrations/*{.ts,.js}'],
-  synchronize: false,
-  migrationsRun: true,
+  synchronize: true,
+  migrationsRun: false,
   logging: false,
-  namingStrategy: new SnakeNamingStrategy(),
-  migrationsTableName: 'migrations',
-
+ // namingStrategy: new SnakeNamingStrategy(),
 }
 
 export const AppDS= new DataSource(DataSourceConfig)

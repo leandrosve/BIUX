@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany, OneToMany } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { IsEmail, IsNotEmpty } from "class-validator";
 import { BaseEntity } from "../../config/base.entity";
 import { IUser } from "../../interfaces/user.interface";
@@ -8,7 +8,20 @@ import { RoutineAssignmentEntity } from "../../users/entities/RoutineAssignmentE
 import { Exclude } from "class-transformer";
 
 @Entity({name:'users'})
-export class UsersEntity extends BaseEntity implements IUser{
+export class UsersEntity  implements IUser{
+    @PrimaryGeneratedColumn('uuid')
+    id:string;
+  
+    @CreateDateColumn({
+      type:'timestamp',
+      name:'created_at'
+    })
+    createdAt:Date;
+    @UpdateDateColumn({
+      type:'timestamp',
+      name:'updated_at'
+    })
+    updatedAt:Date; 
     
     @Column()
     first_name: string;

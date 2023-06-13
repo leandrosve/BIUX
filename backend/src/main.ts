@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import 'dotenv/config'
+import { CORS } from './constants/cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,16 +17,17 @@ async function bootstrap() {
     }),
   );
   const reflector = app.get(Reflector);
-
   app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
-    const config = new DocumentBuilder()
-    .setTitle('BIUX')
-    .setDescription('API')
+
+
+  app.enableCors(CORS);
+  app.setGlobalPrefix('api');
+  const config = new DocumentBuilder()
+    .setTitle('BIUX API')
+    .setDescription('Aplicacion backend')
     .setVersion('1.0')
-    .addTag('')
     .build();
 
-    
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
   
