@@ -1,4 +1,4 @@
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty, IsOptional } from "class-validator";
 import { BaseEntity } from "../../config/base.entity";
 import { IRoutine } from "../../interfaces/routine.interface";
 import { RoutineAssignmentEntity } from "../../users/entities/RoutineAssignmentEntity.entity";
@@ -13,6 +13,7 @@ export class RoutinesEntity extends BaseEntity implements IRoutine{
   name: string;
 
   @Column()
+  @IsOptional()
   description: string;
 
 
