@@ -7,6 +7,7 @@ import { ErrorManager } from 'src/utils/error.manager';
 import { IResponse } from 'src/utils/responseAPI';
 import { RoutineAssignmentEntity } from './entities/RoutineAssignmentEntity.entity';
 import { StudentIntoRoutineDTO } from './dto/studentIntoRoutine.dto';
+import { RegisterUserDTO } from 'src/auth/dto/register.dto';
 
 @Injectable()
 export class UsersService {
@@ -39,7 +40,7 @@ export class UsersService {
       }
     }
 
-    public async findUsersBy(id:string):Promise<IResponse<UsersEntity[]>>{
+    public async findUserById(id:string):Promise<UsersEntity>{
       try {
         const user: UsersEntity = await this.userRepository
           .createQueryBuilder('user')
@@ -52,11 +53,7 @@ export class UsersService {
             message: 'No se encontro resultado',
           });
         }
-        return  {
-          statusCode:200,
-          message:'Se encontro el usuario',
-          data:[user]
-        } 
+        return  user 
       } catch (error) {
         throw ErrorManager.createSignatureError(error.message);
       }
@@ -122,5 +119,20 @@ export class UsersService {
     public async findByEmail(email: string) {
       return await this.userRepository.findOne({ where:{email:email} });
     }
+
+    public async findBy({ key, value }: { key: keyof RegisterUserDTO; value: any }) {
+      try {
+        const user: UsersEntity = await this.userRepository
+          .createQueryBuilder('user')
+          .addSelect('user.password')
+          .where({ [key]: value })
+          .getOne();
+  
+        return user;
+      } catch (error) {
+        throw ErrorManager.createSignatureError(error.message);
+      }
+    }
+  
 
 }

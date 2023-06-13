@@ -28,7 +28,7 @@ export class UsersController {
 
   @Get(':id')
   public async findUserById(@Param('id', new ParseUUIDPipe()) id: string) {
-    return await this.usersService.findUsersBy(id);
+    return await this.usersService.findUserById(id);
   }
   @Delete(':id')
   public async deleteUser(@Param('id', new ParseUUIDPipe()) id: string) {

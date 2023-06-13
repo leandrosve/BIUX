@@ -1,7 +1,7 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import 'dotenv/config'
 
 async function bootstrap() {
@@ -15,6 +15,9 @@ async function bootstrap() {
       forbidUnknownValues: true,
     }),
   );
+  const reflector = app.get(Reflector);
+
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
     const config = new DocumentBuilder()
     .setTitle('BIUX')
     .setDescription('API')

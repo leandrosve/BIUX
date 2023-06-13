@@ -5,6 +5,10 @@ DB_USER=root
 DB_PASSWORD=1234
 DB_DATABASE=db_biux
 
+#Auth
+HASH_SALT=15
+JWT_SECRET=HOLA_mundo123
+
 # para generar migraciones:
  en los archivos mode.entity.ts => cambiar en los imports a la ruta de src a ../../
  npm run m:gen  -- ./src/migrations/name-migration
