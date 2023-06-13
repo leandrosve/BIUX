@@ -1,39 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UsersEntity } from './users.entity';
+import { UsersEntity } from './entities/users.entity';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
-import { UserDTO } from './dto/user.dto';
 import { UserUpdateDTO } from './dto/user.update.dto';
 import { ErrorManager } from 'src/utils/error.manager';
 import { IResponse } from 'src/utils/responseAPI';
+import { RoutineAssignmentEntity } from './entities/RoutineAssignmentEntity.entity';
+import { StudentIntoRoutineDTO } from './dto/studentIntoRoutine.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UsersEntity)
-    private readonly userRepository: Repository<UsersEntity>
-    ){}
+    private readonly userRepository: Repository<UsersEntity>,
+    @InjectRepository(RoutineAssignmentEntity)
+    private readonly routineAssigEntity: Repository<RoutineAssignmentEntity>
+    ){
 
-    public async createdUser(body:UserDTO):Promise<IResponse<UsersEntity[]>>{
-      try {
-
-        const user= await this.userRepository.save(body);
-        if(user){
-          return {
-            statusCode:201,
-            message:'se creo el usuario correctamente',
-            data:[user]
-          } as IResponse<UsersEntity[]>
-        }
-
-        throw new ErrorManager({
-          type:'BAD_REQUEST',
-          message: 'No se pudo crear el usuario'
-        })
-      } catch (error) {
-        throw ErrorManager.createSignatureError(error.message);
-      }
     }
+
 
     public async findUsers():Promise<IResponse<UsersEntity[]>>{
       try {
@@ -48,7 +33,7 @@ export class UsersService {
           statusCode:200,
           message:'Listado de usuarios',
           data:result
-        } as IResponse<UsersEntity[]>
+        } 
       } catch (error) {
         throw new Error(error)
       }
@@ -59,6 +44,7 @@ export class UsersService {
         const user: UsersEntity = await this.userRepository
           .createQueryBuilder('user')
           .where({ id })
+          .leftJoinAndSelect('user.routines_created','routines_created')
           .getOne();
         if (!user) {
           throw new ErrorManager({
@@ -70,7 +56,7 @@ export class UsersService {
           statusCode:200,
           message:'Se encontro el usuario',
           data:[user]
-        } as IResponse<UsersEntity[]>
+        } 
       } catch (error) {
         throw ErrorManager.createSignatureError(error.message);
       }
@@ -88,7 +74,7 @@ export class UsersService {
         return  {
           statusCode:200,
           message:'Se acutualizo el usuario',
-        } as IResponse<UsersEntity[]>
+        } 
       } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
       }
@@ -106,6 +92,35 @@ export class UsersService {
       } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
       }
+    }
+
+    async getInstructorRoutines(userId: string) {
+      const user = await this.userRepository.findOne({where:{id:userId}, relations: ['routines'] });
+      if (user && user.role === 'INSTRUCTOR') {
+        return user.routines_created;
+      }
+      return [];
+    }
+  
+    async getAssignedRoutines(userId: string) {
+      const user = await this.userRepository.findOne({where:{id:userId} ,relations: ['routineAssignments', 'routineAssignments.routine'] });
+      if (user && user.role === 'STUDENT') {
+        return user.routineAssignments.map(assignment => assignment.routine);
+      }
+      return [];
+    }
+
+    public async addStudentIntoRoutine(body:StudentIntoRoutineDTO){
+
+      try {
+        return await this.routineAssigEntity.save(body)
+      } catch (error) {
+        throw ErrorManager.createSignatureError(error.message);
+
+      }
+    }
+    public async findByEmail(email: string) {
+      return await this.userRepository.findOne({ where:{email:email} });
     }
 
 }

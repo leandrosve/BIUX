@@ -6,8 +6,15 @@ import 'dotenv/config'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
-
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      skipMissingProperties: false,
+      forbidUnknownValues: true,
+    }),
+  );
     const config = new DocumentBuilder()
     .setTitle('BIUX')
     .setDescription('API')

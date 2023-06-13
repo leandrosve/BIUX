@@ -3,6 +3,7 @@ import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { UserDTO } from './dto/user.dto';
 import { UserUpdateDTO } from './dto/user.update.dto';
+import { StudentIntoRoutineDTO } from './dto/studentIntoRoutine.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -13,12 +14,6 @@ export class UsersController {
   public async users(){
     return await this.usersService.findUsers();
   }
-
-  @Post('register')
-  public async registerUser(@Body() body:UserDTO){
-    return await this.usersService.createdUser(body)
-  }
-
 
   @ApiParam({
     name: 'id',
@@ -38,5 +33,11 @@ export class UsersController {
   @Delete(':id')
   public async deleteUser(@Param('id', new ParseUUIDPipe()) id: string) {
     return await this.usersService.deleteUser(id);
+  }
+  
+  @Post('studentIntoRoutine')
+  public async addStudentIntoRoutine(@Body() body :StudentIntoRoutineDTO){
+    console.log(body)
+    return 200
   }
 }
