@@ -6,6 +6,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Heading,
+  Icon,
   Input,
   Step,
   StepDescription,
@@ -24,7 +25,8 @@ import RoutineFormSegmentsStep from './RoutineFormSegmentsStep';
 import { useState, useMemo } from 'react';
 import Routine, { RoutineSegment } from '../../model/routines/Routine';
 import ResponsiveCard from '../../components/common/ResponsiveCard';
-import AutoBreadcrumbs from '../../layout/AutoBreadcrumbs';
+import LinkButton from '../../components/common/LinkButton';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 
 const RoutineForm = () => {
   const { activeStep, goToNext, goToPrevious } = useSteps({
@@ -46,8 +48,6 @@ const RoutineForm = () => {
 
   return (
     <>
-      <AutoBreadcrumbs />
-
       <ResponsiveCard defaultWidth={710} defaultHeight={650}>
         <RutineStepper index={activeStep} />
         <Heading mt={2} as='h1'>
@@ -86,14 +86,17 @@ const Step1 = (props: { initialData: Routine; onSubmit: (name: string, descripti
             <Input value={name} type='text' boxShadow='sm' placeholder='Nombre' onChange={(e) => setName(e.target.value)} />
             {name.length > 120 && <FormErrorMessage>La cantidad máxima de caracteres es 120</FormErrorMessage>}
           </FormControl>
-          <FormControl isInvalid={description.length > 500}>
+          <FormControl isInvalid={description.length > 500} display='flex' flexDirection='column' flexGrow={1}>
             <FormLabel mt={2}>Descripción</FormLabel>
-            <Textarea value={description} boxShadow='sm' placeholder='Descripcion' resize='none' onChange={(e) => setDescription(e.target.value)} />
+            <Textarea value={description} boxShadow='sm' flexGrow={1} placeholder='Descripcion' resize='none' onChange={(e) => setDescription(e.target.value)} />
             {description.length > 500 && <FormErrorMessage>La cantidad máxima de caracteres es 500</FormErrorMessage>}
           </FormControl>
         </Flex>
 
-        <Flex justifyContent='end'>
+        <Flex justifyContent='space-between' mt={5}>
+          <LinkButton to='/rutinas' type='submit' leftIcon={<ArrowBackIcon />}>
+            Volver al listado
+          </LinkButton>
           <Tooltip
             placement='left'
             hasArrow
@@ -102,7 +105,7 @@ const Step1 = (props: { initialData: Routine; onSubmit: (name: string, descripti
             aria-label='A tooltip'
             openDelay={300}
           >
-            <Button colorScheme='primary' mt={5} type='submit' isDisabled={disableSubmit}>
+            <Button colorScheme='primary' type='submit' isDisabled={disableSubmit}>
               Siguiente
             </Button>
           </Tooltip>

@@ -74,7 +74,7 @@ const RoutineFormSegmentsStep = ({ routine, onPrevious }: Props) => {
         Planificación
       </Heading>
 
-      <Flex gap='10px' direction='column' alignItems='stretch' grow={1} mt={3}>
+      <Flex gap='10px' direction='column' alignItems='stretch' grow={1} mt={3} >
         <DraggableList
           onDragEnd={handleOnDragEnd}
           onOrderChange={handleOrderChange}
@@ -156,7 +156,7 @@ const DraggableList = ({ onDragEnd, onOrderChange, onRemove, onEdit, segments }:
 
       <Droppable droppableId='routine-items'>
         {(ul) => (
-          <List className='routine-items' {...ul.droppableProps} ref={ul.innerRef} maxHeight='60%' overflowX='hidden' overflowY='auto'>
+          <List className='routine-items' {...ul.droppableProps} ref={ul.innerRef} maxHeight='50vh' overflowX='hidden' overflowY='auto'>
             {segments.map((s, i) => (
               <Draggable key={s.id} draggableId={s.id} index={i} isDragDisabled={orderMethod == 'buttons'}>
                 {(li) => {

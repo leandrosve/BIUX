@@ -1,10 +1,9 @@
-import { createBrowserRouter } from 'react-router-dom';
 import LandingPage from '../pages/landing-page/LandingPage';
 import SignupPage from '../pages/SignupPage';
 import LoginPage from '../pages/LoginPage';
 import { lazy } from 'react';
 
-const RoutineForm = lazy(() => import('../features/routines/RoutineForm'));
+const RoutinesPage = lazy(() => import('../features/routines/RoutinesPage'));
 const ConfigPage = lazy(() => import('../pages/ConfigPage'));
 const NotFoundPage = lazy(() => import('../pages/not-found-page/NotFoundPage'));
 
@@ -29,8 +28,9 @@ const routes = [
     path: '/rutinas',
     type: 'private',
     title: 'Rutinas',
-
-    element: <RoutineForm />,
+    hasSubroutes: true,
+    subroutes: [{ path: 'crear', title: 'Nueva Rutina' }],
+    element: <RoutinesPage />,
   },
   {
     type: 'guest',

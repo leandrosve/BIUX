@@ -1,12 +1,18 @@
-import { matchRoutes, useLocation } from 'react-router-dom';
-import { BRoutes } from '../router/routes';
+import { useLocation } from 'react-router-dom';
+import routes from '../router/routes';
+import { useMemo } from 'react';
 
 const useCurrentPath = () => {
   const location = useLocation();
-  const rou = Object.values(BRoutes).map(r => ({path: r as string}));
-  const match = matchRoutes(rou, location);
 
-  return match?.[0].route;
+  const item = useMemo(() => {
+    const pathname = location.pathname;
+    const route = routes.find((r) => r.path === pathname || pathname.includes(`${r.path}/`));
+
+    return { path: route?.path, title: route?.title };
+  }, [location]);
+
+  return item;
 };
 
 export default useCurrentPath;

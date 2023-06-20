@@ -61,7 +61,7 @@ const SidebarContent = ({ currentPath, onClose }: SidebarContentProps) => {
   return (
     <List display='flex' flexDirection='column' flexGrow={1} gap={1}>
       {items.map((item) => {
-        const selected = !!(currentPath && currentPath === item.path);
+        const selected = !!(currentPath && (currentPath === item.path || currentPath.startsWith(item.path + "/")));
         return (
           <ListItem key={item.label} aria-current={selected}>
             <SidebarItem {...item} selected={selected} onLinkClick={handleClickLink} />
@@ -77,7 +77,7 @@ const SidebarDrawer = (props: SidebarDrawerProps) => {
   return (
     <Drawer isOpen={!!props.open} onClose={props.onClose} placement='left'>
       <DrawerOverlay />
-      <DrawerContent background='bg.300' padding='10px' maxWidth='300px'>
+      <DrawerContent background='bg.300' padding='10px' maxWidth='300px' overflowY='auto' maxHeight={'100vh'}>
         <DrawerCloseButton />
         <Flex alignItems='flex-end' gap={3} paddingY={5}>
           <Icon as={BrandIcon} height={'40px'} width={'40px'} />

@@ -45,7 +45,7 @@ const GuestNavbar = () => {
     return <GuestNavbarDropdown pathname={location.pathname} />;
   };
   return (
-    <Flex align='center' justify='space-between' alignSelf='stretch' paddingX={5} paddingY={2} background='transparent'>
+    <Flex as='span' align='center' justify='space-between' alignSelf='stretch' paddingX={5} paddingY={2} background='transparent'>
       <Link to={BRoutes.HOME}>
         <Flex alignItems='flex-end' gap={3}>
           <Icon as={BrandIcon} height={'40px'} width={'40px'} />

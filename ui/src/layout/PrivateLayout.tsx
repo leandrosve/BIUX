@@ -5,7 +5,6 @@ import { ReactNode, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './sidebar/Sidebar';
 import { SkipNavContent, SkipNavLink } from '@chakra-ui/skip-nav';
-import AutoBreadcrumbs from './AutoBreadcrumbs';
 
 interface Props {
   children?: ReactNode;
@@ -14,7 +13,7 @@ const PrivateLayout = ({ children }: Props) => {
   const [displaySidebar, setDisplaySidebar] = useState(false);
   return (
     <Flex grow={1} align='center' justify='space-between' direction={'column'} maxWidth='100%'>
-      <SkipNavLink id='contenido'>Ir al contenido</SkipNavLink>
+      <SkipNavLink id='contenido' zIndex={1000}>Ir al contenido</SkipNavLink>
 
       <Navbar hasSidebar onOpenSidebar={() => setDisplaySidebar(true)} />
 
@@ -31,6 +30,7 @@ const PrivateLayout = ({ children }: Props) => {
           alignItems='start'
           as='main'
         >
+          <Flex id='breadcrumb-container'/>
           <SkipNavContent id='contenido' />
           {children} <Outlet />
         </Flex>

@@ -99,7 +99,7 @@ const ConfigPage = () => {
 
             <FormControl>
               <FormLabel fontWeight={'semibold'}>Tipo de fuente</FormLabel>
-              <Select value={fontFamily} onChange={(e) => setFontFamily(e.target.value)}>
+              <Select value={fontFamily} onChange={(e) => setFontFamily(e.target.value)} autoComplete='on'>
                 <option label='Nunito (Predeterminado)' value='Nunito' />
                 <option label='Arial' value='Arial' />
                 <option label='Raleway' value='Raleway' />

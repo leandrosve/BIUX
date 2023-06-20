@@ -14,7 +14,7 @@ const BRouter = () => {
             const key = `${route.type}-${route.path}`;
             return (
               <Route
-                path={route.path}
+                path={`${route.path}${route.hasSubroutes ? '/*' : ''}`}
                 key={key}
                 element={<RouteProtection type={route.type} element={<Suspense fallback={<Fallback />}>{route.element}</Suspense>} />}
               />
