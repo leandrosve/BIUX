@@ -68,12 +68,12 @@ export class AuthService {
 
     const payload: PayloadToken = {
       role: getUser.role,
-      sub: getUser.id,
+      sub: (getUser.id),
     };
 
     return {
       accessToken: this.signJWT({
-        payload,
+        payload:{...payload, sub:String(payload.sub)},
         secret: process.env.JWT_SECRET,
         expires: '4h',
       }),

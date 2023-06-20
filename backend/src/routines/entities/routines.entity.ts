@@ -6,21 +6,7 @@ import { UsersEntity } from "../../users/entities/users.entity";
 import {  Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: 'routines' })
-export class RoutinesEntity implements IRoutine{
-  @PrimaryGeneratedColumn('uuid')
-  id:string;
-
-  @CreateDateColumn({
-    type:'timestamp',
-    name:'created_at'
-  })
-  createdAt:Date;
-  @UpdateDateColumn({
-    type:'timestamp',
-    name:'updated_at'
-  })
-  updatedAt:Date;
-
+export class RoutinesEntity extends BaseEntity implements IRoutine{
 
   @IsNotEmpty()
   @Column()

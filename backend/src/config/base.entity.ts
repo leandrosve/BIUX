@@ -1,8 +1,8 @@
 import { Column, CreateDateColumn, Index, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 export abstract class BaseEntity{
-  @PrimaryGeneratedColumn('uuid')
-  id:string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @CreateDateColumn({
     type:'timestamp',

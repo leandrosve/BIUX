@@ -12,6 +12,7 @@
 # para generar migraciones:
  en los archivos mode.entity.ts => cambiar en los imports a la ruta de src a ../../
  npm run m:gen  -- ./src/migrations/name-migration
+ npm run m:gen  -- ubicacion-de-los-archivos/name-migration
 
  # Para correr las migraciones
  npm run m:run

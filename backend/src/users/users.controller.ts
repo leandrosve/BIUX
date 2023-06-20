@@ -24,18 +24,18 @@ export class UsersController {
   })
   @Patch(':id')
   public async updateUser(
-    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param('id') id: number,
     @Body() body: UserUpdateDTO,
   ) {
     return await this.usersService.updateUser(body, id);
   }
 
   @Get(':id')
-  public async findUserById(@Param('id', new ParseUUIDPipe()) id: string) {
+  public async findUserById(@Param('id') id: number) {
     return await this.usersService.findUserById(id);
   }
   @Delete(':id')
-  public async deleteUser(@Param('id', new ParseUUIDPipe()) id: string) {
+  public async deleteUser(@Param('id') id: number) {
     return await this.usersService.deleteUser(id);
   }
   

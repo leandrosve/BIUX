@@ -3,7 +3,13 @@ import * as jwt from 'jsonwebtoken';
 
 export const useAuthToken = (token: string): IUseToken | string => {
   try {
-    const decode = jwt.decode(token) as IAuthTokenResult;
+    const authToken  = jwt.decode(token)  as jwt.JwtPayload;
+    const decode:IAuthTokenResult= {
+      role: (authToken.role),
+      sub:  Number(authToken.sub),
+      iat:  authToken.iat,
+      exp: authToken.exp
+    }
 
     const currentDate = new Date();
     const expiresDate = new Date(decode.exp);

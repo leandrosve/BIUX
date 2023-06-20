@@ -8,20 +8,8 @@ import { RoutineAssignmentEntity } from "../../users/entities/RoutineAssignmentE
 import { Exclude } from "class-transformer";
 
 @Entity({name:'users'})
-export class UsersEntity  implements IUser{
-    @PrimaryGeneratedColumn('uuid')
-    id:string;
-  
-    @CreateDateColumn({
-      type:'timestamp',
-      name:'created_at'
-    })
-    createdAt:Date;
-    @UpdateDateColumn({
-      type:'timestamp',
-      name:'updated_at'
-    })
-    updatedAt:Date; 
+export class UsersEntity extends BaseEntity  implements IUser{
+
     
     @Column()
     first_name: string;

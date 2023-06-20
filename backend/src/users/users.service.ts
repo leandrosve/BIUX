@@ -40,7 +40,7 @@ export class UsersService {
       }
     }
 
-    public async findUserById(id:string):Promise<UsersEntity>{
+    public async findUserById(id:number):Promise<UsersEntity>{
       try {
         const user: UsersEntity = await this.userRepository
           .createQueryBuilder('user')
@@ -59,7 +59,7 @@ export class UsersService {
       }
     }
 
-    public async updateUser(body:UserUpdateDTO,id:string):Promise<IResponse<UsersEntity[]>>{
+    public async updateUser(body:UserUpdateDTO,id:number):Promise<IResponse<void>>{
       try {
         const user:UpdateResult=await this.userRepository.update(id,body)
         if(user.affected==0){
@@ -77,7 +77,7 @@ export class UsersService {
       }
     }
 
-    public async deleteUser(id:string):Promise<DeleteResult | undefined>{
+    public async deleteUser(id:number):Promise<DeleteResult | undefined>{
       try {
         const user:DeleteResult=await this.userRepository.delete(id)
         if(user.affected==0){
@@ -91,7 +91,7 @@ export class UsersService {
       }
     }
 
-    async getInstructorRoutines(userId: string) {
+    async getInstructorRoutines(userId: number) {
       const user = await this.userRepository.findOne({where:{id:userId}, relations: ['routines'] });
       if (user && user.role === 'INSTRUCTOR') {
         return user.routines_created;
@@ -99,7 +99,7 @@ export class UsersService {
       return [];
     }
   
-    async getAssignedRoutines(userId: string) {
+    async getAssignedRoutines(userId: number) {
       const user = await this.userRepository.findOne({where:{id:userId} ,relations: ['routineAssignments', 'routineAssignments.routine'] });
       if (user && user.role === 'STUDENT') {
         return user.routineAssignments.map(assignment => assignment.routine);

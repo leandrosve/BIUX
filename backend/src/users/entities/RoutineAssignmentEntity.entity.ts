@@ -1,12 +1,11 @@
 import { Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UsersEntity } from "../../users/entities/users.entity";
 import { RoutinesEntity } from "../../routines/entities/routines.entity";
+import { BaseEntity } from '../../config/base.entity';
 
 
 @Entity({name:'rutines_assignment'})
-export class RoutineAssignmentEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id:string;
+export class RoutineAssignmentEntity extends BaseEntity {
 
 
   //una rutina puede ser asignado muchas veces
