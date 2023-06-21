@@ -1,6 +1,6 @@
+import { User } from '../user/User';
+
 export interface SessionData {
-  email: string;
-  name: string;
-  role: string;
-  userId: number;
+  authToken: string;
+  user: User;
 }

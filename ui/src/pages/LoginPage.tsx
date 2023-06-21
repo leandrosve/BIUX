@@ -22,6 +22,7 @@ const LoginPage = () => {
     e.preventDefault();
     setSubmiting(true);
     const res = await AuthService.login({ email, password });
+    console.log("RESSS", res);
     setSubmiting(false);
     if (res.hasError) {
       setError('El email y la contraseña no coinciden');

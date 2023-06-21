@@ -74,6 +74,7 @@ const SidebarContent = ({ currentPath, onClose }: SidebarContentProps) => {
 
 const SidebarDrawer = (props: SidebarDrawerProps) => {
   const { session } = useContext(SessionContext);
+  const name = session?.user.firstName + " " + session?.user.lastName;
   return (
     <Drawer isOpen={!!props.open} onClose={props.onClose} placement='left'>
       <DrawerOverlay />
@@ -97,8 +98,8 @@ const SidebarDrawer = (props: SidebarDrawerProps) => {
           <Card padding={2} gap={0} _dark={{ background: 'bg.400' }}>
             <Flex alignItems='center' justifyContent='space-between'>
               <Flex alignItems='center' gap={3}>
-                <Avatar name={session?.name} size='sm' bg='teal.500' color='white' />
-                {session?.name}
+                <Avatar name={name} size='sm' bg='teal.500' color='white' />
+                {name}
               </Flex>
               <Link to={BRoutes.PROFILE}>
                 <IconButton as='span' variant='ghost' icon={<EditIcon />} aria-label='Editar Perfil' />
