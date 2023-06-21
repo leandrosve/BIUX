@@ -1,8 +1,7 @@
-import { ConfigModule, ConfigService } from "@nestjs/config";
+import { ConfigModule } from "@nestjs/config";
 import { DataSource, DataSourceOptions } from "typeorm";
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
-import 'dotenv/config'
-import { UsersEntity } from "src/users/entities/users.entity";
+import 'dotenv/config';
 
 
 ConfigModule.forRoot({
@@ -22,7 +21,7 @@ export const DataSourceConfig:DataSourceOptions={
   synchronize: Boolean(process.env.DB_SYNCHRONIZE) || false,
   migrationsRun: false,
   logging: false,
- // namingStrategy: new SnakeNamingStrategy(),
+  namingStrategy: new SnakeNamingStrategy(),
 }
 
 export const AppDS= new DataSource(DataSourceConfig)

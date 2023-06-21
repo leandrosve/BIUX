@@ -24,6 +24,10 @@ export class AuthGuard implements CanActivate {
       PUBLIC_KEY,
       context.getHandler()
     )
+    const request = context.switchToHttp().getRequest();
+    const idUserParams = request.params.id; // Obtener el valor del parámetro 'id' del request
+
+    //console.log("ID  DEL USER: ", idUserParams)
     if(isPublic) return true;
 
     //para leer el header de la funcion
@@ -46,7 +50,15 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('Token expired');
     }
 
+
     const { sub } = manageToken;
+    //si el token de la persona es el mismo que se pasa por la url
+    if(idUserParams){
+      if(sub!=Number(idUserParams)){
+        throw new UnauthorizedException('Invalid user');
+      }
+    }
+
     const user = await this.userService.findUserById(sub);
     if(!user){
       throw new UnauthorizedException('Invalid user');
