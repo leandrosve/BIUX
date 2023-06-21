@@ -77,10 +77,10 @@ const NavbarDropdown = () => {
         aria-label='User Options'
         variant='ghost'
         rightIcon={<ChevronDownIcon />}
-        children={<Avatar name={session?.name} size='sm' bg='teal.700' color='white' />}
+        children={<Avatar name={session?.user.firstName + " " + session?.user.lastName} size='sm' bg='teal.700' color='white' />}
       />
       <MenuList minWidth={200} maxWidth={300}>
-        <MenuGroup title={session?.name}>
+        <MenuGroup title={session?.user.firstName + " " + session?.user.lastName}>
           <Link to={BRoutes.PROFILE}>
             <MenuItem justifyContent='space-between' gap={5}>
               Editar Perfil <Icon as={EditIcon} />
