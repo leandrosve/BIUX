@@ -6,12 +6,12 @@ export class UserDTO{
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  first_name: string;
+  firstName: string;
   
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  last_name: string;
+  lastName: string;
 
   @ApiProperty()
   @IsString()
