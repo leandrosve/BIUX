@@ -1,5 +1,5 @@
 import { InfoOutlineIcon } from '@chakra-ui/icons';
-import { Collapse, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, InputProps } from '@chakra-ui/react';
+import { Collapse, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, InputProps } from '@chakra-ui/react';
 
 interface Props extends InputProps {
   label: string;
@@ -18,9 +18,11 @@ const TextField = ({ error, label, help, touched, ...props }: Props) => {
         </FormHelperText>
       )}
       <Collapse in={!!error && touched}>
-        <FormErrorMessage fontSize='sm' marginTop='3px' color='red.600' _dark={{ color: 'red.300' }}>
-          {error}
-        </FormErrorMessage>
+        <Flex minHeight={5}>
+          <FormErrorMessage fontSize='sm' marginTop='3px' color='red.600' _dark={{ color: 'red.300' }}>
+            {error}
+          </FormErrorMessage>
+        </Flex>
       </Collapse>
     </FormControl>
   );

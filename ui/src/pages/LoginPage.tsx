@@ -1,8 +1,8 @@
 import { Button, Card, Flex, FormControl, FormLabel, Heading, Icon, Input, Stack, Text, Tooltip } from '@chakra-ui/react';
 import { BrandIcon } from '../components/common/Icons';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { BRoutes } from '../router/routes';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import AuthService from '../services/api/AuthService';
 import BAlert from '../components/common/BAlert';
 import SessionService from '../services/SessionService';
@@ -14,23 +14,30 @@ const LoginPage = () => {
   const [submiting, setSubmiting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const navigate = useNavigate();
   const enableSubmit = useMemo(() => !!(email && password), [email, password]);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  
   const onSubmit = async (e: React.FormEvent) => {
     setError(null);
     e.preventDefault();
     setSubmiting(true);
     const res = await AuthService.login({ email, password });
-    console.log("RESSS", res);
-    setSubmiting(false);
     if (res.hasError) {
+      setSubmiting(false);
       setError('El email y la contraseña no coinciden');
       return;
     }
     SessionService.saveLocalSession(res.data);
     location.replace('/config');
   };
+
+  useEffect(() => {
+    if (searchParams.get('tokenExpired')) {
+      setError('La sesión ha expirado, por favor vuelve a iniciar sesión.');
+      setSearchParams('', { replace: true });
+    }
+  }, []);
 
   return (
     <Flex grow={1} align='center' justify='space-between' direction={'column'} className='dark'>

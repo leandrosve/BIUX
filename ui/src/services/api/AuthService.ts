@@ -25,7 +25,7 @@ export default class AuthService extends APIService {
 
   static async login(data: LoginData): Promise<APIResponse<SessionData>> {
     if (USE_MOCKED_DATA) return this.mockLogin(data);
-    return this.post('/auth/login', data);
+    return this.post('/auth/login', data, { preventSignOut: true });
   }
 
   static async signUp(data: LoginData): Promise<APIResponse<null>> {
