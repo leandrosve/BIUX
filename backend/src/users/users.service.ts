@@ -21,7 +21,7 @@ export class UsersService {
     }
 
 
-    public async findUsers():Promise<IResponse<UsersEntity[]>>{
+    public async findUsers():Promise<UsersEntity[]>{
       try {
         const result=await this.userRepository
         .find({
@@ -30,11 +30,7 @@ export class UsersService {
           },
         });
 
-        return {
-          statusCode:200,
-          message:'Listado de usuarios',
-          data:result
-        } 
+        return result
       } catch (error) {
         throw new Error(error)
       }
@@ -58,7 +54,7 @@ export class UsersService {
       }
     }
 
-    public async updateUser(body:UserUpdateDTO,id:number):Promise<IResponse<void>>{
+    public async updateUser(body:UserUpdateDTO,id:number):Promise<IResponse<any>>{
       try {
         const user:UpdateResult=await this.userRepository.update(id,body)
         if(user.affected==0){
@@ -67,9 +63,11 @@ export class UsersService {
             message: 'No se pudo realizar la actualizacion'
           })
         }
+        const userObj=this.findUserById(id)
         return  {
           statusCode:200,
           message:'Se acutualizo el usuario',
+          data:userObj
         } 
       } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
