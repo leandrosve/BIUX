@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Patch, Post, UseGuards } from '@nestjs/common';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiParam, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { UserDTO } from './dto/user.dto';
 import { UserUpdateDTO } from './dto/user.update.dto';
@@ -22,6 +22,7 @@ export class UsersController {
   @ApiParam({
     name: 'id',
   })
+  @ApiHeader({name:'token'})
   @Patch(':id')
   public async updateUser(
     @Param('id') id: number,
@@ -30,14 +31,15 @@ export class UsersController {
     return await this.usersService.updateUser(body, id);
   }
 
+  @ApiParam({
+    name: 'id',
+  })
+  @ApiHeader({name:'token'})
   @Get(':id')
   public async findUserById(@Param('id') id: number) {
     return await this.usersService.findUserById(id);
   }
-  @Delete(':id')
-  public async deleteUser(@Param('id') id: number) {
-    return await this.usersService.deleteUser(id);
-  }
+
   
   @Post('studentIntoRoutine')
   public async addStudentIntoRoutine(@Body() body :StudentIntoRoutineDTO){
