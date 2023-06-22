@@ -32,27 +32,33 @@ export default class APIService {
   }
 
   // COMMON METHODS HERE
-  private static async doFetch<T>(method: string, path: string, params?: string, body?: any, options?:Options): Promise<APIResponse<T>> {
-   
+  private static async doFetch<T>(method: string, path: string, params?: string, body?: any, options?: Options): Promise<APIResponse<T>> {
     const headers: HeadersInit = new Headers();
     headers.set('Content-Type', 'application/json');
     if (this.token) headers.set('token', this.token);
 
     const url = `${this.BASE_URL}${path || ''}${params ? '?' + params : ''}`;
-    const res = await fetch(url, {
-      method: method,
-      headers: headers,
-      body: JSON.stringify(body),
-    });
-    const responseBody = await res.json();
-    if (res.ok) {
-      return { status: res.status, data: responseBody as T, hasError: false } as APISuccessfulResponse<T>;
+    try {
+      const res = await fetch(url, {
+        method: method,
+        headers: headers,
+        body: JSON.stringify(body),
+      });
+
+      const responseBody = await res.json();
+      if (res.ok) {
+        return { status: res.status, data: responseBody as T, hasError: false } as APISuccessfulResponse<T>;
+      }
+      console.log(res);
+      if (res.status == 401 && !options?.preventSignOut) {
+        SessionService.destroyLocalSession();
+        location.href = '/login?tokenExpired=true';
+      }
+      return { status: res.status, errorMessage: responseBody['message'], hasError: true } as APIErrorResponse<T>;
+    } catch (err) {
+      console.log(err);
+      return { status: 400, hasError: true };
     }
-    if (res.status == 401 && !options?.preventSignOut) {
-      SessionService.destroyLocalSession();
-      location.href = '/login?tokenExpired=true'
-    }
-    return { status: res.status, errorMessage: responseBody['message'], hasError: true } as APIErrorResponse<T>;
   }
 
   protected static get<T>(path: string, params?: string) {

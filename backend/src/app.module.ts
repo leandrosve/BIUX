@@ -7,6 +7,7 @@ import { DataSourceConfig } from './config/data.source';
 import { RoutinesModule } from './routines/routines.module';
 import { SegmentsModule } from './segments/segments.module';
 import 'dotenv/config'
+import { StatusModule } from './status/status.module';
 
 
 @Module({
@@ -23,7 +24,8 @@ import 'dotenv/config'
     UsersModule,
     AuthModule,
     RoutinesModule,
-    SegmentsModule],
+    SegmentsModule,
+    StatusModule],
   controllers: [],
   providers: [],
 })

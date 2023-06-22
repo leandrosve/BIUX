@@ -18,6 +18,7 @@ import { BRoutes } from '../../router/routes';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { CSSProperties } from 'react';
 import LinkButton from '../../components/common/LinkButton';
+import ToggleThemeButton from '../../components/common/ToggleThemeButton';
 
 interface IPropsGuestNavbarDropdown {
   pathname: string;
@@ -26,7 +27,6 @@ const STYLES: CSSProperties = {
   backgroundColor: 'var(--primary-400)',
 };
 const GuestNavbar = () => {
-  const { colorMode, toggleColorMode } = useColorMode();
   const [desktop] = useMediaQuery('(min-width: 992px)', { ssr: false, fallback: true });
   let location = useLocation();
 
@@ -56,20 +56,7 @@ const GuestNavbar = () => {
       </Link>
 
       <Flex gap={3}>
-        <Tooltip hasArrow label={`Cambiar a tema ${colorMode == 'light' ? 'oscuro' : 'claro'}`} aria-label='A tooltip'>
-          <IconButton
-            onClick={toggleColorMode}
-            variant='ghost'
-            colorScheme='primary'
-            borderRadius='50%'
-            padding='3px'
-            display='flex'
-            alignItems='center'
-            justifyContent='center'
-            aria-label='toggle color mode'
-            icon={<Icon as={colorMode == 'light' ? SunIcon : MoonIcon} />}
-          />
-        </Tooltip>
+        <ToggleThemeButton />
         {renderMenu()}
       </Flex>
     </Flex>
