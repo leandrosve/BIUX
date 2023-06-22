@@ -12,6 +12,7 @@ interface SignupData {
   password: string;
   firstName: string;
   lastName: string;
+  role?:string
 }
 
 const existingUserMock = [
@@ -28,14 +29,12 @@ export default class AuthService extends APIService {
     return this.post('/auth/login', data);
   }
 
-  static async signUp(data: LoginData): Promise<APIResponse<null>> {
+  static async signUp(data: SignupData): Promise<APIResponse<null>> {
     // MOCKED
     await this.delay(1000);
-    const user = existingUserMock.find((u) => data.email === u.email);
-    if (user) {
-      return { status: 200, data: null, hasError: false };
-    }
-    return { status: 400, errorMessage: 'El email ya se encuentra utilizado', hasError: true };
+    if (USE_MOCKED_DATA)  return { status: 200, data: null, hasError: false };
+    return this.post('/auth/register', data);
+    //return { status: 400, errorMessage: 'El email ya se encuentra utilizado', hasError: true };
   }
 
   static async mockLogin(data: LoginData): Promise<APIResponse<SessionData>> {

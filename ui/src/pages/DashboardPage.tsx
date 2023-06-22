@@ -34,10 +34,8 @@ const DashboardPage = () => {
                             
                         >
                           <Tag
-                           
-                            
+                          colorScheme='primary'
                             padding={2}
-                            
                             display='flex'
                             alignItems='center'
                             justifyContent='center'
