@@ -9,13 +9,12 @@ import { Exclude } from "class-transformer";
 
 @Entity({name:'users'})
 export class UsersEntity extends BaseEntity  implements IUser{
-
     
-    @Column()
-    first_name: string;
+    @Column({name:'first_name'})
+    firstName: string;
     
-    @Column()
-    last_name: string;
+    @Column({name:'last_name'})
+    lastName: string;
 
     
     @IsEmail()

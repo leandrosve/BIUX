@@ -6,12 +6,12 @@ export class UserUpdateDTO {
   @ApiProperty()
   @IsOptional()
   @IsString()
-  first_name: string;
+  firstName: string;
 
   @ApiProperty()
   @IsOptional()
   @IsString()
-  last_name: string;
+  lastName: string;
 
   @ApiProperty()
   @IsString()
