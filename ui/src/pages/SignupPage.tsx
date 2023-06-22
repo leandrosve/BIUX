@@ -4,18 +4,19 @@ import {
   Flex, Heading,
   Icon,
   Image, Skeleton,
-  Text, useMediaQuery
+  Text, useMediaQuery, useToast
 } from '@chakra-ui/react';
 import illustration from '../assets/illustrations/bike-cut-recollored.png';
 import { BrandIcon } from '../components/common/Icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BRoutes } from '../router/routes';
 import { useFormik } from 'formik';
 import signupSchema from '../validation/signupSchema';
 import TextField from '../components/common/forms/TextField';
 import AuthService from '../services/api/AuthService';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BAlert from '../components/common/BAlert';
+import AlertToast from '../components/common/alert-toast/AlertToast';
 
 type ID = 'firstName' | 'lastName' | 'email' | 'password' | 'passwordConfirmation';
 const fields: { label: string; help?: string; type?: string; id: ID }[] = [
@@ -44,23 +45,58 @@ const fields: { label: string; help?: string; type?: string; id: ID }[] = [
   },
 ];
 const SignupPage = () => {
+  const toast = useToast();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>();
+  const navigate = useNavigate();
 
   const [desktop] = useMediaQuery('(min-width: 992px)', { ssr: false, fallback: true });
+  
   const formik = useFormik({
     initialValues: signupSchema.initialValues,
     validationSchema: signupSchema.validationSchema,
     onSubmit: async (values) => {
       setIsSubmitting(true);
       setError(null);
-      const res = await AuthService.signUp(values);
-      if (res.hasError) {
-        setIsSubmitting(false);
-        setError(res.error?.message);
+      console.log(values)
+      const body={
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        password: values.password,
+        role:'INSTRUCTOR'
       }
+      const res = await AuthService.signUp(body);
+      if(res.status==201){
+        navigate("/login");
+        showUndoToast()
+      }
+      if (res.hasError) {
+        setError(res.errorMessage);
+      }
+      setIsSubmitting(false);
     },
   });
+  
+  const showUndoToast = () => {
+    toast({
+      position: 'top-right',
+      duration: 8000,
+      render: (t) => (
+        <AlertToast colorScheme='primary' status='success' hasProgress duration={8000} hasIcon isClosable onClose={() => toast.close(t.id || '')}>
+          {'Se ha registrado el usuario exitosamente'}
+        </AlertToast>
+      ),
+    });
+  };
+  const btnLocation=()=>{
+    navigate("/login");
+  }
+
+  
+
+
   return (
     <Flex grow={1} align='center' justify='space-between' direction={'column'} className='dark'>
       <Card boxShadow='lg' p='6' background='bg.300' rounded={40} display='flex' mt={10} flexDirection={'column'}>

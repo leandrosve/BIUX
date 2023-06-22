@@ -7,6 +7,7 @@ import { MoonIcon, SunIcon, UndoIcon } from '../components/common/Icons';
 import AlertToast from '../components/common/alert-toast/AlertToast';
 import ResponsiveCard from '../components/common/ResponsiveCard';
 import AutoBreadcrumbs from '../layout/AutoBreadcrumbs';
+import { useNavigate } from 'react-router-dom';
 
 const ConfigPage = () => {
   const [fontFamily, setFontFamily] = useState<string>(AccesibilityService.getLocalSettings().fontFamily);
@@ -14,6 +15,8 @@ const ConfigPage = () => {
   const [color, setColor] = useState<string>(AccesibilityService.getLocalSettings().color);
   const [previousSettings, setPreviousSettings] = useState<AccesibilitySettings>(AccesibilityService.getLocalSettings());
   const { colorMode, setColorMode } = useColorMode();
+  const navigate = useNavigate();
+
   const toast = useToast();
 
   const handleSave = (e: React.FormEvent) => {
