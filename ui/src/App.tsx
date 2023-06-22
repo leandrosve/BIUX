@@ -6,11 +6,13 @@ import { PropsWithChildren, useEffect, useState } from 'react';
 import AccesibilityService from './services/AccesibilityService';
 import SessionProvider from './context/SessionProvider';
 import BRouter from './router/BRouter';
+import APIService from './services/api/APIService';
 
 const EnsureInitialized = (props: PropsWithChildren) => {
   const [initialized, setInitialized] = useState(false);
   useEffect(() => {
     AccesibilityService.initialize();
+    APIService.initialize();
     setInitialized(true);
   }, []);
   if (!initialized) return null;
