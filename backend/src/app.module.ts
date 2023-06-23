@@ -8,6 +8,7 @@ import { RoutinesModule } from './routines/routines.module';
 import { SegmentsModule } from './segments/segments.module';
 import { SettingsModule } from './settings/settings.module';
 import 'dotenv/config'
+import { StatusModule } from './status/status.module';
 
 
 @Module({
@@ -25,7 +26,9 @@ import 'dotenv/config'
     AuthModule,
     RoutinesModule,
     SegmentsModule,
-    SettingsModule],
+    SettingsModule,
+    StatusModule,
+  ],
   controllers: [],
   providers: [],
 })

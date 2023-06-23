@@ -5,7 +5,7 @@ const items = [
   {
     label: 'Inicio',
     icon: HouseIcon,
-    path: '/'
+    path: '/dashboard'
   },
   {
     label: 'Alumnos',

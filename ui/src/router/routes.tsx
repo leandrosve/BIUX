@@ -6,9 +6,8 @@ import { lazy } from 'react';
 const RoutinesPage = lazy(() => import('../features/routines/RoutinesPage'));
 const ConfigPage = lazy(() => import('../pages/ConfigPage'));
 const NotFoundPage = lazy(() => import('../pages/not-found-page/NotFoundPage'));
+const MaintenancePage = lazy(() => import('../pages/maintenance-page/MaintenancePage'));
 const DashboardPage = lazy(() => import('../pages/DashboardPage'));
-
-
 
 export enum BRoutes {
   HOME = '/',
@@ -59,7 +58,12 @@ const routes = [
     title: 'Dashboard',
     element: <DashboardPage />,
   },
-
+  {
+    path: '/mantenimiento',
+    type: 'any',
+    title: 'Mantenimiento',
+    element: <MaintenancePage />,
+  },
   { path: '*', type: 'any', title: 'Página no encontrada', element: <NotFoundPage /> },
 ];
 

@@ -9,18 +9,16 @@ import {
   MenuButton,
   MenuGroup,
   MenuItem,
-  MenuList,
-  Tooltip,
-  useColorMode,
-  useMediaQuery,
+  MenuList, useMediaQuery
 } from '@chakra-ui/react';
-import { BrandIcon, LogOutIcon, MoonIcon, SunIcon } from '../../components/common/Icons';
+import { BrandIcon, LogOutIcon } from '../../components/common/Icons';
 import { Link } from 'react-router-dom';
 import { BRoutes } from '../../router/routes';
 import { ChevronDownIcon, EditIcon, HamburgerIcon } from '@chakra-ui/icons';
 import SessionService from '../../services/SessionService';
 import { SessionContext } from '../../context/SessionProvider';
 import { useContext } from 'react';
+import ToggleThemeButton from '../../components/common/ToggleThemeButton';
 
 interface Props {
   variant?: 'transparent' | 'solid';
@@ -29,7 +27,6 @@ interface Props {
 }
 
 const Navbar = ({ onOpenSidebar }: Props) => {
-  const { colorMode, toggleColorMode } = useColorMode();
   const [desktop] = useMediaQuery('(min-width: 992px)', { ssr: false, fallback: true });
 
   const renderMenu = () => {
@@ -48,20 +45,7 @@ const Navbar = ({ onOpenSidebar }: Props) => {
       </Link>
 
       <Flex gap={3} as='nav'>
-        <Tooltip hasArrow label={`Cambiar a tema ${colorMode == 'light' ? 'oscuro' : 'claro'}`} aria-label='A tooltip'>
-          <IconButton
-            onClick={toggleColorMode}
-            variant='ghost'
-            colorScheme='primary'
-            borderRadius='50%'
-            padding='3px'
-            display='flex'
-            alignItems='center'
-            justifyContent='center'
-            aria-label='toggle color mode'
-            icon={<Icon as={colorMode == 'light' ? SunIcon : MoonIcon} />}
-          />
-        </Tooltip>
+        <ToggleThemeButton />
         {renderMenu()}
       </Flex>
     </Flex>

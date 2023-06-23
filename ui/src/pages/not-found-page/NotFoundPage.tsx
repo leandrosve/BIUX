@@ -1,7 +1,6 @@
 import { Button, Flex, Heading, Icon, Image, Text, Wrap, WrapItem } from '@chakra-ui/react';
 import illustration from '../../assets/illustrations/missing-page.png';
-import React, { useContext, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { useContext } from 'react';
 import { ArrowBackIcon, SettingsIcon } from '@chakra-ui/icons';
 import { BRoutes } from '../../router/routes';
 import { SessionContext } from '../../context/SessionProvider';

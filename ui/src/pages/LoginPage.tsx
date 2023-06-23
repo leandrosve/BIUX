@@ -13,13 +13,16 @@ const LoginPage = () => {
 
   const [submiting, setSubmiting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
 
   const enableSubmit = useMemo(() => !!(email && password), [email, password]);
 
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   const onSubmit = async (e: React.FormEvent) => {
     setError(null);
+    setSuccess(null);
     e.preventDefault();
     setSubmiting(true);
     const res = await AuthService.login({ email, password });
@@ -29,14 +32,17 @@ const LoginPage = () => {
       return;
     }
     SessionService.saveLocalSession(res.data);
-    location.replace('/config');
+    location.replace('/');
   };
 
   useEffect(() => {
     if (searchParams.get('tokenExpired')) {
-      setError('La sesión ha expirado, por favor vuelve a iniciar sesión.');
-      setSearchParams('', { replace: true });
+      setError('La sesión ha expirado, por favor vuelve a iniciar sesión.');   
     }
+    if (searchParams.get('logout')) {
+      setSuccess('Se ha cerrado la sesión correctamente. Hasta pronto!');   
+    }
+    setSearchParams('', { replace: true });
   }, []);
 
   return (
@@ -51,6 +57,7 @@ const LoginPage = () => {
                 Iniciar Sesión
               </Heading>
               <BAlert status='error' autoFocus description={error} />
+              <BAlert status='info' autoFocus description={success} />
               <FormControl>
                 <FormLabel mt={2}>Email</FormLabel>
                 <Input type='email' boxShadow='sm' variant={'filled'} size={'sm'} placeholder='Email' onChange={(e) => setEmail(e.target.value)} />
