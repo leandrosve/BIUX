@@ -25,4 +25,4 @@ dist-ssr
 .develop.env
 keys_db_remote
 
-./src/migrations/*
+./src/migrations/*.ts
