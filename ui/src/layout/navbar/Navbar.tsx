@@ -9,12 +9,9 @@ import {
   MenuButton,
   MenuGroup,
   MenuItem,
-  MenuList,
-  Tooltip,
-  useColorMode,
-  useMediaQuery,
+  MenuList, useMediaQuery
 } from '@chakra-ui/react';
-import { BrandIcon, LogOutIcon, MoonIcon, SunIcon } from '../../components/common/Icons';
+import { BrandIcon, LogOutIcon } from '../../components/common/Icons';
 import { Link } from 'react-router-dom';
 import { BRoutes } from '../../router/routes';
 import { ChevronDownIcon, EditIcon, HamburgerIcon } from '@chakra-ui/icons';

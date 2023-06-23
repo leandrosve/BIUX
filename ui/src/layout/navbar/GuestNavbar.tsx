@@ -1,5 +1,4 @@
 import {
-  Button,
   Flex,
   Heading,
   Icon,
@@ -7,12 +6,9 @@ import {
   Menu,
   MenuButton,
   MenuItem,
-  MenuList,
-  Tooltip,
-  useColorMode,
-  useMediaQuery,
+  MenuList, useMediaQuery
 } from '@chakra-ui/react';
-import { BrandIcon, MoonIcon, SunIcon } from '../../components/common/Icons';
+import { BrandIcon } from '../../components/common/Icons';
 import { Link, useLocation } from 'react-router-dom';
 import { BRoutes } from '../../router/routes';
 import { HamburgerIcon } from '@chakra-ui/icons';
