@@ -41,9 +41,5 @@ export class UsersController {
   }
 
   
-  @Post('studentIntoRoutine')
-  public async addStudentIntoRoutine(@Body() body :StudentIntoRoutineDTO){
-    console.log(body)
-    return 200
-  }
+
 }

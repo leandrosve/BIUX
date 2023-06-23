@@ -104,15 +104,7 @@ export class UsersService {
       return [];
     }
 
-    public async addStudentIntoRoutine(body:StudentIntoRoutineDTO){
 
-      try {
-        return await this.routineAssigEntity.save(body)
-      } catch (error) {
-        throw ErrorManager.createSignatureError(error.message);
-
-      }
-    }
     public async findByEmail(email: string) {
       return await this.userRepository.findOne({ where:{email:email} });
     }

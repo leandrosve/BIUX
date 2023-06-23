@@ -9,6 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
 import * as jwt from 'jsonwebtoken';
 import { AuthResponse, PayloadToken } from 'src/interfaces/auth.interface';
+import { SettingsService } from 'src/settings/settings.service';
 
 
 
@@ -17,7 +18,8 @@ export class AuthService {
   constructor(
     @InjectRepository(UsersEntity)
     private readonly userRepository: Repository<UsersEntity>,
-    private readonly userService: UsersService
+    private readonly userService: UsersService,
+    private readonly settingService:SettingsService
        ){}
 
 
@@ -29,12 +31,14 @@ export class AuthService {
     try {
       body.password = await bcrypt.hash(body.password, +process.env.HASH_SALT);
       const user= await this.userRepository.save(body);
+      await this.settingService.created(user)
       if(user){
         return {
           statusCode: 201,
           message: 'Se creó el usuario correctamente',
         };
       }
+      
 
       throw new ErrorManager({
         type:'BAD_REQUEST',
