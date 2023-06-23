@@ -12,7 +12,7 @@ import StatusService from './services/api/StatusService';
 const EnsureInitialized = (props: PropsWithChildren) => {
   const [initialized, setInitialized] = useState(false);
   useEffect(() => {
-    if(initialized) return;
+    if (initialized) return;
     AccesibilityService.initialize();
     APIService.initialize();
     StatusService.checkStatus();

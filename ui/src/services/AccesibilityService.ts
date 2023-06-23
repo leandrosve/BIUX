@@ -56,6 +56,16 @@ export default class AccesibilityService {
     document.documentElement.style.setProperty(`--hue-rotate`, `${hues[color]}deg`);
   }
 
+  static saveAndUpdate(settings: AccesibilitySettings, setColorMode: (colorMode: string) => void) {
+    settings = {...this.DEFAULT_SETTINGS, ...settings};
+    AccesibilityService.saveLocalSettings(settings);
+    AccesibilityService.updateFont(settings.fontFamily, settings.fontSize);
+    AccesibilityService.updateColor(settings.color);
+    if (settings.colorMode) {
+      setColorMode(settings.colorMode);
+    }
+  }
+
   static saveLocalSettings(settings: AccesibilitySettings) {
     localStorage.setItem('accesibilitySettings', JSON.stringify(settings));
   }

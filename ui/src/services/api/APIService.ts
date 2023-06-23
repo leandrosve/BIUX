@@ -19,11 +19,13 @@ interface Options {
 
 export default class APIService {
   protected static BASE_URL = import.meta.env.VITE_APP_API_BASE_URL;
+  
+  protected static PATH:string;
 
   protected static token?: string;
 
   public static initialize() {
-    this.token = SessionService.getLocalSession()?.authToken;
+    this.token = SessionService.getLocalSession()?.accessToken;
   }
 
   protected static delay(ms: number) {
@@ -37,7 +39,7 @@ export default class APIService {
     headers.set('Content-Type', 'application/json');
     if (this.token) headers.set('token', this.token);
 
-    const url = `${this.BASE_URL}${path || ''}${params ? '?' + params : ''}`;
+    const url = `${this.BASE_URL}${this.PATH || ''}${path || ''}${params ? '?' + params : ''}`;
     try {
       const res = await fetch(url, {
         method: method,
