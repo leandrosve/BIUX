@@ -6,7 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { DataSourceConfig } from './config/data.source';
 import { RoutinesModule } from './routines/routines.module';
 import { SegmentsModule } from './segments/segments.module';
-import { SettingModule } from './setting/setting.module';
+import { SettingsModule } from './settings/settings.module';
 import 'dotenv/config'
 
 
@@ -25,7 +25,7 @@ import 'dotenv/config'
     AuthModule,
     RoutinesModule,
     SegmentsModule,
-    SettingModule],
+    SettingsModule],
   controllers: [],
   providers: [],
 })

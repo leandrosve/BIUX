@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -7,6 +7,7 @@ import { RoutineAssignmentEntity } from './entities/RoutineAssignmentEntity.enti
 import { RoutinesEntity } from 'src/routines/entities/routines.entity';
 import { IsEmailUnique } from './validators/is-email-unique.validator';
 
+@Global()
 @Module({
   imports: [TypeOrmModule.forFeature([UsersEntity,RoutineAssignmentEntity,RoutinesEntity]), ],
 

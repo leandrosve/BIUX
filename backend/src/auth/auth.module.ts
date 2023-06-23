@@ -5,13 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersEntity } from 'src/users/entities/users.entity';
 import { UsersService } from 'src/users/users.service';
 import { UsersModule } from 'src/users/users.module';
+import { SettingsService } from 'src/settings/settings.service';
+import { SettingsModule } from 'src/settings/settings.module';
 
 
 @Global()
 @Module({
   imports: [UsersModule],
-
-  controllers: [AuthController],
-  providers: [AuthService,UsersService]
+  providers: [AuthService, UsersService],
+  controllers: [AuthController]
 })
 export class AuthModule {}
