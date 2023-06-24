@@ -1,11 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable,} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Request  } from 'express';
+import { RoutinesEntity } from './entities/routines.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class RoutinesService {
-
+  constructor(
+       @InjectRepository(RoutinesEntity)
+   private readonly routineRepository: Repository<RoutinesEntity>,
+  ) {}
 
   public async all(){
-    return "alll";
+    return "all";
+  }
+
+  public async getStudentRoutines(id:number){
+    return 'student routines: ' + id
   }
 
   // constructor(
