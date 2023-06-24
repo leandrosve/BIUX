@@ -22,8 +22,7 @@ export class UsersController {
   @ApiParam({
     name: 'id',
   })
-  @ApiHeader({name:'token'})
-  @Patch(':id')
+  @ApiHeader({name:'token',required: true})  @Patch(':id')
   public async updateUser(
     @Param('id') id: number,
     @Body() body: UserUpdateDTO,
@@ -34,8 +33,7 @@ export class UsersController {
   @ApiParam({
     name: 'id',
   })
-  @ApiHeader({name:'token'})
-  @Get(':id')
+  @ApiHeader({name:'token',required: true})  @Get(':id')
   public async findUserById(@Param('id') id: number) {
     return await this.usersService.findUserById(id);
   }
