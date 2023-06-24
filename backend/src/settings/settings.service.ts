@@ -63,15 +63,16 @@ export class SettingsService {
 
         public async update(user_id:number,body: SettingUpdateDTO){
           try {
-            const {id}=await this.getSetting(user_id);
-            const user:UpdateResult=await this.settingRepository.update(id,body)
-            if(user.affected==0){
+            const {id: id_setting}=await this.getSetting(user_id);
+            const setting:UpdateResult=await this.settingRepository.update(id_setting,body)
+            if(setting.affected==0){
               throw new ErrorManager({
                 type:'BAD_REQUEST',
                 message: 'No se pudo realizar la actualizacion'
               })
             }
-            const settingObj=this.getSetting(id)
+            console.log("id del usuario: ",user_id)
+            const settingObj=await this.getSetting(user_id)
             return  {
               statusCode:200,
               message:'Se acutualizo la configuracion del usuario',
