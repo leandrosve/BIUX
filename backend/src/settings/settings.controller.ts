@@ -14,7 +14,7 @@ export class SettingsController {
   constructor(private readonly settingService:SettingsService){}
 
   @Get('user')
-  @ApiHeader({name:"token"})
+  @ApiHeader({name:"token",required:true})
   public async getSettingForUser(@Req() request: Request) {
 
     return await this.settingService.getSetting(request.idUser);
@@ -22,7 +22,7 @@ export class SettingsController {
 
 
   @Patch('user')
-  @ApiHeader({name:"token"})
+  @ApiHeader({name:"token",required:true})
   public async update(@Req() request: Request, @Body() body: SettingUpdateDTO,) {
 
     return await this.settingService.update(request.idUser,body);
