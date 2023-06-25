@@ -19,7 +19,7 @@ export const DataSourceConfig:DataSourceOptions={
   entities: [__dirname + '/../**/**/*.entity{.ts,.js}'],
   migrations: [__dirname + '/../migrations/*{.ts,.js}'],
   synchronize: Boolean(process.env.DB_SYNCHRONIZE) || false,
-  migrationsRun: false,
+  migrationsRun: true,
   logging: false,
   namingStrategy: new SnakeNamingStrategy(),
 }

@@ -9,6 +9,7 @@ import { SegmentsModule } from './segments/segments.module';
 import { SettingsModule } from './settings/settings.module';
 import 'dotenv/config'
 import { StatusModule } from './status/status.module';
+import { InstructorModule } from './instructor/instructor.module';
 
 
 @Module({
@@ -28,6 +29,7 @@ import { StatusModule } from './status/status.module';
     SegmentsModule,
     SettingsModule,
     StatusModule,
+    InstructorModule,
   ],
   controllers: [],
   providers: [],

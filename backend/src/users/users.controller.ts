@@ -22,7 +22,8 @@ export class UsersController {
   @ApiParam({
     name: 'id',
   })
-  @ApiHeader({name:'token',required: true})  @Patch(':id')
+  @ApiHeader({name:'token',required: true})
+  @Patch(':id')
   public async updateUser(
     @Param('id') id: number,
     @Body() body: UserUpdateDTO,

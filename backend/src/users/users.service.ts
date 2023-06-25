@@ -88,21 +88,6 @@ export class UsersService {
       }
     }
 
-    async getInstructorRoutines(userId: number) {
-      const user = await this.userRepository.findOne({where:{id:userId}, relations: ['routines'] });
-      if (user && user.role === 'INSTRUCTOR') {
-        return user.routines_created;
-      }
-      return [];
-    }
-  
-    async getAssignedRoutines(userId: number) {
-      const user = await this.userRepository.findOne({where:{id:userId} ,relations: ['routineAssignments', 'routineAssignments.routine'] });
-      if (user && user.role === 'STUDENT') {
-        return user.routineAssignments.map(assignment => assignment.routine);
-      }
-      return [];
-    }
 
 
     public async findByEmail(email: string) {
