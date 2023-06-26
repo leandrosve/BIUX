@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Card,
   Drawer,
   DrawerCloseButton,
@@ -19,13 +18,14 @@ import SidebarItem from './SidebarItem';
 import items from './sidebarItems';
 import { BrandIcon, LogOutIcon } from '../../components/common/Icons';
 import useCurrentPath from '../../hooks/useCurrentPath';
-import AccesibilityService from '../../services/AccesibilityService';
 import SessionService from '../../services/SessionService';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { SessionContext } from '../../context/SessionProvider';
 import { Link } from 'react-router-dom';
 import { BRoutes } from '../../router/routes';
 import { EditIcon } from '@chakra-ui/icons';
+import Role from '../../model/user/Role';
+import BAvatar from '../../components/common/BAvatar';
 
 interface Props {
   open?: boolean;
@@ -55,13 +55,17 @@ const Sidebar = (props: Props) => {
 };
 
 const SidebarContent = ({ currentPath, onClose }: SidebarContentProps) => {
+  const {session} = useContext(SessionContext);
   const handleClickLink = () => {
     onClose();
   };
+  const sidebarItems = useMemo(() => {
+    return items.filter((item) => !item.role || item.role == session?.user.role);
+  }, [items, session]);
   return (
     <List display='flex' flexDirection='column' flexGrow={1} gap={1}>
-      {items.map((item) => {
-        const selected = !!(currentPath && (currentPath === item.path || currentPath.startsWith(item.path + "/")));
+      {sidebarItems.map((item) => {
+        const selected = !!(currentPath && (currentPath === item.path || currentPath.startsWith(item.path + '/')));
         return (
           <ListItem key={item.label} aria-current={selected}>
             <SidebarItem {...item} selected={selected} onLinkClick={handleClickLink} />
@@ -74,7 +78,7 @@ const SidebarContent = ({ currentPath, onClose }: SidebarContentProps) => {
 
 const SidebarDrawer = (props: SidebarDrawerProps) => {
   const { session } = useContext(SessionContext);
-  const name = session?.user.firstName + " " + session?.user.lastName;
+  const name = session?.user.firstName + ' ' + session?.user.lastName;
   return (
     <Drawer isOpen={!!props.open} onClose={props.onClose} placement='left'>
       <DrawerOverlay />
@@ -98,7 +102,7 @@ const SidebarDrawer = (props: SidebarDrawerProps) => {
           <Card padding={2} gap={0} _dark={{ background: 'bg.400' }}>
             <Flex alignItems='center' justifyContent='space-between'>
               <Flex alignItems='center' gap={3}>
-                <Avatar name={name} size='sm' bg='teal.500' color='white' />
+                <BAvatar name={name} size='sm' />
                 {name}
               </Flex>
               <Link to={BRoutes.PROFILE}>

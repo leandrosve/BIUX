@@ -11,7 +11,7 @@ const ResponsiveCard = ({ defaultWidth = 700, defaultHeight = 650, ...props }: R
       boxShadow={{ base: 'none', md: 'base' }}
       background='bg.300'
       p='6'
-      rounded={[0, 40]}
+      rounded={[0, 'lg']}
       minW={['100%', '100%', defaultWidth]}
       minHeight={['calc(100vh - 160px)', defaultHeight]}
       alignSelf={{ base: 'center', md: 'auto' }}

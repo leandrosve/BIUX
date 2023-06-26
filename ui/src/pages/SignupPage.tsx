@@ -1,146 +1,32 @@
-import {
-  Button,
-  Card,
-  Flex, Heading,
-  Icon,
-  Image, Skeleton,
-  Text, useMediaQuery, useToast
-} from '@chakra-ui/react';
-import illustration from '../assets/illustrations/bike-cut-recollored.png';
+import { Button, Flex, Icon } from '@chakra-ui/react';
+import { useState } from 'react';
+import InitialRoleStep from '../features/signup/InitialRoleStep';
+import RegistrationStep from '../features/signup/RegistrationStep';
+import ResponsiveCard from '../components/common/ResponsiveCard';
 import { BrandIcon } from '../components/common/Icons';
-import { Link, useNavigate } from 'react-router-dom';
-import { BRoutes } from '../router/routes';
-import { useFormik } from 'formik';
-import signupSchema from '../validation/signupSchema';
-import TextField from '../components/common/forms/TextField';
-import AuthService from '../services/api/AuthService';
-import { useEffect, useState } from 'react';
-import BAlert from '../components/common/BAlert';
-import AlertToast from '../components/common/alert-toast/AlertToast';
+import SimpleStepper from '../components/common/SimpleStepper';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 
-type ID = 'firstName' | 'lastName' | 'email' | 'password' | 'passwordConfirmation';
-const fields: { label: string; help?: string; type?: string; id: ID }[] = [
-  {
-    label: 'Nombre',
-    id: 'firstName',
-  },
-  {
-    label: 'Apellido',
-    id: 'lastName',
-  },
-  {
-    label: 'Email',
-    id: 'email',
-  },
-  {
-    label: 'Contraseña',
-    id: 'password',
-    type: 'password',
-    help: 'Debe contener al menos ocho caracteres y un número o símbolo',
-  },
-  {
-    label: 'Confirmar Contraseña',
-    type: 'password',
-    id: 'passwordConfirmation',
-  },
-];
+enum Steps {
+  INITIAL_ROLE = 0,
+  REGISTRATION = 1,
+}
 const SignupPage = () => {
-  const toast = useToast();
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>();
-  const navigate = useNavigate();
-
-  const [desktop] = useMediaQuery('(min-width: 992px)', { ssr: false, fallback: true });
-  
-  const formik = useFormik({
-    initialValues: signupSchema.initialValues,
-    validationSchema: signupSchema.validationSchema,
-    onSubmit: async (values) => {
-      setIsSubmitting(true);
-      setError(null);
-      console.log(values)
-      const body={
-        firstName: values.firstName,
-        lastName: values.lastName,
-        email: values.email,
-        password: values.password,
-        role:'INSTRUCTOR'
-      }
-      const res = await AuthService.signUp(body);
-      if(res.status==201){
-        navigate("/login");
-        showUndoToast()
-      }
-      if (res.hasError) {
-        setError(res.errorMessage);
-      }
-      setIsSubmitting(false);
-    },
-  });
-  
-  const showUndoToast = () => {
-    toast({
-      position: 'top-right',
-      duration: 8000,
-      render: (t) => (
-        <AlertToast colorScheme='primary' status='success' hasProgress duration={8000} hasIcon isClosable onClose={() => toast.close(t.id || '')}>
-          {'Se ha registrado el usuario exitosamente'}
-        </AlertToast>
-      ),
-    });
-  };
-  const btnLocation=()=>{
-    navigate("/login");
-  }
-
-  
-
-
+  const [step, setStep] = useState<Steps>(Steps.INITIAL_ROLE);
   return (
-    <Flex grow={1} align='center' justify='space-between' direction={'column'} className='dark'>
-      <Card boxShadow='lg' p='6' background='bg.300' rounded={40} display='flex' mt={10} flexDirection={'column'}>
-        <Flex gap={5} align='stretch'>
-          <form onSubmit={formik.handleSubmit}>
-            <Flex align='stretch' direction='column' width={['auto', 325]} gap={1}>
-              <Icon as={BrandIcon} height={'60px'} width={'60px'} marginRight={3} />
-              <Heading my={1}>¡Registrate!</Heading>
-              <BAlert status='error' autoFocus description={error} fontSize='sm' />
-              {fields.map((f) => (
-                <TextField
-                  {...f}
-                  boxShadow='sm'
-                  variant={'filled'}
-                  key={f.id}
-                  size={'sm'}
-                  placeholder={f.label}
-                  onChange={formik.handleChange}
-                  onBlurCapture={formik.handleBlur}
-                  touched={formik.getFieldMeta(f.id).touched}
-                  value={formik.values[f.id]}
-                  error={formik.errors[f.id]}
-                />
-              ))}
+    <ResponsiveCard marginTop={5} maxWidth={900} defaultHeight='auto'>
+      <Flex mb={3} justifyContent='space-between'>
+        <SimpleStepper steps={['tipo de usuario', 'registro']} index={step} />
 
-              <Button colorScheme='primary' width='100%' mt={3} type='submit' isLoading={isSubmitting}>
-                Continuar
-              </Button>
-              <Text textAlign={'center'} mt={2}>
-                ¿Ya estas registrado?{' '}
-                <Link to={BRoutes.LOGIN}>
-                  <b>Iniciar Sesión</b>
-                </Link>
-              </Text>
-            </Flex>
-          </form>
-          {desktop && (
-            <Flex alignItems={'center'} justifyContent={'center'}>
-              <Image src={illustration} className='hue-adaptative' alt='Cyclist' w={520} fallback={<Skeleton width={520} height={562} />} />
-            </Flex>
-          )}
-        </Flex>
-      </Card>
-    </Flex>
+        {step == Steps.REGISTRATION && (
+          <Button variant='ghost' leftIcon={<ArrowBackIcon />} onClick={() => setStep(Steps.INITIAL_ROLE)}>
+            Atrás
+          </Button>
+        )}
+      </Flex>
+      {step === Steps.INITIAL_ROLE && <InitialRoleStep onSuccess={() => setStep(Steps.REGISTRATION)} />}
+      {step === Steps.REGISTRATION && <RegistrationStep />}
+    </ResponsiveCard>
   );
 };
 

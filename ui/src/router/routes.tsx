@@ -2,6 +2,7 @@ import LandingPage from '../pages/landing-page/LandingPage';
 import SignupPage from '../pages/SignupPage';
 import LoginPage from '../pages/LoginPage';
 import { lazy } from 'react';
+import Role from '../model/user/Role';
 
 const RoutinesPage = lazy(() => import('../features/routines/RoutinesPage'));
 const ConfigPage = lazy(() => import('../pages/ConfigPage'));
@@ -33,6 +34,7 @@ const routes = [
     hasSubroutes: true,
     subroutes: [{ path: 'crear', title: 'Nueva Rutina' }],
     element: <RoutinesPage />,
+    role: Role.INSTRUCTOR
   },
   {
     type: 'guest',

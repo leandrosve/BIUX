@@ -4,6 +4,7 @@ import routes, { BRoutes } from './routes';
 import { SessionContext } from '../context/SessionProvider';
 import Layout from '../layout/Layout';
 import { Flex, Spinner } from '@chakra-ui/react';
+import Role from '../model/user/Role';
 
 const BRouter = () => {
   return (
@@ -16,7 +17,9 @@ const BRouter = () => {
               <Route
                 path={`${route.path}${route.hasSubroutes ? '/*' : ''}`}
                 key={key}
-                element={<RouteProtection type={route.type} element={<Suspense fallback={<Fallback />}>{route.element}</Suspense>} />}
+                element={
+                  <RouteProtection type={route.type} role={route.role} element={<Suspense fallback={<Fallback />}>{route.element}</Suspense>} />
+                }
               />
             );
           })}
@@ -31,13 +34,14 @@ const Fallback = () => (
     <Spinner mt={5} size='xl' color='primary.400' boxSize={['50px', 100]} />
   </Flex>
 );
-function RouteProtection({ type, element }: { type: string; element: ReactElement }) {
-  const sessionContext = useContext(SessionContext);
+function RouteProtection({ type, element, role }: { type: string; element: ReactElement; role?: Role }) {
+  const { session } = useContext(SessionContext);
 
-  if (type == 'private' && !sessionContext.session) return <Navigate to={BRoutes.LOGIN} replace />;
+  if (type == 'private' && !session) return <Navigate to={BRoutes.LOGIN} replace />;
 
-  if (type == 'guest' && sessionContext.session) return <Navigate to={BRoutes.DASHBOARD} replace />;
+  if (type == 'guest' && session) return <Navigate to={BRoutes.DASHBOARD} replace />;
 
+  if (role && session?.user.role !== role) return <Navigate to={BRoutes.DASHBOARD} replace />;
   return <>{element}</>;
 }
 

@@ -1,16 +1,4 @@
-import {
-  Avatar,
-  Button,
-  Flex,
-  Heading,
-  Icon,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuGroup,
-  MenuItem,
-  MenuList, useMediaQuery
-} from '@chakra-ui/react';
+import { Button, Flex, Heading, Icon, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, useMediaQuery } from '@chakra-ui/react';
 import { BrandIcon, LogOutIcon } from '../../components/common/Icons';
 import { Link } from 'react-router-dom';
 import { BRoutes } from '../../router/routes';
@@ -19,6 +7,7 @@ import SessionService from '../../services/SessionService';
 import { SessionContext } from '../../context/SessionProvider';
 import { useContext } from 'react';
 import ToggleThemeButton from '../../components/common/ToggleThemeButton';
+import BAvatar from '../../components/common/BAvatar';
 
 interface Props {
   variant?: 'transparent' | 'solid';
@@ -61,10 +50,10 @@ const NavbarDropdown = () => {
         aria-label='User Options'
         variant='ghost'
         rightIcon={<ChevronDownIcon />}
-        children={<Avatar name={session?.user.firstName + " " + session?.user.lastName} size='sm' bg='teal.700' color='white' />}
+        children={<BAvatar name={session?.user.firstName + ' ' + session?.user.lastName} size='sm' />}
       />
       <MenuList minWidth={200} maxWidth={300}>
-        <MenuGroup title={session?.user.firstName + " " + session?.user.lastName}>
+        <MenuGroup title={session?.user.firstName + ' ' + session?.user.lastName}>
           <Link to={BRoutes.PROFILE}>
             <MenuItem justifyContent='space-between' gap={5}>
               Editar Perfil <Icon as={EditIcon} />

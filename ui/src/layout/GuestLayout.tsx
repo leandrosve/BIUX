@@ -16,7 +16,7 @@ const GuestLayout = ({ children }: Props) => {
 
       <GuestNavbar />
 
-      <Flex id='main' as='main' alignItems='center' justifyContent='center' grow={1} padding={5} paddingBottom={50}>
+      <Flex id='main' as='main' alignItems='center' justifyContent='center' grow={1} padding={[0, 5]} paddingBottom={50}>
         <SkipNavContent id='contenido'/>
         {children}
         <Outlet />

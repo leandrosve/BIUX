@@ -1,0 +1,47 @@
+.initial-role-option {
+  cursor: pointer;
+  transition: 200ms all;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--bg-400);
+}
+
+.initial-role-option::before {
+  content: ' ';
+  top: 0;
+  left: 0;
+  position: absolute;
+  z-index: -1;
+  height: 100%;
+  width: 100%;
+  pointer-events: none;
+  opacity: 0;
+  background: var(--primary-400);
+  transition: 200ms all;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.initial-role-option:hover::before {
+  opacity: 0.2;
+}
+
+html[data-theme='dark'] .initial-role-option:hover::before {
+  opacity: 0.4;
+}
+
+.initial-role-option[data-checked] {
+  border:none;
+  background: var(--primary-300);
+  background: linear-gradient(130deg, var(--primary-500), var(--primary-400));
+  color: white;
+  outline: 4px solid var(--primary-300);
+  outline-offset: -4px;
+}
+
+html[data-theme='dark'] .initial-role-option[data-checked] {
+  background: var(--primary-500);
+  background: linear-gradient(130deg, var(--primary-700), var(--primary-600));
+}

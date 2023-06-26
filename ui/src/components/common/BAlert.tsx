@@ -6,16 +6,18 @@ interface Props extends AlertProps {
   closable?: boolean;
   autoFocus?: boolean;
   description?: string | ReactNode;
+  onClose?: () => void;
 }
 
-const BAlert = ({ hasIcon = true, closable, autoFocus, title, description, ...rest }: Props) => {
+const BAlert = ({ hasIcon = true, closable, autoFocus, title, description, onClose, size, ...rest }: Props) => {
   const ref = useRef<HTMLDivElement>();
   const [hidden, setHidden] = useState(true);
 
   const empty = useMemo(() => !title && !description, [title, description]);
 
-  const onClose = () => {
+  const handleClose = () => {
     setHidden(true);
+    onClose?.();
   };
 
   useEffect(() => {
@@ -32,11 +34,11 @@ const BAlert = ({ hasIcon = true, closable, autoFocus, title, description, ...re
 
   return (
     <ScaleFade initialScale={0.9} in={true}>
-      <Alert {...rest} ref={ref} tabIndex={-1}>
-        {hasIcon && <AlertIcon />}
+      <Alert {...rest} ref={ref} tabIndex={-1} paddingY={size == 'sm' ? '3px' : '20px'} paddingRight={closable ? '40px' : undefined} borderRadius='md'>
+        {hasIcon && <AlertIcon boxSize={size == 'sm' ? '20px' : '20px'} />}
         {title && <AlertTitle>{title}</AlertTitle>}
         {description && <AlertDescription>{description}</AlertDescription>}
-        {closable && <CloseButton alignSelf='flex-start' position='relative' right={-1} top={-1} onClick={onClose} />}
+        {closable && <CloseButton size={size} position='absolute' right={'4px'} top='4px' onClick={handleClose} />}
       </Alert>
     </ScaleFade>
   );
