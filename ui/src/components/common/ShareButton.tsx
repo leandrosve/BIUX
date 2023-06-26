@@ -8,6 +8,7 @@ import { BRoutes } from '../../router/routes';
 interface Props {
   subject: string;
   body: string;
+  label?: string;
 }
 const ShareButton = (props: Props) => {
   const handleWhatsApp = () => {
@@ -20,8 +21,8 @@ const ShareButton = (props: Props) => {
   };
   return (
     <Menu placement='left-start'>
-      <Tooltip label='Compartir' hasArrow>
-      <MenuButton as={IconButton} aria-label='Compartir' color='primary.700' _dark={{color: 'primary.200'}} icon={<ShareIcon width={30} height={30} />} />
+      <Tooltip label={props.label || 'Compartir'} hasArrow>
+      <MenuButton as={IconButton} aria-label={props.label || 'Compartir'} color='primary.700' _dark={{color: 'primary.200'}} icon={<ShareIcon width={30} height={30} />} />
       </Tooltip>
       <MenuList>
         <MenuItem as='button' gap={2} onClick={handleWhatsApp}>

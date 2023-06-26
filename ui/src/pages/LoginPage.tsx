@@ -1,6 +1,6 @@
 import { Button, Card, Flex, FormControl, FormLabel, Heading, Icon, Input, Stack, Text, Tooltip } from '@chakra-ui/react';
 import { BrandIcon } from '../components/common/Icons';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { BRoutes } from '../router/routes';
 import { useMemo, useState, useEffect } from 'react';
 import AuthService from '../services/api/AuthService';
@@ -14,7 +14,6 @@ const LoginPage = () => {
   const [submiting, setSubmiting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-
 
   const enableSubmit = useMemo(() => !!(email && password), [email, password]);
 
@@ -37,10 +36,10 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (searchParams.get('tokenExpired')) {
-      setError('La sesión ha expirado, por favor vuelve a iniciar sesión.');   
+      setError('La sesión ha expirado, por favor vuelve a iniciar sesión.');
     }
     if (searchParams.get('logout')) {
-      setSuccess('Se ha cerrado la sesión correctamente. Hasta pronto!');   
+      setSuccess('Se ha cerrado la sesión correctamente. Hasta pronto!');
     }
     setSearchParams('', { replace: true });
   }, []);

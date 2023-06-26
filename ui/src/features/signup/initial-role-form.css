@@ -5,6 +5,11 @@
   z-index: 1;
   overflow: hidden;
   border-radius: 10px;
+
+  background: var(--primary-50);
+}
+
+html[data-theme='dark'] .initial-role-option {
   background: var(--bg-400);
 }
 
@@ -33,7 +38,7 @@ html[data-theme='dark'] .initial-role-option:hover::before {
 }
 
 .initial-role-option[data-checked] {
-  border:none;
+  border: none;
   background: var(--primary-300);
   background: linear-gradient(130deg, var(--primary-500), var(--primary-400));
   color: white;

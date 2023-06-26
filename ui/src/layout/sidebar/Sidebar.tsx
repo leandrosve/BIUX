@@ -24,7 +24,6 @@ import { SessionContext } from '../../context/SessionProvider';
 import { Link } from 'react-router-dom';
 import { BRoutes } from '../../router/routes';
 import { EditIcon } from '@chakra-ui/icons';
-import Role from '../../model/user/Role';
 import BAvatar from '../../components/common/BAvatar';
 
 interface Props {
@@ -48,7 +47,7 @@ const Sidebar = (props: Props) => {
   const currentPath = useCurrentPath();
   if (!desktop) return <SidebarDrawer {...props} currentPath={currentPath?.path} />;
   return (
-    <Flex alignSelf='stretch' background='bg.300' minWidth={260} padding={2} as='nav'>
+    <Flex alignSelf='stretch' background='bg.300' minWidth={'15em'} padding={2} as='nav'>
       <SidebarContent currentPath={currentPath?.path} onClose={props.onClose} />
     </Flex>
   );

@@ -2,12 +2,12 @@ import { Box, Step, StepDescription, StepIcon, StepIndicator, StepNumber, StepSe
 import React from 'react';
 
 interface Props extends Omit<StepperProps, 'children'> {
-  steps: string[];
+  steps: React.ReactNode[];
   index: number;
 }
 const SimpleStepper = ({ steps, index, ...props }: Props) => {
   return (
-    <Stepper {...props} index={index} maxWidth={{ base: 325, md: 400 }} colorScheme='primary'>
+    <Stepper {...props} index={index} maxWidth={{ base: 325, md: 400 }} lineHeight='none' colorScheme='primary'>
       {steps.map((step, index) => (
         <Step key={index}>
           <StepIndicator>
