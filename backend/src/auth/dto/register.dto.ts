@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsEnum, IsNotEmpty, IsString, Validate } from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, Validate } from "class-validator";
 import { ROLES } from "src/constants/roles";
 import { IsEmailUnique } from "src/users/validators/is-email-unique.validator";
 
@@ -30,4 +30,9 @@ export class RegisterUserDTO{
   @IsNotEmpty()
   @IsEnum(ROLES)
   role: ROLES;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  code:string
 }

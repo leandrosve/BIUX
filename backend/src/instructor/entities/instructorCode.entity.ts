@@ -7,7 +7,9 @@ export class InstructorCodeEntity extends BaseEntity  {
   @Column({name:'code',unique:true})
   code: string;
 
-  @OneToOne(() => UsersEntity)
+  @OneToOne(() => UsersEntity,{
+    eager:true
+  })
   @JoinColumn({name:'user_id'})
   user: UsersEntity
 

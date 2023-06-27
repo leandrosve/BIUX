@@ -25,7 +25,6 @@ export class SettingsService {
               user,
             }
             const setting= await this.settingRepository.save(settingNew);
-            console.log("SE CREO EL SETTING CORRECTAMENTE",setting)
 
              if(setting){
               return setting
@@ -35,7 +34,7 @@ export class SettingsService {
             message: 'No se pudo crear el setting por default'
           })
           } catch (error) {
-            throw ErrorManager.createSignatureError(error.message);
+           throw error;
           }
 
         }
@@ -57,7 +56,7 @@ export class SettingsService {
             })
             
           } catch (error) {
-            throw ErrorManager.createSignatureError(error.message);
+           throw error;
           }
         }
 
@@ -80,7 +79,7 @@ export class SettingsService {
             } 
 
           } catch (error) {
-            throw ErrorManager.createSignatureError(error.message);
+           throw error;
           }
 
         }

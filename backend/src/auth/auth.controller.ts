@@ -1,8 +1,9 @@
-import { Body, Controller, Post, Put, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Post, Put, UnauthorizedException, UsePipes } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { RegisterUserDTO } from './dto/register.dto';
 import { LoginAuthDto } from './dto/auth.dto';
+import { StudentCodePipe } from './pipes/studentCode.pipe';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -25,7 +26,7 @@ export class AuthController {
 
     return jwt;
   }
-
+  @UsePipes(new StudentCodePipe())
   @Post('register')
   public async registerUser(@Body() body:RegisterUserDTO){
     return await this.authService.register(body)

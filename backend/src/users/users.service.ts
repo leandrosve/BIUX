@@ -50,7 +50,7 @@ export class UsersService {
         }
         return  user 
       } catch (error) {
-        throw ErrorManager.createSignatureError(error.message);
+       throw error;
       }
     }
 
@@ -70,7 +70,7 @@ export class UsersService {
           data:userObj
         } 
       } catch (error) {
-      throw ErrorManager.createSignatureError(error.message);
+     throw error;
       }
     }
 
@@ -84,7 +84,7 @@ export class UsersService {
           })        }
         return user
       } catch (error) {
-      throw ErrorManager.createSignatureError(error.message);
+     throw error;
       }
     }
 
@@ -104,7 +104,7 @@ export class UsersService {
   
         return user;
       } catch (error) {
-        throw ErrorManager.createSignatureError(error.message);
+       throw error;
       }
     }
   

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersEntity } from 'src/users/entities/users.entity';
 import { ErrorManager } from 'src/utils/error.manager';
@@ -23,31 +23,45 @@ export class AuthService {
     private readonly instructorService: InstructorService
   ) {}
 
-  public async login() {
-    return 'login from service';
-  }
 
-  public async register(body: RegisterUserDTO): Promise<IResponse<UsersEntity[]>> {
+  public async register(body: RegisterUserDTO): Promise<IResponse<any>> {
     try {
       body.password = await bcrypt.hash(body.password, +process.env.HASH_SALT);
-      const user = await this.userRepository.save(body);
-      await this.settingService.created(user);
-      if (user.role.toString() == ROLES.INSTRUCTOR.toString()) {
-        await this.instructorService.regenerateCode(user.id);
+      let  userNew:UsersEntity|null=null;
+      if(body.role==ROLES.STUDENT && body.code){
+        const objectCode=await this.instructorService.findByCode(body.code)
+        if(!objectCode.user){
+          throw new ErrorManager({
+            type:'BAD_REQUEST',
+            message: 'No se pudo crear el estudiante'
+          })
+        }
+        userNew = await this.userRepository.save(body);
+        await this.settingService.created(userNew);
+        const {user:instructor}=objectCode
+        await this.instructorService.createdrelationshipWithStudent(userNew,instructor)
+
+
       }
-      if (user) {
-        return {
-          statusCode: 201,
-          message: 'Se creó el usuario correctamente',
-        };
+      if(body.role==ROLES.INSTRUCTOR){
+        userNew = await this.userRepository.save(body);
+        await this.settingService.created(userNew);
+        await this.instructorService.regenerateCode(userNew.id);
       }
 
+      if(userNew){
+          return {
+          statusCode: 201,
+          message: 'se creo el usuario correctamente'};
+      }
+      
       throw new ErrorManager({
-        type: 'BAD_REQUEST',
-        message: 'No se pudo crear el usuario',
-      });
+        type:'BAD_REQUEST',
+        message: 'No se pudo crear el usuario'
+      })
+
     } catch (error) {
-      throw ErrorManager.createSignatureError(error.message);
+      throw error;
     }
   }
 

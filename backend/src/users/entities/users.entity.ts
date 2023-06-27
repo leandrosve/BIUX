@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { IsEmail, IsNotEmpty } from "class-validator";
 import { BaseEntity } from "../../config/base.entity";
 import { IUser } from "../../interfaces/user.interface";
@@ -37,6 +37,16 @@ export class UsersEntity extends BaseEntity  implements IUser{
     // cada usuario con rol estudiante va a tener RoutineAssignmentEntity, esa asignasion le pertenece solo a un usuario
     @OneToMany(() => RoutineAssignmentEntity, assignment => assignment.student)
     routineAssignments: RoutineAssignmentEntity[];
+
+        // Relación uno a muchos: un instructor tiene muchos estudiantes
+    @OneToMany(() => UsersEntity, student => student)
+    students: UsersEntity[];
+
+    // @ManyToOne(() => UsersEntity, (instructor) => instructor.students)
+    // instructor: UsersEntity;
+
+    // @OneToMany(() => UsersEntity, (student) => student.instructor)
+    // students: UsersEntity[]
 }
 
 

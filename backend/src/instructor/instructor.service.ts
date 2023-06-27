@@ -4,12 +4,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { ErrorManager } from 'src/utils/error.manager';
 import { UsersEntity } from 'src/users/entities/users.entity';
+import { InstructorStudentEntity } from './entities/InstructorStudent.entity';
+import { InstructorStudentDTO } from './dto/instructorStudent.dto';
 
 @Injectable()
 export class InstructorService {
   constructor(
     @InjectRepository(InstructorCodeEntity)
-    private readonly instructorCodeRepository: Repository<InstructorCodeEntity>
+    private readonly instructorCodeRepository: Repository<InstructorCodeEntity>,
+    @InjectRepository(InstructorStudentEntity)
+    private readonly instructorStudentRepository: Repository<InstructorStudentEntity>,
   ) {}
 
   public async code(user_id: number): Promise<InstructorCodeEntity> {
@@ -21,7 +25,7 @@ export class InstructorService {
 
       return instructor_code;
     } catch (error) {
-      throw ErrorManager.createSignatureError(error.message);
+     throw error;
     }
   }
 
@@ -50,7 +54,7 @@ export class InstructorService {
       const updatedCode = await this.instructorCodeRepository.save({ id: currentCode.id, code: newCode });
       return updatedCode;
     } catch (error) {
-      throw ErrorManager.createSignatureError(error.message);
+     throw error;
     }
   }
 
@@ -65,5 +69,22 @@ export class InstructorService {
       counter += 1;
     }
     return result;
+  }
+
+  public async findByCode(code:string):Promise<InstructorCodeEntity>{
+    const objectInstructorCode = await this.instructorCodeRepository.findOne({
+      where: { code },
+      relations: ['user'], // Indica que quieres cargar la relación con la entidad 'user'
+    });
+
+    return objectInstructorCode
+  }
+
+  public async createdrelationshipWithStudent(student:UsersEntity,instructor:UsersEntity ){
+   const body:InstructorStudentDTO={
+      instructor:instructor ,
+      student: student,
+    }
+    return await this.instructorStudentRepository.save(body);
   }
 }
