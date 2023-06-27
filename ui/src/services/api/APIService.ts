@@ -70,4 +70,8 @@ export default class APIService {
   protected static post<T>(path: string, body?: any, options?: Options) {
     return this.doFetch<T>('POST', path, undefined, body, options);
   }
+
+  protected static patch<T>(path: string, body?: any, options?: Options) {
+    return this.doFetch<T>('PATCH', path, undefined, body, options);
+  }
 }

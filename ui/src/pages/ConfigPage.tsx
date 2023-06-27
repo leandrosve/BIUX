@@ -1,4 +1,4 @@
-import { Button, Card, Flex, FormControl, FormLabel, Heading, Icon, Select, Stack, Text, useColorMode, useToast } from '@chakra-ui/react';
+import { Button, Card, FormControl, FormLabel, Heading, Icon, Select, Stack, Text, useColorMode, useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import AccesibilityService, { AccesibilitySettings } from '../services/AccesibilityService';
 import ButtonSelect, { ButtonSelectItem } from '../components/common/forms/ButtonSelect';
@@ -7,7 +7,7 @@ import { MoonIcon, SunIcon, UndoIcon } from '../components/common/Icons';
 import AlertToast from '../components/common/alert-toast/AlertToast';
 import ResponsiveCard from '../components/common/ResponsiveCard';
 import AutoBreadcrumbs from '../layout/AutoBreadcrumbs';
-import { useNavigate } from 'react-router-dom';
+import SettingsService from '../services/api/SettingsService';
 
 const ConfigPage = () => {
   const [fontFamily, setFontFamily] = useState<string>(AccesibilityService.getLocalSettings().fontFamily);
@@ -15,24 +15,24 @@ const ConfigPage = () => {
   const [color, setColor] = useState<string>(AccesibilityService.getLocalSettings().color);
   const [previousSettings, setPreviousSettings] = useState<AccesibilitySettings>(AccesibilityService.getLocalSettings());
   const { colorMode, setColorMode } = useColorMode();
-  const navigate = useNavigate();
-
+  const [loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     toast.closeAll();
-    AccesibilityService.updateFont(fontFamily, fontSize);
-    AccesibilityService.updateColor(color);
-    AccesibilityService.saveLocalSettings({ fontFamily, fontSize, color, colorMode });
-    setPreviousSettings({ fontFamily, fontSize, color, colorMode });
+    const newSettings = { fontFamily, fontSize, color, colorMode };
+    await SettingsService.updateSettings(newSettings);
+    AccesibilityService.saveAndUpdate(newSettings, setColorMode);
+    setLoading(false);
+    setPreviousSettings(newSettings);
     showUndoToast();
   };
 
-  const undoChanges = () => {
-    AccesibilityService.updateFont(previousSettings.fontFamily, previousSettings.fontSize);
-    AccesibilityService.updateColor(previousSettings.color);
-    AccesibilityService.saveLocalSettings(previousSettings);
+  const undoChanges = async () => {
+    await SettingsService.updateSettings(previousSettings);
+    AccesibilityService.saveAndUpdate(previousSettings, setColorMode);
     setStates(previousSettings);
     toast.closeAll();
   };
@@ -44,9 +44,10 @@ const ConfigPage = () => {
     setColorMode(settings.colorMode);
   };
 
-  const restoreDefaults = () => {
+  const restoreDefaults = async () => {
     setStates(AccesibilityService.DEFAULT_SETTINGS);
     AccesibilityService.restoreDefaults();
+    await SettingsService.updateSettings(AccesibilityService.DEFAULT_SETTINGS);
     toast.closeAll();
     showUndoToast(true);
   };
@@ -69,7 +70,6 @@ const ConfigPage = () => {
 
   useEffect(() => {
     AccesibilityService.initialize();
-    //setStates(AccesibilityService.getLocalSettings());
   }, []);
 
   return (
@@ -146,7 +146,7 @@ const ConfigPage = () => {
             </FormControl>
 
             <Stack>
-              <Button colorScheme='primary' width='100%' mt={5} type='submit'>
+              <Button colorScheme='primary' width='100%' mt={5} type='submit' isLoading={loading}>
                 Guardar
               </Button>
               <Button colorScheme='primary' variant='ghost' width='100%' onClick={restoreDefaults}>
