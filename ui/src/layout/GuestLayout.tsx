@@ -11,7 +11,7 @@ interface Props {
 
 const GuestLayout = ({ children }: Props) => {
   return (
-    <Flex grow={1} align='stretch' justify='stretch' direction='column'>
+    <Flex className='background-tone' grow={1} align='stretch' justify='stretch' direction='column'>
       <SkipNavLink id='contenido'>Ir al contenido</SkipNavLink>
 
       <GuestNavbar />

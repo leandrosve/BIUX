@@ -1,4 +1,4 @@
-import { Button, Card, Flex, Heading, Icon, Image, Skeleton, Text, useMediaQuery, useToast } from '@chakra-ui/react';
+import { Badge, Button, Card, Flex, Heading, Icon, Image, Skeleton, Text, useMediaQuery, useToast } from '@chakra-ui/react';
 import illustration from '../../assets/illustrations/bike-cut-recollored.png';
 import { BrandIcon } from '../../components/common/Icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,6 +10,7 @@ import AuthService from '../../services/api/AuthService';
 import { useEffect, useState } from 'react';
 import BAlert from '../../components/common/BAlert';
 import AlertToast from '../../components/common/alert-toast/AlertToast';
+import Role from '../../model/user/Role';
 
 type ID = 'firstName' | 'lastName' | 'email' | 'password' | 'passwordConfirmation';
 const fields: { label: string; help?: string; type?: string; id: ID }[] = [
@@ -37,14 +38,22 @@ const fields: { label: string; help?: string; type?: string; id: ID }[] = [
     id: 'passwordConfirmation',
   },
 ];
-const RegistrationStep = () => {
+
+interface Props {
+  role?: Role;
+  accessCode?: string;
+  instructorId?: number;
+  instructorName?: string;
+}
+
+const RegistrationStep = ({ accessCode, instructorId, instructorName, role = Role.STUDENT }: Props) => {
   const toast = useToast();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>();
   const navigate = useNavigate();
 
-  const [desktop] = useMediaQuery('(min-width: 992px)', { ssr: false, fallback: true });
+  const [desktop] = useMediaQuery('(min-width: 768px)', { ssr: false, fallback: true });
 
   const formik = useFormik({
     initialValues: signupSchema.initialValues,
@@ -86,38 +95,40 @@ const RegistrationStep = () => {
 
   return (
     <Flex gap={5} align='stretch'>
-      <form onSubmit={formik.handleSubmit}>
-        <Flex align='stretch' direction='column' width={['auto', 325]} gap={1}>
-         
-          <Heading my={1}>¡Registrate!</Heading>
-          <BAlert status='error' autoFocus description={error} fontSize='sm' />
-          {fields.map((f) => (
-            <TextField
-              {...f}
-              boxShadow='sm'
-              variant={'filled'}
-              key={f.id}
-              size={'sm'}
-              placeholder={f.label}
-              onChange={formik.handleChange}
-              onBlurCapture={formik.handleBlur}
-              touched={formik.getFieldMeta(f.id).touched}
-              value={formik.values[f.id]}
-              error={formik.errors[f.id]}
-            />
-          ))}
+      <Flex as='form' align='stretch' direction='column' gap={1} onSubmit={(e) => formik.handleSubmit(e as any)}
+        width={{base: '100%', md:'400px', lg: '350px'}}
+      >
+        <Badge variant='subtle' colorScheme={role == Role.STUDENT ? 'teal' : 'orange'} alignSelf='baseline' marginY={-2} borderRadius='md'>
+          {role == Role.INSTRUCTOR ? 'Instructor' : 'Alumno' + (instructorName ? ` de ${instructorName}` : '')}
+        </Badge>
+        <Heading my={1}>¡Registrate! </Heading>
+        <BAlert status='error' autoFocus description={error} fontSize='sm' />
+        {fields.map((f) => (
+          <TextField
+            {...f}
+            boxShadow='sm'
+            variant={'filled'}
+            key={f.id}
+            size={'sm'}
+            placeholder={f.label}
+            onChange={formik.handleChange}
+            onBlurCapture={formik.handleBlur}
+            touched={formik.getFieldMeta(f.id).touched}
+            value={formik.values[f.id]}
+            error={formik.errors[f.id]}
+          />
+        ))}
 
-          <Button colorScheme='primary' width='100%' mt={3} type='submit' isLoading={isSubmitting}>
-            Continuar
-          </Button>
-          <Text textAlign={'center'} mt={2}>
-            ¿Ya estas registrado?{' '}
-            <Link to={BRoutes.LOGIN}>
-              <b>Iniciar Sesión</b>
-            </Link>
-          </Text>
-        </Flex>
-      </form>
+        <Button colorScheme='primary' width='100%' mt={3} type='submit' isLoading={isSubmitting}>
+          Registrarme
+        </Button>
+        <Text textAlign={'center'} mt={2}>
+          ¿Ya estas registrado?{' '}
+          <Link to={BRoutes.LOGIN}>
+            <b>Iniciar Sesión</b>
+          </Link>
+        </Text>
+      </Flex>
       {desktop && (
         <Flex alignItems={'center'} justifyContent={'center'}>
           <Image src={illustration} className='hue-adaptative' alt='Cyclist' w={520} fallback={<Skeleton width={520} height={562} />} />

@@ -27,7 +27,7 @@ const InstructorCodeDisplay = () => {
 
   const shareText = useMemo(() => {
     const name = `${session?.user.firstName} ${session?.user.lastName}`;
-    const registerLink = window.location.origin + BRoutes.SIGNUP;
+    const registerLink = window.location.origin + BRoutes.SIGNUP + '?tipo=alumno';
     return SHARE_TEMPLATE.replace('{{name}}', name).replace('{{link}}', registerLink).replace('{{code}}', code);
   }, [session?.user, code]);
 
@@ -78,7 +78,7 @@ const InstructorCodeDisplay = () => {
       <Text display='inline-flex' maxWidth='360px'>
         Comparte este código con tus alumnos para que puedan unirse a tu grupo.
       </Text>
-      <BAlert size='sm' status='info' description={successMessage} autoFocus minWidth='360px' />
+      <BAlert size='sm' status='info' description={successMessage} autoFocus />
       {dialog.render()}
       <SkeletonWrapper loading={loading} height='55px' fadeDuration={0.2} repeat={2} width='100%'>
         <Tag
@@ -123,7 +123,7 @@ const InstructorCodeDisplay = () => {
             Regenerar Código
           </Button>
 
-          <ShareButton body={shareText} subject={SHARE_SUBJECT} />
+          <ShareButton body={shareText} subject={SHARE_SUBJECT} label='Compartir Invitación' />
         </Flex>
       </SkeletonWrapper>
     </ResponsiveCard>

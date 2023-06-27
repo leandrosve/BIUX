@@ -19,7 +19,7 @@ const PrivateLayout = ({ children }: Props) => {
   }, []);
 
   return (
-    <Flex grow={1} align='center' justify='space-between' direction={'column'} maxWidth='100%'>
+    <Flex className='private-layout background-tone' grow={1} align='center' justify='space-between' direction={'column'} maxWidth='100%'>
       <SkipNavLink id='contenido' zIndex={1000}>
         Ir al contenido
       </SkipNavLink>

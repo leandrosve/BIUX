@@ -5,7 +5,7 @@
   overflow: hidden;
 }
 
-#root::before {
+.background-tone::before {
   height: 100vh;
   width: 100vw;
   position: fixed;
@@ -17,14 +17,17 @@
   background: -webkit-linear-gradient(to bottom, var(--primary-100) 1%, var(--primary-50) 15%, var(--primary-50) 70%, var(--primary-300));
   background: linear-gradient(to bottom, var(--primary-100) 1%, var(--primary-50) 15%, var(--primary-50));
 }
+html[data-theme='light'] .private-layout.background-tone::before {
+  opacity: .2;
+}
+
+html[data-theme='dark'] .background-tone::before {
+  opacity: 0.5;
+  mix-blend-mode: color-burn;
+}
 
 html[data-theme='dark'] .landing-page-illustration {
   filter: drop-shadow(0px 0px 10px var(--primary-400));
-}
-
-html[data-theme='dark'] #root::before {
-  opacity: 0.5;
-  mix-blend-mode: color-burn;
 }
 
 .hue-adaptative {

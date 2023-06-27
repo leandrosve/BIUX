@@ -16,65 +16,92 @@ import {
   RadioProps,
   SimpleGrid,
   Text,
+  Tooltip,
   useRadio,
   useRadioGroup,
 } from '@chakra-ui/react';
-import { useState, SVGProps } from 'react';
-import ResponsiveCard from '../../components/common/ResponsiveCard';
+import { useState, SVGProps, useMemo, useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import './initial-role-form.css';
 import { StudentIcon2, TeacherIcon } from '../../components/common/Icons';
 import { InfoIcon } from '@chakra-ui/icons';
 import BAlert from '../../components/common/BAlert';
-import SimpleStepper from '../../components/common/SimpleStepper';
-import { Link } from 'react-router-dom';
 import { BRoutes } from '../../router/routes';
+import Role from '../../model/user/Role';
+import InstructorService from '../../services/api/InstructorService';
 
 const options = [
   {
     title: 'Alumno',
-    description: 'Soy un alumno de ciclismo con un profesor a cargo que desea mejorar en su progreso personal.',
+    description: 'Soy un alumno de ciclismo con un instructor a cargo que desea mejorar en su progreso personal.',
     value: 'STUDENT',
     icon: StudentIcon2,
   },
   {
-    title: 'Profesor',
-    description: 'Soy un profesor de ciclismo deseando mejorar el control sobre el progreso de mis alumnos.',
+    title: 'Instructor',
+    description: 'Soy un instructor de ciclismo deseando mejorar el control sobre el progreso de mis alumnos.',
     value: 'INSTRUCTOR',
     icon: TeacherIcon,
   },
 ];
 
 interface Props {
-  onSuccess: () => void;
+  onSuccess: (role: Role, accessCode?: string, instructorId?: number, instructorName?: string) => void;
+  initialData: { role?: Role; accessCode?: string };
 }
 
-const InitialRoleStep = ({ onSuccess }: Props) => {
-  const [role, setRole] = useState<string>('');
-  const [accessCode, setAccessCode] = useState<string>('');
+const InitialRoleStep = ({ onSuccess, initialData }: Props) => {
+  const [role, setRole] = useState<Role | undefined>(initialData.role);
+  const [accessCode, setAccessCode] = useState<string | undefined>(initialData.accessCode);
   const [error, setError] = useState<string | null>();
   const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const { getRadioProps } = useRadioGroup({
     name: 'Tipo de usuario',
     onChange: (v) => {
-      setRole(v);
+      setRole(v as Role);
     },
     defaultValue: '',
     value: role,
   });
 
+  const invalidCode = useMemo(() => {
+    return role == Role.STUDENT && (!accessCode?.length || accessCode?.length < 6);
+  }, [accessCode, role]);
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setHasSubmitted(true);
-    if (role === 'STUDENT') {
-      if (accessCode?.length < 6) return;
-      if (accessCode !== 'ASD123') {
-        setError('El código de acceso ingresado no corresponde a ningún profesor.');
-        return;
-      }
+
+    if (!role) return;
+    if (role === Role.INSTRUCTOR) {
+      onSuccess(Role.INSTRUCTOR);
+      return;
     }
-    onSuccess();
+    // STUDENT
+    if (!accessCode?.length || accessCode.length < 6) return;
+    setLoading(true);
+    const res = await InstructorService.checkCode(accessCode);
+    if (res.hasError || !res.data.valid) {
+      setError('El código de acceso ingresado no corresponde a ningún instructor.');
+      setLoading(false);
+      return;
+    }
+    const user = res.data.user;
+    onSuccess(role, accessCode, user.id, `${user.firstName} ${user.lastName}`);
   };
+
+  useEffect(() => {
+    if (searchParams.get('tipo') == 'alumno') {
+      setRole(Role.STUDENT);
+    }
+    if (searchParams.get('tipo') == 'instructor') {
+      setRole(Role.INSTRUCTOR);
+    }
+  }, []);
 
   return (
     <>
@@ -96,16 +123,16 @@ const InitialRoleStep = ({ onSuccess }: Props) => {
         </Flex>
 
         <Collapse in={role == 'STUDENT'} unmountOnExit>
-          <FormControl padding={3} paddingTop={0} isInvalid={hasSubmitted && accessCode?.length < 6}>
+          <FormControl padding={3} paddingTop={0} isInvalid={hasSubmitted && invalidCode}>
             <FormLabel htmlFor='access-code-0' fontSize='lg' fontWeight='bold' marginBottom={0}>
               Código de acceso *
             </FormLabel>
             <FormHelperText marginTop={0} marginBottom={2}>
-              <InfoIcon marginTop='-4px' /> Introduce el código acceso brindado por tu profesor para poder unirte a su grupo.
+              <InfoIcon marginTop='-4px' /> Introduce el código acceso brindado por tu instructor para poder unirte a su grupo.
             </FormHelperText>
             <HStack spacing={[1, 2]}>
               <PinInput
-                isInvalid={hasSubmitted && accessCode?.length < 6}
+                isInvalid={hasSubmitted && invalidCode}
                 id='access-code'
                 type='alphanumeric'
                 size={{ base: 'md', md: 'lg' }}
@@ -123,16 +150,18 @@ const InitialRoleStep = ({ onSuccess }: Props) => {
             </FormErrorMessage>
           </FormControl>
         </Collapse>
-        <Flex justifyContent='space-between' grow={1} alignItems='center'>
-          <Text textAlign={'center'} mt={2} ml={5}>
+        <Flex justifyContent='space-between' grow={1} alignItems='end'>
+          <Text textAlign={'start'} mt={2} ml={[0, 5]}>
             ¿Ya estas registrado?{' '}
             <Link to={BRoutes.LOGIN}>
-              <b>Iniciar Sesión</b>
+              <b style={{ display: 'inline-flex' }}>Iniciar Sesión</b>
             </Link>
           </Text>
-          <Button size='lg' colorScheme='primary' type='submit'>
-            Continuar
-          </Button>
+          <Tooltip hasArrow label={!role ? 'Por favor selecciona una opción' : null}>
+            <Button size='lg' colorScheme='primary' type='submit' isDisabled={!role} isLoading={loading}>
+              Continuar
+            </Button>
+          </Tooltip>
         </Flex>
       </Flex>
     </>

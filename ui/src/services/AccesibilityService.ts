@@ -82,7 +82,7 @@ export default class AccesibilityService {
 
   // DOM Functions
   static focusOnMainContent() {
-    const main = document.getElementById('main');
+    const main = document.getElementById('contenido');
     main?.focus();
   }
 }

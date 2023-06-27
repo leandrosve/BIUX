@@ -1,4 +1,5 @@
 import { InstructorCode } from '../../model/instructor/InstructorCode';
+import { User } from '../../model/user/User';
 import APIService from './APIService';
 
 export default class InstructorService extends APIService {
@@ -10,5 +11,9 @@ export default class InstructorService extends APIService {
 
   static async regenerateCode() {
     return this.post<InstructorCode>('/code/regenerate');
+  }
+
+  static async checkCode(code: string) {
+    return this.post<{valid: boolean, user:User}>('/code/check', {code});
   }
 }

@@ -29,11 +29,31 @@ export class InstructorService {
     }
   }
 
+  public async checkCode(code: string): Promise<{valid: boolean, user: UsersEntity}> {
+    try {
+      const instructorCode = await this.instructorCodeRepository
+        .createQueryBuilder('instructor_code')
+        .innerJoinAndSelect('instructor_code.user', 'u')
+        .where('instructor_code.code = :code', { code })
+        .getOne();
+
+      if (!instructorCode) {
+        throw new ErrorManager({ type: 'BAD_REQUEST', message: 'invalid_code' });
+      }
+      return {
+        valid: true,
+        user: instructorCode.user
+      };
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
   public async regenerateCode(user_id: number) {
     try {
       const currentCode = await this.code(user_id);
 
-      let newCode:string;
+      let newCode: string;
       for (let i = 0, codeExists = true; i < 10; i++) {
         newCode = this.generateInstructorCode();
         codeExists = Boolean(await this.instructorCodeRepository.findOne({ where: { code: newCode } }));
