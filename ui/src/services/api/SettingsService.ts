@@ -12,4 +12,8 @@ export default class SettingsService extends APIService {
     if (res.hasError) return;
     AccesibilityService.saveAndUpdate(res.data, setColorMode);
   }
+
+  static async updateSettings(settings: AccesibilitySettings) {
+    return await this.patch<AccesibilitySettings>('/user', settings);
+  }
 }
