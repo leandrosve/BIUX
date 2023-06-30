@@ -1,20 +1,35 @@
-import { Box, Flex, Icon, SimpleGrid, Tag, Text } from '@chakra-ui/react';
+import { Box, Flex, Icon,  Tag, Text, useMediaQuery } from '@chakra-ui/react';
 import itemsRoutes from '../layout/sidebar/sidebarItems';
 import InstructorCodeDisplay from '../features/instructor/InstructorCodeDisplay';
 import { SessionContext } from '../context/SessionProvider';
 import { useContext, useMemo } from 'react';
 import Role from '../model/user/Role';
+import {  useNavigate } from "react-router-dom";
+import { ResponsiveDashBoard } from '../components/ResponsiveDashboard';
 
 const DashboardPage = () => {
   const { session } = useContext(SessionContext);
   const role = useMemo(() => session?.user.role, [session]);
+  const navigate=useNavigate();
+  const [isLargerThan1510] = useMediaQuery('(max-width: 1510px)')
+
+  const styleFlex=''
   return (
     <>
-      {role == Role.INSTRUCTOR && <InstructorCodeDisplay />}
-      <SimpleGrid columns={{ base: 1, sm: 2, md: 3, xl: 4 }} gap={4} padding='10vh'>
+<ResponsiveDashBoard>
+
+{role == Role.INSTRUCTOR && <InstructorCodeDisplay />}
+    <Flex flexDirection={{sm:'column',md:"column",lx:"row"}} 
+            justifyContent={"center"} 
+            alignItems={"center"} 
+            alignContent={"center"}
+            padding={"1.5%"}
+            gap={"5px"}
+      >
         {itemsRoutes.map((item) => (
-          <div key={item.label}>
+          <div key={item.label}  >
             <Box
+            onClick={()=> navigate(item.path)}
               transition={' 0.5s all'}
               borderWidth='1px'
               borderRadius='lg'
@@ -34,7 +49,10 @@ const DashboardPage = () => {
             </Box>
           </div>
         ))}
-      </SimpleGrid>
+    </Flex>
+</ResponsiveDashBoard>
+
+
     </>
   );
 };

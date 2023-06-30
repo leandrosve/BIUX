@@ -67,7 +67,8 @@ const RegistrationStep = ({ accessCode, instructorId, instructorName, role = Rol
         lastName: values.lastName,
         email: values.email,
         password: values.password,
-        role: 'INSTRUCTOR',
+        role,
+        code:accessCode
       };
       const res = await AuthService.signUp(body);
       if (res.status == 201) {
