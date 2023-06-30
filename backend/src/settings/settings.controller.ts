@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Patch, Req, UseGuards } from '@nestjs/common';
-import { ApiHeader, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiParam, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Request } from 'express';
 import { SettingsService } from './settings.service';
@@ -23,6 +23,7 @@ export class SettingsController {
 
   @Patch('user')
   @ApiHeader({name:"token",required:true})
+  @ApiProperty()
   public async update(@Req() request: Request, @Body() body: SettingUpdateDTO,) {
 
     return await this.settingService.update(request.idUser,body);

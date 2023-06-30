@@ -3,30 +3,34 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Request  } from 'express';
 import { RoutinesEntity } from './entities/routines.entity';
 import { Repository } from 'typeorm';
+import { UsersService } from 'src/users/users.service';
+import { RoutineCreateDTO } from './dto/routine.create.dto';
+import { UsersEntity } from 'src/users/entities/users.entity';
 
 @Injectable()
 export class RoutinesService {
   constructor(
        @InjectRepository(RoutinesEntity)
    private readonly routineRepository: Repository<RoutinesEntity>,
+   @InjectRepository(RoutinesEntity)
+   private readonly userRepository: Repository<UsersEntity>,
+   private readonly userService: UsersService,
   ) {}
 
   public async all(){
     return "all";
   }
 
-  public async getStudentRoutines(id:number){
-    return 'student routines: ' + id
+  public async getStudentRoutines(userId:number){
+    return 'student routines: ' + userId
+  }
+  public async createdRoutine(userId:number, body:RoutineCreateDTO){
+    const user=await this.userService.findUserById(userId)
+
+    //console.log(user)
+    return await {msj:"created: " + userId, data:user,body}
   }
 
-  // constructor(
-  //   @InjectRepository(Routine)
-  //   private readonly routineRepository: Repository<Routine>,
-  //   @InjectRepository(User)
-  //   private readonly userRepository: Repository<User>,
-  //   @InjectRepository(UserRoutine)
-  //   private readonly userRoutineRepository: Repository<UserRoutine>,
-  // ) {}
 
   // async createRoutine(creatorId: number, name: string): Promise<Routine> {
   //   const creator = await this.userRepository.findOne(creatorId);

@@ -4,6 +4,7 @@ import { IRoutine } from "../../interfaces/routine.interface";
 import { RoutineAssignmentEntity } from "../../users/entities/RoutineAssignmentEntity.entity";
 import { UsersEntity } from "../../users/entities/users.entity";
 import {  Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { SegmentsEntity } from "src/segments/entities/segments.entity";
 
 @Entity({ name: 'routines' })
 export class RoutinesEntity extends BaseEntity implements IRoutine{
@@ -13,7 +14,6 @@ export class RoutinesEntity extends BaseEntity implements IRoutine{
   name: string;
 
   @Column()
-  @IsOptional()
   description: string;
 
 
@@ -23,4 +23,8 @@ export class RoutinesEntity extends BaseEntity implements IRoutine{
   
   @OneToMany(() => RoutineAssignmentEntity, assignment => assignment.routine)
   assignments: RoutineAssignmentEntity[];
+
+
+  @OneToMany(() => SegmentsEntity, (segment) => segment.routine)
+  segments: SegmentsEntity[]
 }
