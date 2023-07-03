@@ -52,7 +52,7 @@ const LoginPage = () => {
             <Stack align='stretch' width={['auto', 350]}>
               <Icon margin='auto' as={BrandIcon} height={'40px'} width={'40px'} />
 
-              <Heading mt={5} textAlign='center'>
+              <Heading mt={5} textAlign='center' as='legend'>
                 Iniciar Sesión
               </Heading>
               <BAlert status='error' autoFocus description={error} />

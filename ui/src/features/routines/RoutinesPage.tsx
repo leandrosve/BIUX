@@ -3,6 +3,7 @@ import AutoBreadcrumbs from '../../layout/AutoBreadcrumbs';
 import RoutineList from './RoutineList';
 import { Link, Outlet, Route, Routes } from 'react-router-dom';
 import { Fade, Text } from '@chakra-ui/react';
+import RoutineDetails from './RoutineDetails';
 
 const RoutinesPage = () => {
   return (
@@ -12,10 +13,13 @@ const RoutinesPage = () => {
         <Route path='crear' element={<RoutineForm />} />
 
         <Route path='' element={<RoutineList />} />
-        <Route path='/:id' element={<Text>aaaaaaaaaaaaaaaaaaaaaaaa</Text>} />
+        <Route path='/:id' element={<RoutineDetails />} />
       </Routes>
       <Outlet />
     </>
+
+
+
   );
 };
 

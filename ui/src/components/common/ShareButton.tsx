@@ -26,13 +26,13 @@ const ShareButton = (props: Props) => {
       </Tooltip>
       <MenuList>
         <MenuItem as='button' gap={2} onClick={handleWhatsApp}>
-          <WhatsAppIcon fontSize='25px' /> WhatsApp
+          <WhatsAppIcon fontSize='25px' aria-hidden='true' /> WhatsApp
         </MenuItem>
         <MenuItem gap={2} as='a' href={`mailto:?subject=${props.subject}&body=${encodeURIComponent(props.body)}`}>
-          <EmailIcon fontSize='25px' color='#ca2929' _dark={{ color: '#df5b5b' }} /> Correo electrónico
+          <EmailIcon fontSize='25px' aria-hidden='true' color='#ca2929' _dark={{ color: '#df5b5b' }} /> Correo electrónico
         </MenuItem>
         <MenuItem gap={2} as='button' onClick={handleCopy}>
-          <CopyIcon fontSize='22px' /> Copiar
+          <CopyIcon fontSize='22px' aria-hidden='true' /> Copiar
         </MenuItem>
       </MenuList>
     </Menu>

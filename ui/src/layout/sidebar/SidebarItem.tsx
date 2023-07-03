@@ -37,6 +37,7 @@ const SidebarItem = ({ label, icon, iconSize = 6, selected, onClick, onLinkClick
             alignItems='center'
             justifyContent='center'
             boxShadow='md'
+            aria-hidden
           >
             <Icon as={icon} fill='text.300' boxSize={iconSize} />
           </Tag>

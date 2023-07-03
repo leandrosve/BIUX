@@ -2,7 +2,7 @@ import { ChatIcon, ChevronDownIcon, ChevronUpIcon, DeleteIcon, DragHandleIcon, E
 import { Flex, FlexProps, Grid, GridItem, Icon, IconButton, Tag, Text, Tooltip, useMediaQuery } from '@chakra-ui/react';
 import { DistanceIcon, StopwatchIcon } from '../../components/common/Icons';
 import { DraggableProvidedDragHandleProps } from '@hello-pangea/dnd';
-import { RoutineSegment } from '../../model/routines/Routine';
+import { DraggableSegment, RoutineSegment } from '../../model/routines/Routine';
 import { useEffect, useRef } from 'react';
 
 const items = [
@@ -41,17 +41,28 @@ const items = [
 ];
 
 interface Props extends FlexProps {
-  segment: RoutineSegment;
+  segment: DraggableSegment;
   index: number;
   onOrderChange: (previousIndex: number, newIndex: number) => void;
   dragHandleProps?: DraggableProvidedDragHandleProps | null;
   lastIndex: number;
   orderMethod?: 'drag' | 'buttons';
-  onRemove: (removedItem: RoutineSegment) => void;
-  onEdit: (removedItem: RoutineSegment) => void;
+  onRemove: (removedItem: DraggableSegment) => void;
+  onEdit: (removedItem: DraggableSegment) => void;
+  hideButtons?: boolean;
 }
 
-const RoutineSegmentListItem = ({ index, segment, onOrderChange, onRemove, onEdit, dragHandleProps, lastIndex, orderMethod = 'drag' }: Props) => {
+const RoutineSegmentListItem = ({
+  index,
+  segment,
+  onOrderChange,
+  onRemove,
+  onEdit,
+  dragHandleProps,
+  lastIndex,
+  orderMethod = 'drag',
+  hideButtons,
+}: Props) => {
   const [mobile] = useMediaQuery('(max-width: 768px)', { ssr: false, fallback: true });
 
   const sortUpRef = useRef<HTMLButtonElement>(null);
@@ -120,16 +131,18 @@ const RoutineSegmentListItem = ({ index, segment, onOrderChange, onRemove, onEdi
           </Grid>
         </Flex>
       </Flex>
-      <Flex alignItems='center' gap={2} justifyContent='center' direction={{ base: 'column-reverse', md: 'row' }}>
-        <Tooltip hasArrow label='Eliminar segmento' aria-label='A tooltip' openDelay={600}>
-          <IconButton icon={<DeleteIcon />} aria-label='Eliminar segmento' variant='ghost' colorScheme='red' onClick={() => onRemove(segment)} />
-        </Tooltip>
-        <Tooltip hasArrow label='Editar segmento' aria-label='A tooltip' openDelay={600}>
-          <IconButton icon={<EditIcon />} aria-label='Editar segmento' onClick={() => onEdit(segment)} />
-        </Tooltip>
-      </Flex>
+      {!hideButtons && (
+        <Flex alignItems='center' gap={2} justifyContent='center' direction={{ base: 'column-reverse', md: 'row' }}>
+          <Tooltip hasArrow label='Eliminar segmento' aria-label='A tooltip' openDelay={600}>
+            <IconButton icon={<DeleteIcon />} aria-label='Eliminar segmento' variant='ghost' colorScheme='red' onClick={() => onRemove(segment)} />
+          </Tooltip>
+          <Tooltip hasArrow label='Editar segmento' aria-label='A tooltip' openDelay={600}>
+            <IconButton icon={<EditIcon />} aria-label='Editar segmento' onClick={() => onEdit(segment)} />
+          </Tooltip>
+        </Flex>
+      )}
 
-      {orderMethod == 'buttons' && (
+      {!hideButtons && orderMethod == 'buttons' && (
         <Flex direction='column'>
           <Tooltip hasArrow label='Mover hacia arriba' aria-label='A tooltip' placement='left' openDelay={800}>
             <IconButton
@@ -157,7 +170,7 @@ const RoutineSegmentListItem = ({ index, segment, onOrderChange, onRemove, onEdi
           </Tooltip>
         </Flex>
       )}
-      {orderMethod == 'drag' && (
+      {!hideButtons && orderMethod == 'drag' && (
         <Tooltip hasArrow label='Arrastra y suelta para ordenar' aria-label='A tooltip' placement='right' openDelay={1000}>
           <IconButton
             icon={<DragHandleIcon />}

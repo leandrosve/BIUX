@@ -11,5 +11,11 @@ export interface RoutineSegment {
   pulseRate: number;
   duration: number;
   description?: string;
-  id: string;
+  order: number;
+  id?: number;
+}
+
+// Only to manage drag and drop functionality
+export interface DraggableSegment extends RoutineSegment{
+  localId: string;
 }

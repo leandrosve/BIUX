@@ -2,11 +2,17 @@ import Routine from '../../model/routines/Routine';
 import APIService from './APIService';
 
 export default class RoutineService extends APIService {
-  static test = { email: 'profesor@gmail.com', password: '12345' };
-  static async createRoutine(data: Routine) {
-    // MOCKED
-    await this.delay(1000);
+  protected static PATH = '/routines';
 
-    return { status: 200 };
+  static async createRoutine(data: Routine) {
+    return await this.post<Routine[]>('/instructor', data);
+  }
+
+  static async getInstructorRoutines() {
+    return await this.get<Routine[]>('/instructor');
+  }
+
+  static async getRoutineDetail(id: number) {
+    return await this.get<Routine>(`/${id}`);
   }
 }

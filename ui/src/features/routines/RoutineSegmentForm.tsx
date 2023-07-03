@@ -22,14 +22,14 @@ import {
   Tooltip,
 } from '@chakra-ui/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { RoutineSegment } from '../../model/routines/Routine';
+import { DraggableSegment } from '../../model/routines/Routine';
 
 interface Props {
   isOpen: boolean;
   onCancel: () => void;
-  onSubmit: (segment: RoutineSegment) => void;
+  onSubmit: (segment: DraggableSegment) => void;
   index?: number;
-  segment?: RoutineSegment | null; // For editting
+  segment?: DraggableSegment | null; // For editting
 }
 
 const RoutineSegmentForm = (props: Props) => {
@@ -54,11 +54,20 @@ const RoutineSegmentFormContent = ({ onCancel, onSubmit, index, segment }: Props
   const [pulseRate, setPulseRate] = useState<number>();
 
   const ref = useRef<HTMLDivElement>(null);
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const z = (value?: number) => value ?? 0;
-    onSubmit({ id: segment?.id ?? '', distance, duration: z(duration), cadence: z(cadence), pulseRate: z(pulseRate), description });
+    onSubmit({
+      id: segment?.id,
+      localId: segment?.localId ?? '',
+      distance,
+      order: segment?.order ?? -1,
+      duration: z(duration),
+      cadence: z(cadence),
+      pulseRate: z(pulseRate),
+      description,
+    });
   };
 
   const disableSubmit = useMemo(() => {
@@ -201,15 +210,16 @@ const BasicNumberInput = ({ max, value, onChange, ...rest }: BasicNumberInputPro
     if (number !== 0 && !number) onChange(undefined);
     if (isNaN(number)) return;
     onChange(number);
-  }
+  };
   return (
-  <NumberInput size='sm' min={0} max={max} value={`${value ?? ""}`} _light={{ border: '0px solid' }} onChange={handleChange}>
-    <NumberInputField {...rest} min={0} />
-    <NumberInputStepper>
-      <NumberIncrementStepper />
-      <NumberDecrementStepper />
-    </NumberInputStepper>
-  </NumberInput>
-)};
+    <NumberInput size='sm' min={0} max={max} value={`${value ?? ''}`} _light={{ border: '0px solid' }} onChange={handleChange}>
+      <NumberInputField {...rest} min={0} />
+      <NumberInputStepper>
+        <NumberIncrementStepper />
+        <NumberDecrementStepper />
+      </NumberInputStepper>
+    </NumberInput>
+  );
+};
 
 export default RoutineSegmentForm;

@@ -90,7 +90,7 @@ const InstructorCodeDisplay = () => {
           gap={5}
           justifyContent='space-between'
         >
-          <Flex grow={1} justifyContent='center'>
+          <Flex grow={1} justifyContent='center' aria-label='Codigo de Acceso' role='contentinfo'>
             {showCode ? code : '******'}
           </Flex>
           <Flex gap={2}>
@@ -98,7 +98,7 @@ const InstructorCodeDisplay = () => {
               <IconButton
                 onClick={() => setShowCode((p) => !p)}
                 icon={showCode ? <HideIcon fontSize='25px' /> : <ViewIcon fontSize='25px' />}
-                aria-label={showCode ? 'Mostrar' : 'Ocultar'}
+                aria-label={!showCode ? 'Mostrar' : 'Ocultar'}
               />
             </Tooltip>
             <Tooltip

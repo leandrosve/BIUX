@@ -1,13 +1,13 @@
 import { ArrowBackIcon, DragHandleIcon, InfoIcon, PlusSquareIcon, UpDownIcon } from '@chakra-ui/icons';
-import { Button, Flex, Heading, Icon, List, ListItem, Text, Tooltip, VisuallyHidden } from '@chakra-ui/react';
+import { Button, Flex, Heading, Icon, List, ListItem, Text, Tooltip, VisuallyHidden, useToast } from '@chakra-ui/react';
 import RoutineSegmentListItem from './RoutineSegmentListItem';
-
 import { useState } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import RoutineSegmentForm from './RoutineSegmentForm';
 import BTooltip from '../../components/common/BTooltip';
-import Routine, { RoutineSegment } from '../../model/routines/Routine';
+import Routine, { DraggableSegment, RoutineSegment } from '../../model/routines/Routine';
 import RoutineService from '../../services/api/RoutineService';
+import AlertToast from '../../components/common/alert-toast/AlertToast';
 
 interface Props {
   routine: Routine;
@@ -15,57 +15,65 @@ interface Props {
 }
 
 const RoutineFormSegmentsStep = ({ routine, onPrevious }: Props) => {
-  const [segments, setSegments] = useState<RoutineSegment[]>(routine.segments);
+  const [segments, setSegments] = useState<DraggableSegment[]>(initializeSegments(routine.segments));
   const [showForm, setShowForm] = useState(false);
-  const [edittingSegment, setEdittingSegment] = useState<RoutineSegment | null>();
+  const [edittingSegment, setEdittingSegment] = useState<DraggableSegment | null>();
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  // For drag and drop we need to pass an id to each segment
-  const [localId, setLocalId] = useState(findLastLocalId(routine.segments));
+  const toast = useToast();
 
   const handleOrderChange = (previousIndex: number, newIndex: number) => {
-    setSegments((prev) => reorderItem(prev, previousIndex, newIndex));
+    setSegments((prev) => insertAndReorderItems(prev, previousIndex, newIndex));
   };
 
   const handleOnDragEnd = (result: DropResult) => {
     setSegments((prev) => {
       if (!result.destination) return prev;
-      return reorderItem(prev, result.source.index, result.destination.index);
+      return insertAndReorderItems(prev, result.source.index, result.destination.index);
     });
   };
 
-  const handleAddSegment = (segment: RoutineSegment) => {
+  const handleAddSegment = (segment: DraggableSegment) => {
     if (segment.id) {
-      handleEditSegment(segment);
+      handleEditSegment({ ...segment });
       return;
     }
     setSegments((prev) => {
-      return [...prev, { ...segment, id: 'localId-' + localId }];
+      return [...prev, { ...segment, localId: getRandomLocalId(), order: prev.length + 1 }];
     });
-    setLocalId((prev) => prev + 1);
     setShowForm(false);
   };
 
-  const handleEditSegment = (segment: RoutineSegment) => {
+  const handleEditSegment = (segment: DraggableSegment) => {
     setSegments((prev) => prev.map((s) => (s.id !== segment.id ? s : segment)));
     setShowForm(false);
     setEdittingSegment(null);
   };
 
-  const handleRemoveSegment = (segment: RoutineSegment) => {
+  const handleRemoveSegment = (segment: DraggableSegment) => {
     setSegments((prev) => prev.filter((s) => s.id !== segment.id));
   };
 
-  const handleOpenEditSegment = (segment: RoutineSegment) => {
+  const handleOpenEditSegment = (segment: DraggableSegment) => {
     setEdittingSegment(segment);
     setShowForm(true);
   };
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    await RoutineService.createRoutine({ ...routine, segments });
+    const res = await RoutineService.createRoutine({ ...routine, segments });
     setIsSubmitting(false);
+    if (res.hasError) return;
+    toast({
+      position: 'bottom-right',
+      duration: 15000,
+      render: (t) => (
+        <AlertToast colorScheme='primary' status='success' hasProgress duration={15000} hasIcon isClosable onClose={() => toast.close(t.id || '')}>
+          {'Se ha creado la rutina exitosamente'}
+        </AlertToast>
+      ),
+    });
   };
 
   return (
@@ -74,7 +82,7 @@ const RoutineFormSegmentsStep = ({ routine, onPrevious }: Props) => {
         Planificación
       </Heading>
 
-      <Flex gap='10px' direction='column' alignItems='stretch' grow={1} mt={3} >
+      <Flex gap='10px' direction='column' alignItems='stretch' grow={1} mt={3}>
         <DraggableList
           onDragEnd={handleOnDragEnd}
           onOrderChange={handleOrderChange}
@@ -131,9 +139,9 @@ const RoutineFormSegmentsStep = ({ routine, onPrevious }: Props) => {
 interface DraggableListProps {
   onDragEnd: (result: DropResult) => void;
   onOrderChange: (prev: number, next: number) => void;
-  segments: RoutineSegment[];
-  onRemove: (removedItem: RoutineSegment) => void;
-  onEdit: (removedItem: RoutineSegment) => void;
+  segments: DraggableSegment[];
+  onRemove: (removedItem: DraggableSegment) => void;
+  onEdit: (removedItem: DraggableSegment) => void;
 }
 
 const DraggableList = ({ onDragEnd, onOrderChange, onRemove, onEdit, segments }: DraggableListProps) => {
@@ -158,10 +166,10 @@ const DraggableList = ({ onDragEnd, onOrderChange, onRemove, onEdit, segments }:
         {(ul) => (
           <List className='routine-items' {...ul.droppableProps} ref={ul.innerRef} maxHeight='50vh' overflowX='hidden' overflowY='auto'>
             {segments.map((s, i) => (
-              <Draggable key={s.id} draggableId={s.id} index={i} isDragDisabled={orderMethod == 'buttons'}>
+              <Draggable key={s.localId} draggableId={s.localId} index={i} isDragDisabled={orderMethod == 'buttons'}>
                 {(li) => {
                   return (
-                    <ListItem key={s.id} ref={li.innerRef} {...li.draggableProps} tabIndex={0}>
+                    <ListItem key={s.localId} ref={li.innerRef} {...li.draggableProps} tabIndex={0}>
                       <RoutineSegmentListItem
                         segment={s}
                         index={i}
@@ -187,21 +195,17 @@ const DraggableList = ({ onDragEnd, onOrderChange, onRemove, onEdit, segments }:
 
 /* Utility functions */
 
-const reorderItem = (items: RoutineSegment[], previousIndex: number, newIndex: number) => {
-  const next = [...items];
-  const el = next.splice(previousIndex, 1)[0];
-  next.splice(newIndex, 0, el);
-  return next;
-};
+const LOCAL_ID_PREFIX = 'localId-'; // prefix used to allow drag and drop
+const getRandomLocalId = () => LOCAL_ID_PREFIX + crypto.randomUUID();
+const sortSegments = (segments: RoutineSegment[]) => segments.sort((a, b) => (a.order > b.order ? 1 : -1));
+const generateLocalIds = (segments: RoutineSegment[]) => segments.map((s) => ({ ...s, localId: `${s.id}` }));
+const initializeSegments = (segments: RoutineSegment[]) => generateLocalIds(sortSegments(segments));
 
-const findLastLocalId = (items: RoutineSegment[]) => {
-  let maxId = 0;
-  for (let item of items) {
-    if (!item.id.startsWith('localId-')) continue;
-    const id = parseInt(item.id.split('-')[1]);
-    if (id > maxId) maxId = id;
-  }
-  return maxId + 1;
+const insertAndReorderItems = (items: DraggableSegment[], previousIndex: number, newIndex: number) => {
+  const orderedItems = [...items];
+  const el = orderedItems.splice(previousIndex, 1)[0];
+  orderedItems.splice(newIndex, 0, el);
+  return orderedItems.map((item, index) => ({ ...item, order: index + 1 }));
 };
-
+export {DraggableList as RoutineSegmentsDraggableList };
 export default RoutineFormSegmentsStep;
