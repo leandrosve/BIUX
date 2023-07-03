@@ -9,6 +9,6 @@ import { SegmentsController } from './segments.controller';
   imports: [TypeOrmModule.forFeature([SegmentsEntity]), ],
   controllers: [SegmentsController],
   providers: [SegmentsService],
-  exports:[TypeOrmModule]
+  exports:[TypeOrmModule,SegmentsService]
 })
 export class SegmentsModule {}

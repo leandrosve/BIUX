@@ -1,6 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { Type } from 'class-transformer';
+import { ArrayNotEmpty, IsArray, IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
 import { IRoutine } from "src/interfaces/routine.interface";
+import { SegmentCreateDTO } from 'src/segments/dto/segment.create.dto';
 
 export class RoutineCreateDTO implements IRoutine{
     @ApiProperty({ example: 'Nombre de la rutina'})
@@ -10,8 +12,14 @@ export class RoutineCreateDTO implements IRoutine{
 
     @ApiProperty({ example: 'Descripcion de la rutina'})
     @IsOptional()
-    @IsNotEmpty()
     @IsString()
     description: string;
+
+    @ApiProperty({ isArray: true,  type: SegmentCreateDTO })
+    @IsArray()
+    @ArrayNotEmpty()
+    @ValidateNested({ each: true })
+    @Type(() => SegmentCreateDTO)
+    segments: SegmentCreateDTO[]
     
 } 

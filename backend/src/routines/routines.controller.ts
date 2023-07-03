@@ -6,6 +6,7 @@ import { Request } from 'express';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { RoutineCreateDTO } from './dto/routine.create.dto';
+import { RoutineUpdateDTO } from './dto/routine.update.dto';
 
 
 @ApiTags('Routines')
@@ -20,7 +21,15 @@ export class RoutinesController {
   @ApiHeader({name:'token',required: true})
   @Roles('INSTRUCTOR')
   public async all(@Req() request: Request){
-    return this.routinesService.all()
+    return this.routinesService.all(request.idUser)
+  }
+
+  @Get(':id_routine')
+  @ApiProperty()
+  @ApiHeader({name:'token',required: true})
+  @Roles('INSTRUCTOR')
+  public async details(@Req() request: Request,@Param('id_routine') id_routine: number,){
+    return this.routinesService.details(request.idUser,id_routine)
   }
 
   @Post('instructor')
@@ -35,17 +44,10 @@ export class RoutinesController {
   @ApiProperty({name:'id_routine'})
   @ApiHeader({name:'token',required: true})
   @Roles('INSTRUCTOR')
-  public async uptated(@Req() request: Request,@Param('id_routine') id_routine: number){
-    return this.routinesService.all()
+  public async update(@Req() request: Request,@Param('id_routine') id_routine: number,@Body() body:RoutineUpdateDTO){
+    return this.routinesService.update(request.idUser,id_routine,body)
   }
 
-  // @Get('instructor/assignsToStudent/:id_student')
-  // @ApiProperty({name:"id_student"})
-  // @ApiHeader({name:'token',required: true})
-  // @Roles('STUDENT')
-  // public async asignarToStudent(@Req() request: Request,@Param('id_student') id_student: number){
-  //   return this.routinesService.getStudentRoutines(request.idUser)
-  // }
 
 //----------------------------------------------------------
   @Get('student')

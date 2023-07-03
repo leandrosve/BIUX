@@ -3,10 +3,12 @@ import { BaseEntity } from '../../config/base.entity';
 import { ISetting } from '../../interfaces/setting.interface';
 import { UsersEntity } from '../../users/entities/users.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
-import { RoutinesEntity } from 'src/routines/entities/routines.entity';
+import { RoutinesEntity } from '../../routines/entities/routines.entity';
 
 @Entity({name:'segments'})
 export class SegmentsEntity extends BaseEntity  implements ISegment{
+  @Column({name:'order'})
+  order:number
 
   @Column({name:'distance'})
   distance: number;

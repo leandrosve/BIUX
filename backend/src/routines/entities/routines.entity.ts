@@ -3,8 +3,8 @@ import { BaseEntity } from "../../config/base.entity";
 import { IRoutine } from "../../interfaces/routine.interface";
 import { RoutineAssignmentEntity } from "../../users/entities/RoutineAssignmentEntity.entity";
 import { UsersEntity } from "../../users/entities/users.entity";
-import {  Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { SegmentsEntity } from "src/segments/entities/segments.entity";
+import {  Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { SegmentsEntity } from "../../segments/entities/segments.entity";
 
 @Entity({ name: 'routines' })
 export class RoutinesEntity extends BaseEntity implements IRoutine{
@@ -18,6 +18,7 @@ export class RoutinesEntity extends BaseEntity implements IRoutine{
 
 
   @ManyToOne(() => UsersEntity, user => user.routines_created)
+  @JoinColumn({name:'instructor_id'})
   instructor: UsersEntity;
 
   
@@ -25,6 +26,6 @@ export class RoutinesEntity extends BaseEntity implements IRoutine{
   assignments: RoutineAssignmentEntity[];
 
 
-  @OneToMany(() => SegmentsEntity, (segment) => segment.routine)
+  @OneToMany(() => SegmentsEntity, (segment) => segment.routine, { cascade: true })
   segments: SegmentsEntity[]
 }

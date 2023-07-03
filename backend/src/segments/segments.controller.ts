@@ -24,7 +24,7 @@ export class SegmentsController {
   @Post()
   @PublicAccess()
   public async create(@Body() body:SegmentCreateDTO) {
-    return await {body};
+    return await this.segmentsService.create(body);
   }
 
 }

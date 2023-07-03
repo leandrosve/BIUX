@@ -33,6 +33,6 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document);
   
   await app.listen(process.env.PORT || 3335);
-  console.log(`Application running on: ${await app.getUrl()}`);
+  console.log(`Application running on: ${await app.getUrl()}  http://localhost:3335/docs`);
 }
 bootstrap();

@@ -1,47 +1,90 @@
-import { Injectable,} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Request  } from 'express';
+import { Request } from 'express';
 import { RoutinesEntity } from './entities/routines.entity';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
 import { RoutineCreateDTO } from './dto/routine.create.dto';
 import { UsersEntity } from 'src/users/entities/users.entity';
+import { ErrorManager } from 'src/utils/error.manager';
+import { RoutineUpdateDTO } from './dto/routine.update.dto';
+import { SegmentCreateDTO } from 'src/segments/dto/segment.create.dto';
 
 @Injectable()
 export class RoutinesService {
   constructor(
-       @InjectRepository(RoutinesEntity)
-   private readonly routineRepository: Repository<RoutinesEntity>,
-   @InjectRepository(RoutinesEntity)
-   private readonly userRepository: Repository<UsersEntity>,
-   private readonly userService: UsersService,
+    @InjectRepository(RoutinesEntity)
+    private readonly routineRepository: Repository<RoutinesEntity>,
+    @InjectRepository(RoutinesEntity)
+    private readonly userRepository: Repository<UsersEntity>,
+    private readonly userService: UsersService
   ) {}
 
-  public async all(){
-    return "all";
+  public async all(userId: number) {
+    return await this.routineRepository.createQueryBuilder('routines').where('routines.instructor_id = :userId', { userId }).getMany();
   }
 
-  public async getStudentRoutines(userId:number){
-    return 'student routines: ' + userId
+  public async getStudentRoutines(routineId: number) {
+    return 'student routines: ';
   }
-  public async createdRoutine(userId:number, body:RoutineCreateDTO){
-    const user=await this.userService.findUserById(userId)
+  public async createdRoutine(userId: number, body: RoutineCreateDTO) {
+    const user = await this.userService.findUserById(userId);
 
+    this.checkSegmentsOrder(body.segments);
+
+    const newRoutine = {
+      ...body,
+      instructor: user,
+    };
+    const result = await this.routineRepository.save(newRoutine);
     //console.log(user)
-    return await {msj:"created: " + userId, data:user,body}
+    return result;
+  }
+  public async details(userId, routineId: number) {
+    const result = await this.routineRepository
+      .createQueryBuilder('routines')
+      .leftJoinAndSelect('routines.segments', 'segments')
+      .where('routines.id = :routineId and routines.instructor_id = :userId', { routineId, userId })
+      .getOne();
+
+    if (result) {
+      return await result;
+    }
+    throw new ErrorManager({
+      type: 'NOT_FOUND',
+      message: 'No se encontro la rutina',
+    });
   }
 
+  public async update(userId: number, routineId: number, body: RoutineUpdateDTO) {
+    const routine = await this.details(userId, routineId);
+    this.checkSegmentsOrder(body.segments);
+    const resultUpdated:UpdateResult=await this.routineRepository.update(routineId,body)
+   
+    if(resultUpdated.affected==0){
+      throw new ErrorManager({
+        type:'BAD_REQUEST',
+        message: 'No se pudo realizar la actualizacion'
+      })
+    }
+    const updatedRoutine=await this.details(userId,routineId)
+    return  {
+      statusCode:200,
+      message:'Se acutualizo la rutina',
+      data:updatedRoutine
+    } 
+  }
 
-  // async createRoutine(creatorId: number, name: string): Promise<Routine> {
-  //   const creator = await this.userRepository.findOne(creatorId);
-  //   const routine = this.routineRepository.create({ name, creator });
-  //   return this.routineRepository.save(routine);
-  // }
-
-  // async assignRoutineToUsers(routineId: number, userIds: number[]): Promise<void> {
-  //   const routine = await this.routineRepository.findOne(routineId);
-  //   const users = await this.userRepository.findByIds(userIds);
-  //   const userRoutines = users.map(user => this.userRoutineRepository.create({ user, routine }));
-  //   await this.userRoutineRepository.save(userRoutines);
-  // }
+  private checkSegmentsOrder(segments: SegmentCreateDTO[]) {
+    const orderSequence = Array.from({length: segments.length}, (_, i) => i + 1)
+    let orders:number[] = segments.map(s => s.order);
+    let valid = orders.every(v => orderSequence.includes(v));
+  
+    if (!valid) {
+      throw new ErrorManager({
+        type: 'BAD_REQUEST',
+        message: 'El orden de los segmentos es inconsistente.',
+      });
+    }
+  }
 }
