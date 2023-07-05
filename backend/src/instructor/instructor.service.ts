@@ -6,6 +6,9 @@ import { ErrorManager } from 'src/utils/error.manager';
 import { UsersEntity } from 'src/users/entities/users.entity';
 import { InstructorStudentEntity } from './entities/InstructorStudent.entity';
 import { InstructorStudentDTO } from './dto/instructorStudent.dto';
+import { RoutinesService } from 'src/routines/routines.service';
+import { RoutineUpdateDTO } from 'src/routines/dto/routine.update.dto';
+import { RoutineCreateDTO } from 'src/routines/dto/routine.create.dto';
 
 @Injectable()
 export class InstructorService {
@@ -14,6 +17,7 @@ export class InstructorService {
     private readonly instructorCodeRepository: Repository<InstructorCodeEntity>,
     @InjectRepository(InstructorStudentEntity)
     private readonly instructorStudentRepository: Repository<InstructorStudentEntity>,
+    private readonly routinesService: RoutinesService,
   ) {}
 
   public async code(user_id: number): Promise<InstructorCodeEntity> {
@@ -106,5 +110,20 @@ export class InstructorService {
       student: student,
     }
     return await this.instructorStudentRepository.save(body);
+  }
+  public async updateRoutine(userId:number,routineId,body:RoutineUpdateDTO){
+
+    return await this.routinesService.update(userId,routineId,body)
+  }
+  public async createRoutine(instructorId: number, body: RoutineCreateDTO){
+    //return this.routinesService.details(request.idUser,id_routine)
+    return await this.routinesService.createdRoutine(instructorId,body)
+  }
+  public async routines(instructorId:number){
+    return await this.routinesService.routinesByInstructor(instructorId)
+  }
+
+  public async routineDetails(instructorId:number,routineId:number){
+    return await this.routinesService.details(instructorId,routineId)
   }
 }

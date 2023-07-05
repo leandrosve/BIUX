@@ -70,7 +70,6 @@ export class SettingsService {
                 message: 'No se pudo realizar la actualizacion'
               })
             }
-            console.log("id del usuario: ",user_id)
             const settingObj=await this.getSetting(user_id)
             return  {
               statusCode:200,

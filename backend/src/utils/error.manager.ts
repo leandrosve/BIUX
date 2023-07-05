@@ -52,7 +52,7 @@ export class ErrorManagerFilter implements ExceptionFilter {
    
     const statusName = message.split(' : ')[0];
     const onlyMsj = message.split(' : ')[1];
-    console.log("name error:",statusName)
+
     let statusCode = HttpStatus[statusName];
     let error = statusName;
 

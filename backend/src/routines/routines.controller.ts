@@ -21,7 +21,7 @@ export class RoutinesController {
   @ApiHeader({name:'token',required: true})
   @Roles('INSTRUCTOR')
   public async all(@Req() request: Request){
-    return this.routinesService.all(request.idUser)
+    return this.routinesService.routinesByInstructor(request.idUser)
   }
 
   @Get(':id_routine')

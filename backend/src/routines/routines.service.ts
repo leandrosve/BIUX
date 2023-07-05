@@ -20,7 +20,7 @@ export class RoutinesService {
     private readonly userService: UsersService
   ) {}
 
-  public async all(userId: number) {
+  public async routinesByInstructor(userId: number) {
     return await this.routineRepository.createQueryBuilder('routines').where('routines.instructor_id = :userId', { userId }).getMany();
   }
 
@@ -40,7 +40,7 @@ export class RoutinesService {
     //console.log(user)
     return result;
   }
-  public async details(userId, routineId: number) {
+  public async details(userId:number, routineId: number) {
     const result = await this.routineRepository
       .createQueryBuilder('routines')
       .leftJoinAndSelect('routines.segments', 'segments')
@@ -59,20 +59,16 @@ export class RoutinesService {
   public async update(userId: number, routineId: number, body: RoutineUpdateDTO) {
     const routine = await this.details(userId, routineId);
     this.checkSegmentsOrder(body.segments);
-    const resultUpdated:UpdateResult=await this.routineRepository.update(routineId,body)
+    const resultUpdated =await this.routineRepository.save({routine, ...body})
    
-    if(resultUpdated.affected==0){
+    if(!resultUpdated){
       throw new ErrorManager({
         type:'BAD_REQUEST',
         message: 'No se pudo realizar la actualizacion'
       })
     }
-    const updatedRoutine=await this.details(userId,routineId)
-    return  {
-      statusCode:200,
-      message:'Se acutualizo la rutina',
-      data:updatedRoutine
-    } 
+    return resultUpdated;
+
   }
 
   private checkSegmentsOrder(segments: SegmentCreateDTO[]) {

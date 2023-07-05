@@ -5,9 +5,10 @@ import { InstructorController } from './instructor.controller';
 import { InstructorService } from './instructor.service';
 import { InstructorCodeEntity } from './entities/instructorCode.entity';
 import { InstructorStudentEntity } from './entities/InstructorStudent.entity';
+import { RoutinesModule } from 'src/routines/routines.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UsersEntity, InstructorCodeEntity,InstructorStudentEntity]), ],
+  imports: [TypeOrmModule.forFeature([UsersEntity, InstructorCodeEntity,InstructorStudentEntity]),RoutinesModule ],
   controllers: [InstructorController],
   providers: [InstructorService],
   exports:[InstructorService,TypeOrmModule]
