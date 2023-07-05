@@ -45,7 +45,7 @@ const RoutineList = () => {
     return routines.filter((r) => [r.name, r.description].find((v) => v?.toLowerCase().includes(sanitized)));
   }, [routines, search]);
 
-  const pagination = usePagination(filteredRoutines, 1);
+  const pagination = usePagination(filteredRoutines, 5);
 
   const retrieveRoutines = async () => {
     setLoading(true);
@@ -62,7 +62,7 @@ const RoutineList = () => {
     <ResponsiveCard defaultHeight='auto'>
       <Flex justifyContent='space-between' marginY={3} alignItems='center'>
         <Heading>Rutinas</Heading>
-        <LinkButton to='crear' colorScheme='primary' gap={2} size={['sm', 'md']}>
+        <LinkButton to='crear' colorScheme='primary' gap={2} size={['sm', 'md']} whiteSpace='initial'>
           <Icon as={PlusSquareIcon} /> Nueva Rutina
         </LinkButton>
       </Flex>
@@ -82,14 +82,14 @@ const RoutineList = () => {
           <Input placeholder='Buscar' id='routine-list-search' ref={searchRef} />
         </InputGroup>
       </form>
-      <SkeletonWrapper repeat={5} height={50} loading={loading} marginBottom={2}>
+      <SkeletonWrapper repeat={7} height={50} loading={loading} marginBottom={2}>
         {!loading && !filteredRoutines.length && (
           <Text paddingY={5} textAlign='center'>
             {!routines.length ? 'Aún no has agregado ninguna rutina' : 'No se han encontrado rutinas'}
           </Text>
         )}
-        <Flex direction='column'  grow={1}>
-          <List spacing={1} bg='bg.400' borderRadius='lg' mb={3} >
+        <Flex direction='column' grow={1}>
+          <List spacing={1} bg='bg.400' borderRadius='lg' mb={3}>
             {pagination.paginatedItems.map((r, index) => (
               <Fragment key={r.id}>
                 <RoutineListItem routine={r} />
@@ -110,21 +110,23 @@ const RoutineList = () => {
 };
 
 const RoutineListItem = ({ routine }: { routine: Routine }) => (
-  <ListItem padding={2} paddingX={3} borderRadius='md' borderColor='chakra-border-color'>
+  <ListItem paddingY={1} paddingX={3} borderRadius='md' borderColor='chakra-border-color'>
     <Flex justifyContent='space-between' alignItems={['start', 'center']} flexDirection={['column', 'row']}>
       <Flex direction='column'>
-        <Heading size='md'>{routine.name}</Heading>
-        <Text color='text.300' fontWeight='normal'>
+        <Heading size='md' aria-label='nombre' color='primary.700' _dark={{color: 'primary.200'}}>
+          {routine.name}
+        </Heading>
+        <Text color='text.300' fontWeight='normal' aria-label='descripción'>
           {routine.name}
         </Text>
       </Flex>
       <Flex gap={3} alignSelf='stretch' alignItems='center' justifyContent={['space-between', 'center']}>
         <Tooltip hasArrow label={`Duracion total: 60 minutos`}>
-          <Tag borderRadius='full' boxSize='40px' colorScheme='cyan' justifyContent='center'>
+          <Tag borderRadius='full' boxSize='40px' colorScheme='cyan' justifyContent='center' aria-label={`${10} minutos`}>
             10'
           </Tag>
         </Tooltip>
-        <LinkButton to={`${routine.id}`} size='sm' onClick={() => null}>
+        <LinkButton to={`${routine.id}`} size='sm'>
           Ver detalles
         </LinkButton>
       </Flex>

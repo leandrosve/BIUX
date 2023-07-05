@@ -15,7 +15,7 @@ export enum BRoutes {
   CONFIG = '/config',
   SIGNUP = '/registrarme',
   LOGIN = '/login',
-  RUTINES = '/rutinas',
+  ROUTINES = '/rutinas',
   DASHBOARD = '/dashboard',
   PROFILE = '/perfil',
 }

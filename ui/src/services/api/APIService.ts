@@ -29,7 +29,6 @@ export default class APIService {
   }
 
   protected static delay(ms: number) {
-    console.log(this.BASE_URL);
     return new Promise((res) => setTimeout(res, ms));
   }
 
@@ -51,7 +50,7 @@ export default class APIService {
       if (res.ok) {
         return { status: res.status, data: responseBody as T, hasError: false } as APISuccessfulResponse<T>;
       }
-      console.log(res);
+      //console.log(res);
       if (res.status == 401 && !options?.preventSignOut) {
         SessionService.destroyLocalSession();
         location.href = '/login?tokenExpired=true';

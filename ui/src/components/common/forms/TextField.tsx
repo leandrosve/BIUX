@@ -1,16 +1,17 @@
 import { InfoOutlineIcon } from '@chakra-ui/icons';
-import { Collapse, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, InputProps } from '@chakra-ui/react';
+import { Collapse, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, FormLabelProps, Input, InputProps } from '@chakra-ui/react';
 
 interface Props extends InputProps {
-  label: string;
-  error?: string;
+  label?: string;
+  error?: string | boolean;
   help?: string;
   touched?: boolean;
+  labelProps?: FormLabelProps;
 }
-const TextField = ({ error, label, help, touched, ...props }: Props) => {
+const TextField = ({ error, label, help, touched, labelProps, ...props }: Props) => {
   return (
     <FormControl isInvalid={!!error && touched}>
-      <FormLabel htmlFor={props.id}>{label}</FormLabel>
+      <FormLabel htmlFor={props.id} {...labelProps}>{label}</FormLabel>
       <Input {...props} borderColor={!error && touched ? 'green.300' : undefined} />
       {help && (
         <FormHelperText fontSize='xs'>

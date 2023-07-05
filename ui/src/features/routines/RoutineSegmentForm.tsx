@@ -30,16 +30,17 @@ interface Props {
   onSubmit: (segment: DraggableSegment) => void;
   index?: number;
   segment?: DraggableSegment | null; // For editting
+  padding?: number | string;
 }
 
 const RoutineSegmentForm = (props: Props) => {
   return (
     <Fade
       in={props.isOpen}
-      style={{ position: 'absolute', pointerEvents: 'none', bottom: 0, width: '100%', height: '100%', overflow: 'hidden', zIndex: 1 }}
+      style={{ position: 'absolute', pointerEvents: 'none', bottom: 0, left: 0, width: '100%', height: '100%', overflow: 'hidden', zIndex: 1 }}
     >
       {props.isOpen && <Box pointerEvents='all' height='100%' width='100%' position='absolute' bottom={0} zIndex={2} onClick={props.onCancel} />}
-      <Slide in={props.isOpen} unmountOnExit style={{ position: 'absolute', height: '84%', zIndex: 3 }} direction='bottom'>
+      <Slide in={props.isOpen} unmountOnExit style={{ position: 'absolute', maxHeight: '84%', zIndex: 3, padding: props.padding }} direction='bottom'>
         <RoutineSegmentFormContent {...props} />
       </Slide>
     </Fade>
@@ -102,6 +103,7 @@ const RoutineSegmentFormContent = ({ onCancel, onSubmit, index, segment }: Props
       width='100%'
       height='100%'
       pointerEvents='all'
+      position='relative'
       overflowY='auto'
       bgGradient='linear(to-b, bg.400, bg.300)'
       tabIndex={-1}
@@ -179,7 +181,7 @@ const RoutineSegmentFormContent = ({ onCancel, onSubmit, index, segment }: Props
             </FormControl>
           </Tag>
         </Grid>
-        <Flex paddingTop={3} justifyContent='space-between'>
+        <Flex paddingY={3} justifyContent='space-between'>
           <Button onClick={onCancel}>Cancelar</Button>
           <Tooltip
             placement='left'

@@ -75,7 +75,7 @@ const AlertDialogModal = (props: AlertDialogModalProps) => {
               <Button ref={cancelRef} onClick={props.onClose}>
                 {props.cancelText || 'Cancelar'}
               </Button>
-              <Button colorScheme='primary' onClick={props.onConfirm} ml={3}>
+              <Button colorScheme='primary' onClick={props.onConfirm} ml={3} whiteSpace='pre-wrap'>
                 {props.confirmText || 'Aceptar'}
               </Button>
             </AlertDialogFooter>

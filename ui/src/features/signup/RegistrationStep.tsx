@@ -61,7 +61,6 @@ const RegistrationStep = ({ accessCode, instructorId, instructorName, role = Rol
     onSubmit: async (values) => {
       setIsSubmitting(true);
       setError(null);
-      console.log(values);
       const body = {
         firstName: values.firstName,
         lastName: values.lastName,
