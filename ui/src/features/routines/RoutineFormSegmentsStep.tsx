@@ -1,6 +1,6 @@
 import { ArrowBackIcon, PlusSquareIcon } from '@chakra-ui/icons';
 import { Button, Flex, Heading, Text, useToast } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import RoutineSegmentForm from './RoutineSegmentForm';
 import Routine, { DraggableSegment, RoutineSegment } from '../../model/routines/Routine';
 import AlertToast from '../../components/common/alert-toast/AlertToast';
@@ -9,6 +9,7 @@ import RoutineUtils from '../../utils/RoutineUtils';
 import { useNavigate } from 'react-router-dom';
 import { BRoutes } from '../../router/routes';
 import InstructorService from '../../services/api/InstructorService';
+import { InstructorRoutinesContext } from '../../context/ListsProviders';
 
 interface Props {
   routine: Routine;
@@ -21,6 +22,7 @@ const RoutineFormSegmentsStep = ({ routine, onPrevious, displayOnly, editMode }:
   const [segments, setSegments] = useState<DraggableSegment[]>(RoutineUtils.initializeSegments(routine.segments));
   const [showForm, setShowForm] = useState(false);
   const [edittingSegment, setEdittingSegment] = useState<DraggableSegment | null>();
+  const { onUpdate } = useContext(InstructorRoutinesContext);
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -58,6 +60,7 @@ const RoutineFormSegmentsStep = ({ routine, onPrevious, displayOnly, editMode }:
     const res = await InstructorService.createRoutine({ ...routine, segments });
     setIsSubmitting(false);
     if (res.hasError) return;
+    onUpdate(RoutineUtils.toReducedRoutine(res.data))
     toast({
       position: 'bottom-right',
       duration: 15000,
@@ -67,7 +70,7 @@ const RoutineFormSegmentsStep = ({ routine, onPrevious, displayOnly, editMode }:
         </AlertToast>
       ),
     });
-    navigate(`${BRoutes.ROUTINES}/${res.data.id}`)
+    navigate(`${BRoutes.ROUTINES}/${res.data.id}`);
   };
 
   return (
@@ -77,12 +80,7 @@ const RoutineFormSegmentsStep = ({ routine, onPrevious, displayOnly, editMode }:
       </Heading>
 
       <Flex gap='10px' direction='column' alignItems='stretch' grow={1} mt={3}>
-        <RoutineSegmentList
-          onChange={(v) => setSegments(v)}
-          onEdit={handleOpenEditSegment}
-          onRemove={handleRemoveSegment}
-          segments={segments}
-        />
+        <RoutineSegmentList onChange={(v) => setSegments(v)} onEdit={handleOpenEditSegment} onRemove={handleRemoveSegment} segments={segments} />
         {!displayOnly && (
           <Flex
             grow={1}

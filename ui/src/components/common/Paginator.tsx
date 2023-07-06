@@ -64,7 +64,7 @@ const Paginator = ({ totalElements, pageSize, currentPage, onChange, hideOnSingl
               key={page}
               size='sm'
               margin={0}
-              aria-current={page == 3}
+              aria-current={page == currentPage}
               variant={page === currentPage ? 'solid' : 'outline'}
               colorScheme={page === currentPage ? 'primary' : 'gray'}
               onClick={() => onChange(page)}

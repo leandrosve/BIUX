@@ -5,23 +5,29 @@ export interface ResponsiveCardProps extends CardProps {
   defaultHeight?: string | number;
 }
 
-const ResponsiveCard = ({ defaultWidth = 700, defaultHeight = 650, ...props }: ResponsiveCardProps) => {
+const getDefaultWidth = (value?: number | string) => {
+  console.log("render")
+  const max = '(100vw - 17rem)'
+  value = Number(value) ? value + 'px' : value;
+  return `calc(min(${max}, ${value}))`
+}
+
+const ResponsiveCard = ({ defaultWidth = 700, defaultHeight = 'auto', ...props }: ResponsiveCardProps) => {
   return (
     <Card
       boxShadow={{ base: 'none', md: 'base' }}
       background='bg.300'
       p='6'
       rounded={[0, 'lg']}
-      minW={['100%', '100%', defaultWidth]}
-      minHeight={['calc(100vh - 160px)', defaultHeight]}
       alignSelf={{ base: 'center', md: 'auto' }}
       display='flex'
-      marginX={[0, 5]}
+      marginX={{base:0, lg:5}}
       marginTop={0}
       paddingTop={6}
       position='relative'
       flexDirection='column'
-      maxWidth='100vw'
+      minHeight={['calc(100vh - 160px)', defaultHeight]}
+      width={{base:'100%', lg:getDefaultWidth(defaultWidth)}}
       {...props}
     >
       {props.children}

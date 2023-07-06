@@ -75,7 +75,7 @@ const ConfigPage = () => {
   return (
     <>
       <AutoBreadcrumbs />
-      <ResponsiveCard defaultWidth={500}>
+      <ResponsiveCard defaultWidth={700}>
         <form onSubmit={handleSave}>
           <Stack align='stretch' gap={3}>
             <Heading mt={2}>Configuración</Heading>

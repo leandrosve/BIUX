@@ -88,7 +88,7 @@ const Step1 = (props: { initialData: Routine; onSubmit: (name: string, descripti
           </FormControl>
           <FormControl isInvalid={description.length > 500} display='flex' flexDirection='column' flexGrow={1}>
             <FormLabel mt={2}>Descripción</FormLabel>
-            <Textarea value={description} boxShadow='sm' flexGrow={1} placeholder='Descripcion' resize='none' onChange={(e) => setDescription(e.target.value)} />
+            <Textarea value={description} boxShadow='sm' flexGrow={1} maxHeight='100px' placeholder='Descripcion' resize='none' onChange={(e) => setDescription(e.target.value)} />
             {description.length > 500 && <FormErrorMessage>La cantidad máxima de caracteres es 500</FormErrorMessage>}
           </FormControl>
         </Flex>

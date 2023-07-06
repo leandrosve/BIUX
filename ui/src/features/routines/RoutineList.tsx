@@ -15,41 +15,43 @@ import {
   VisuallyHidden,
 } from '@chakra-ui/react';
 import { PlusSquareIcon, Search2Icon } from '@chakra-ui/icons';
-import Routine, { ReducedRoutine } from '../../model/routines/Routine';
+import { ReducedRoutine } from '../../model/routines/Routine';
 import LinkButton from '../../components/common/LinkButton';
-import { useState, useEffect, Fragment, useMemo, useRef } from 'react';
+import { useState, useEffect, Fragment, useMemo, useContext } from 'react';
 import SkeletonWrapper from '../../components/common/SkeletonWrapper';
 import Paginator from '../../components/common/Paginator';
 import usePagination from '../../hooks/usePagination';
-import InstructorService from '../../services/api/InstructorService';
 import { StopwatchIcon } from '../../components/common/Icons';
+import { InstructorRoutinesContext } from '../../context/ListsProviders';
 
 const RoutineList = () => {
-  const [routines, setRoutines] = useState<ReducedRoutine[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const searchRef = useRef<HTMLInputElement>(null);
+  const {
+    fetch: fetchRoutines,
+    initialized,
+    data: routines,
+    loading,
+    page,
+    onPageChange,
+    searchText,
+    onSearchTextChange,
+  } = useContext(InstructorRoutinesContext);
+
+  const [searchInputValue, setSearchInputValue] = useState<string>(searchText);
+
   const filteredRoutines = useMemo(() => {
-    if (!search) return routines;
-    const sanitized = search.toLowerCase();
+    if (!searchText) return routines;
+    const sanitized = searchText.toLowerCase();
     return routines.filter((r) => [r.name, r.description].find((v) => v?.toLowerCase().includes(sanitized)));
-  }, [routines, search]);
+  }, [routines, searchText]);
 
-  const pagination = usePagination(filteredRoutines, 5);
-
-  const retrieveRoutines = async () => {
-    setLoading(true);
-    const res = await InstructorService.getRoutines();
-    setLoading(false);
-    if (res.hasError) return;
-    setRoutines(res.data);
-  };
+  const pagination = usePagination(filteredRoutines, 5, page, onPageChange);
 
   useEffect(() => {
-    retrieveRoutines();
+    if (!initialized) fetchRoutines();
   }, []);
+
   return (
-    <ResponsiveCard defaultHeight='auto'>
+    <ResponsiveCard defaultHeight='auto' defaultWidth='800px'>
       <Flex justifyContent='space-between' marginY={3} alignItems='center'>
         <Heading>Rutinas</Heading>
         <LinkButton to='crear' colorScheme='primary' gap={2} size={['sm', 'md']} whiteSpace='initial'>
@@ -59,7 +61,7 @@ const RoutineList = () => {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          setSearch(searchRef?.current?.value || '');
+          onSearchTextChange(searchInputValue);
         }}
       >
         <InputGroup size='sm' maxWidth={300} paddingBottom={3}>
@@ -69,7 +71,7 @@ const RoutineList = () => {
               <Search2Icon />
             </InputRightElement>
           </label>
-          <Input placeholder='Buscar' id='routine-list-search' ref={searchRef} />
+          <Input placeholder='Buscar' id='routine-list-search' value={searchInputValue} onChange={(e) => setSearchInputValue(e.target.value)} />
         </InputGroup>
       </form>
       <SkeletonWrapper repeat={7} height={50} loading={loading} marginBottom={2}>
@@ -101,20 +103,24 @@ const RoutineList = () => {
 
 const RoutineListItem = ({ routine }: { routine: ReducedRoutine }) => (
   <ListItem paddingY={1} paddingX={3} borderRadius='md' borderColor='chakra-border-color'>
-    <Flex justifyContent='space-between' alignItems={['start', 'center']} flexDirection={['column', 'row']}>
-      <Flex direction='column'>
-        <Heading size='md' aria-label='nombre' color='primary.700' _dark={{ color: 'primary.200' }}>
+    <Flex justifyContent='space-between' alignItems={['start', 'center']} flexDirection={['column', 'row']} overflow='hidden'>
+      <Flex direction='column' minWidth={0}>
+        <Heading size='md' aria-label='nombre' noOfLines={1} color='primary.700' _dark={{ color: 'primary.200' }}>
           {routine.name}
         </Heading>
-        <Text color='text.300' fontWeight='normal' aria-label='descripción'>
-          {routine.name}
-        </Text>
+        <Flex minHeight='1rem' overflow='hidden' minWidth={0}>
+          {routine.description && (
+            <Text color='text.300' fontWeight='normal' aria-label='descripción' fontSize='md' noOfLines={1}>
+              {routine.description}
+            </Text>
+          )}
+        </Flex>
       </Flex>
-      <Flex gap={3} alignSelf='stretch' alignItems='center' justifyContent={['space-between', 'center']}>
+      <Flex gap={3} alignSelf='stretch' alignItems='center' justifyContent={['space-between', 'center']} shrink={0}>
         {!!routine.totalDuration && (
           <Tooltip hasArrow label={`Duracion total`}>
-            <Tag borderRadius='full' colorScheme='cyan' justifyContent='center' aria-label={`${10} minutos`}>
-              <Icon as={StopwatchIcon} mr={1}/> {routine.totalDuration} min
+            <Tag borderRadius='20px' colorScheme='cyan' justifyContent='center' aria-label={`${10} minutos`}>
+              <Icon as={StopwatchIcon} mr={1} /> {routine.totalDuration} min
             </Tag>
           </Tooltip>
         )}

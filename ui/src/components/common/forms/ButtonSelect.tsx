@@ -21,7 +21,7 @@ interface ButtonSelectItemProps extends Omit<ButtonProps, 'onClick'> {
 
 const ButtonSelect = ({ value, onChange, checkIcon, children }: Props) => {
   return (
-    <Flex borderRadius={10} border='1px solid' borderColor='chakra-border-color' display='inline-flex'>
+    <Flex borderRadius={10} border='1px solid' borderColor='chakra-border-color' display='inline-flex' maxWidth={'100%'}>
       {children.map((c, i) =>
         cloneElement(c, { key: i, onClick: onChange, selected: value, checkIcon, first: i == 0, last: i + 1 == children.length })
       )}

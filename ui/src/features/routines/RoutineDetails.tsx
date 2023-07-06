@@ -2,7 +2,22 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import ResponsiveCard from '../../components/common/ResponsiveCard';
 import { useParams } from 'react-router-dom';
 import Routine, { DraggableSegment } from '../../model/routines/Routine';
-import { Alert, Box, Button, Collapse, Flex, FormControl, FormLabel, FormLabelProps, Heading, Icon, Image, Tag, Text, Tooltip } from '@chakra-ui/react';
+import {
+  Alert,
+  Box,
+  Button,
+  Collapse,
+  Flex,
+  FormControl,
+  FormLabel,
+  FormLabelProps,
+  Heading,
+  Icon,
+  Image,
+  Tag,
+  Text,
+  Tooltip,
+} from '@chakra-ui/react';
 import missingIllustration from '../../assets/illustrations/missing-page.png';
 import LinkButton from '../../components/common/LinkButton';
 import { BRoutes } from '../../router/routes';
@@ -70,7 +85,7 @@ const RoutineDetails = () => {
   }, [id]);
   if (!loading && !routine) return <NotFound />;
   return (
-    <ResponsiveCard defaultHeight='600px' position='relative'>
+    <ResponsiveCard defaultHeight='auto' position='relative' defaultWidth='700px'>
       <SkeletonWrapper loading={loading} heights={['60px', '90px', '60px']} height='70px' repeat={7} marginY={1}>
         <Flex justifyContent='space-between' mb={3} alignItems='center'>
           <LinkButton to={BRoutes.ROUTINES} leftIcon={<ArrowBackIcon />} size={['sm', 'md']}>
@@ -144,8 +159,9 @@ const RoutineDetailsContent = ({ routine, segments }: RoutineDetailsContentProps
             Planificación
           </RoutineDetailLabel>
           {!!segments?.length && (
-            <Tag colorScheme='cyan' fontWeight='bold' borderRadius='full' paddingY='3px'>
-              <Icon as={StopwatchIcon} aria-hidden mr={1}/>Duración total: {`${totalDuration}`} min
+            <Tag colorScheme='cyan' fontWeight='bold' borderRadius='20px' paddingY='3px'>
+              <Icon as={StopwatchIcon} aria-hidden mr={1} />
+              Duración total: {`${totalDuration}`} min
             </Tag>
           )}
         </Flex>

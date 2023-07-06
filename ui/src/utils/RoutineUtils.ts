@@ -1,4 +1,4 @@
-import { DraggableSegment, RoutineSegment } from '../model/routines/Routine';
+import Routine, { DraggableSegment, ReducedRoutine, RoutineSegment } from '../model/routines/Routine';
 
 export default class RoutineUtils {
   public static LOCAL_ID_PREFIX = 'localId-'; // prefix used to allow drag and drop
@@ -13,4 +13,15 @@ export default class RoutineUtils {
     orderedItems.splice(newIndex, 0, el);
     return orderedItems.map((item, index) => ({ ...item, order: index + 1 }));
   };
+
+  public static toReducedRoutine(routine: Routine): ReducedRoutine {
+    return {
+      id: routine.id ?? -1,
+      name: routine.name,
+      description: routine.description,
+      totalDuration: routine.segments.reduce((acc, obj) => {
+        return acc + obj.duration;
+      }, 0),
+    };
+  }
 }

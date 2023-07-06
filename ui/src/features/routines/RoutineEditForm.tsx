@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import Routine, { DraggableSegment } from '../../model/routines/Routine';
+import { useState, useMemo, useContext } from 'react';
+import Routine, { DraggableSegment, ReducedRoutine } from '../../model/routines/Routine';
 import { Box, Button, Collapse, Flex, FormControl, FormErrorMessage, Input, Text, Tooltip } from '@chakra-ui/react';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import RoutineSegmentList from './RoutineSegmentList';
@@ -8,6 +8,7 @@ import RoutineSegmentForm from './RoutineSegmentForm';
 import { RoutineDetailLabel } from './RoutineDetails';
 import BAlert from '../../components/common/BAlert';
 import InstructorService from '../../services/api/InstructorService';
+import { InstructorRoutinesContext } from '../../context/ListsProviders';
 
 interface RoutineEditProps {
   routine: Routine;
@@ -23,6 +24,8 @@ const RoutineEditForm = ({ routine, segments, onSuccess }: RoutineEditProps) => 
 
   const [showForm, setShowForm] = useState(false);
   const [edittingSegment, setEdittingSegment] = useState<DraggableSegment | null>();
+
+  const { onUpdate } = useContext(InstructorRoutinesContext);
 
   const fieldErrors = useMemo(() => {
     let submit = !name ? 'Por favor completa los campos obligatorios' : '';
@@ -54,6 +57,7 @@ const RoutineEditForm = ({ routine, segments, onSuccess }: RoutineEditProps) => 
       return;
     }
     onSuccess(res.data);
+    onUpdate(RoutineUtils.toReducedRoutine(res.data));
   };
 
   return (
@@ -76,7 +80,7 @@ const RoutineEditForm = ({ routine, segments, onSuccess }: RoutineEditProps) => 
             id='routine-description'
           />
         </FormControl>
-        <Flex  direction='column' grow={1} position='relative' marginTop={2}>
+        <Flex direction='column' grow={1} position='relative' marginTop={2}>
           <RoutineDetailLabel marginBottom={3} marginTop={0}>
             Planificación
           </RoutineDetailLabel>
