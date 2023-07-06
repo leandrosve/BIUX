@@ -5,6 +5,13 @@ export default interface Routine {
   id?: number;
 }
 
+export interface ReducedRoutine {
+  name: string;
+  description?: string;
+  totalDuration?: number;
+  id: number;
+}
+
 export interface RoutineSegment {
   distance?: number;
   cadence: number;

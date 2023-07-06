@@ -1,41 +1,31 @@
 import ResponsiveCard from '../../components/common/ResponsiveCard';
 import {
-  Button,
   Divider,
   Flex,
   Heading,
   Icon,
-  IconButton,
   Input,
   InputGroup,
   InputRightElement,
   List,
   ListItem,
-  Table,
-  TableContainer,
   Tag,
-  Tbody,
-  Td,
   Text,
-  Th,
-  Thead,
   Tooltip,
-  Tr,
   VisuallyHidden,
 } from '@chakra-ui/react';
-import { ChevronLeftIcon, ChevronRightIcon, PlusSquareIcon, Search2Icon } from '@chakra-ui/icons';
-import Routine from '../../model/routines/Routine';
+import { PlusSquareIcon, Search2Icon } from '@chakra-ui/icons';
+import Routine, { ReducedRoutine } from '../../model/routines/Routine';
 import LinkButton from '../../components/common/LinkButton';
-import { routinesMock } from './routineMocks';
 import { useState, useEffect, Fragment, useMemo, useRef } from 'react';
-import RoutineService from '../../services/api/RoutineService';
-import { StopwatchIcon } from '../../components/common/Icons';
 import SkeletonWrapper from '../../components/common/SkeletonWrapper';
 import Paginator from '../../components/common/Paginator';
 import usePagination from '../../hooks/usePagination';
+import InstructorService from '../../services/api/InstructorService';
+import { StopwatchIcon } from '../../components/common/Icons';
 
 const RoutineList = () => {
-  const [routines, setRoutines] = useState<Routine[]>([]);
+  const [routines, setRoutines] = useState<ReducedRoutine[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const searchRef = useRef<HTMLInputElement>(null);
@@ -49,7 +39,7 @@ const RoutineList = () => {
 
   const retrieveRoutines = async () => {
     setLoading(true);
-    const res = await RoutineService.getInstructorRoutines();
+    const res = await InstructorService.getRoutines();
     setLoading(false);
     if (res.hasError) return;
     setRoutines(res.data);
@@ -109,11 +99,11 @@ const RoutineList = () => {
   );
 };
 
-const RoutineListItem = ({ routine }: { routine: Routine }) => (
+const RoutineListItem = ({ routine }: { routine: ReducedRoutine }) => (
   <ListItem paddingY={1} paddingX={3} borderRadius='md' borderColor='chakra-border-color'>
     <Flex justifyContent='space-between' alignItems={['start', 'center']} flexDirection={['column', 'row']}>
       <Flex direction='column'>
-        <Heading size='md' aria-label='nombre' color='primary.700' _dark={{color: 'primary.200'}}>
+        <Heading size='md' aria-label='nombre' color='primary.700' _dark={{ color: 'primary.200' }}>
           {routine.name}
         </Heading>
         <Text color='text.300' fontWeight='normal' aria-label='descripción'>
@@ -121,11 +111,13 @@ const RoutineListItem = ({ routine }: { routine: Routine }) => (
         </Text>
       </Flex>
       <Flex gap={3} alignSelf='stretch' alignItems='center' justifyContent={['space-between', 'center']}>
-        <Tooltip hasArrow label={`Duracion total: 60 minutos`}>
-          <Tag borderRadius='full' boxSize='40px' colorScheme='cyan' justifyContent='center' aria-label={`${10} minutos`}>
-            10'
-          </Tag>
-        </Tooltip>
+        {!!routine.totalDuration && (
+          <Tooltip hasArrow label={`Duracion total`}>
+            <Tag borderRadius='full' colorScheme='cyan' justifyContent='center' aria-label={`${10} minutos`}>
+              <Icon as={StopwatchIcon} mr={1}/> {routine.totalDuration} min
+            </Tag>
+          </Tooltip>
+        )}
         <LinkButton to={`${routine.id}`} size='sm'>
           Ver detalles
         </LinkButton>

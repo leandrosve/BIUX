@@ -2,12 +2,12 @@ import { useState, useMemo } from 'react';
 import Routine, { DraggableSegment } from '../../model/routines/Routine';
 import { Box, Button, Collapse, Flex, FormControl, FormErrorMessage, Input, Text, Tooltip } from '@chakra-ui/react';
 import { PlusSquareIcon } from '@chakra-ui/icons';
-import RoutineService from '../../services/api/RoutineService';
 import RoutineSegmentList from './RoutineSegmentList';
 import RoutineUtils from '../../utils/RoutineUtils';
 import RoutineSegmentForm from './RoutineSegmentForm';
 import { RoutineDetailLabel } from './RoutineDetails';
 import BAlert from '../../components/common/BAlert';
+import InstructorService from '../../services/api/InstructorService';
 
 interface RoutineEditProps {
   routine: Routine;
@@ -47,7 +47,7 @@ const RoutineEditForm = ({ routine, segments, onSuccess }: RoutineEditProps) => 
     if (!routine.id) return;
     const data = { ...routine, name, description, segments: newSegments };
     setIsSubmitting(true);
-    const res = await RoutineService.editRoutine(routine.id, data);
+    const res = await InstructorService.editRoutine(routine.id, data);
     if (res.hasError) {
       setIsSubmitting(false);
       setError('Lo sentimos, ha ocurrido un error al tratar de actualizar la rutina.');
@@ -76,7 +76,7 @@ const RoutineEditForm = ({ routine, segments, onSuccess }: RoutineEditProps) => 
             id='routine-description'
           />
         </FormControl>
-        <Box position='relative' marginTop={2}>
+        <Flex  direction='column' grow={1} position='relative' marginTop={2}>
           <RoutineDetailLabel marginBottom={3} marginTop={0}>
             Planificación
           </RoutineDetailLabel>
@@ -103,7 +103,7 @@ const RoutineEditForm = ({ routine, segments, onSuccess }: RoutineEditProps) => 
               Agregar Segmento
             </Button>
           </Flex>
-        </Box>
+        </Flex>
 
         <Flex mt={5} justifyContent='end'>
           <Tooltip hasArrow label={fieldErrors.submit} isDisabled={!fieldErrors.submit}>

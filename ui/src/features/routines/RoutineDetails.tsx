@@ -1,20 +1,20 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import ResponsiveCard from '../../components/common/ResponsiveCard';
 import { useParams } from 'react-router-dom';
 import Routine, { DraggableSegment } from '../../model/routines/Routine';
-import { Alert, Box, Button, Collapse, Flex, FormControl, FormLabel, FormLabelProps, Heading, Image, Text, Tooltip } from '@chakra-ui/react';
+import { Alert, Box, Button, Collapse, Flex, FormControl, FormLabel, FormLabelProps, Heading, Icon, Image, Tag, Text, Tooltip } from '@chakra-ui/react';
 import missingIllustration from '../../assets/illustrations/missing-page.png';
 import LinkButton from '../../components/common/LinkButton';
 import { BRoutes } from '../../router/routes';
 import { ArrowBackIcon, InfoIcon } from '@chakra-ui/icons';
 import SkeletonWrapper from '../../components/common/SkeletonWrapper';
-import RoutineService from '../../services/api/RoutineService';
 import RoutineSegmentList from './RoutineSegmentList';
 import RoutineUtils from '../../utils/RoutineUtils';
-import { EditIcon, EditOffIcon } from '../../components/common/Icons';
+import { EditIcon, EditOffIcon, StopwatchIcon } from '../../components/common/Icons';
 import useAlertDialog from '../../hooks/useAlertDialog';
 import RoutineEditForm from './RoutineEditForm';
 import BAlert from '../../components/common/BAlert';
+import InstructorService from '../../services/api/InstructorService';
 
 const RoutineDetails = () => {
   let { id } = useParams();
@@ -27,7 +27,7 @@ const RoutineDetails = () => {
   const dialog = useAlertDialog();
 
   const retrieveRoutine = async (id: number) => {
-    const res = await RoutineService.getRoutineDetail(id);
+    const res = await InstructorService.getRoutineDetail(id);
     if (res.hasError) {
       setLoading(false);
       return;
@@ -112,37 +112,57 @@ export const RoutineDetailLabel = ({ children, ...props }: FormLabelProps) => (
   </FormLabel>
 );
 
-const RoutineDetailsContent = ({ routine, segments }: RoutineDetailsContentProps) => (
-  <Flex direction='column'>
-    <FormControl>
-      <RoutineDetailLabel htmlFor='routine-name' mb={0}>
-        Nombre
-      </RoutineDetailLabel>
-      <Heading aria-label='Routine Name'>{routine.name}</Heading>
-    </FormControl>
+const RoutineDetailsContent = ({ routine, segments }: RoutineDetailsContentProps) => {
+  const totalDuration = useMemo(() => {
+    let total = 0;
+    segments.forEach((s) => (total += s.duration));
+    return total;
+  }, segments);
 
-    {routine.description && (
+  return (
+    <Flex direction='column'>
       <FormControl>
-        <RoutineDetailLabel htmlFor='routine-description' mb={0}>
-          Descripción
+        <RoutineDetailLabel htmlFor='routine-name' mb={0}>
+          Nombre
         </RoutineDetailLabel>
-        <Heading size='md' as='h2' paddingY={2}>
-          {routine.description}
-        </Heading>
+        <Heading aria-label='Routine Name'>{routine.name}</Heading>
       </FormControl>
-    )}
-    <Box position='relative' marginTop={2}>
-      <RoutineDetailLabel marginBottom={3} marginTop={0}>
-        Planificación
-      </RoutineDetailLabel>
-      {!!segments?.length ? (
-        <Box background='bg.400' borderRadius='lg' mb={5} maxHeight='400px' overflowY='auto'>
-          <RoutineSegmentList displayOnly={true} segments={segments} onChange={() => {}} onRemove={() => {}} onEdit={() => {}} />
-        </Box>
-      ) : <Text><InfoIcon aria-hidden mr={2}/>Esta rutina no posee ningún segmento</Text>}
-    </Box>
-  </Flex>
-);
+
+      {routine.description && (
+        <FormControl>
+          <RoutineDetailLabel htmlFor='routine-description' mb={0}>
+            Descripción
+          </RoutineDetailLabel>
+          <Heading size='md' as='h2' paddingY={2}>
+            {routine.description}
+          </Heading>
+        </FormControl>
+      )}
+      <Box position='relative' marginTop={2}>
+        <Flex justifyContent='space-between' alignItems='center'>
+          <RoutineDetailLabel marginBottom={3} marginTop={0}>
+            Planificación
+          </RoutineDetailLabel>
+          {!!segments?.length && (
+            <Tag colorScheme='cyan' fontWeight='bold' borderRadius='full' paddingY='3px'>
+              <Icon as={StopwatchIcon} aria-hidden mr={1}/>Duración total: {`${totalDuration}`} min
+            </Tag>
+          )}
+        </Flex>
+        {!!segments?.length ? (
+          <Box background='bg.400' borderRadius='lg' mb={5} maxHeight='400px' overflowY='auto'>
+            <RoutineSegmentList displayOnly={true} segments={segments} onChange={() => {}} onRemove={() => {}} onEdit={() => {}} />
+          </Box>
+        ) : (
+          <Text>
+            <InfoIcon aria-hidden mr={2} />
+            Esta rutina no posee ningún segmento
+          </Text>
+        )}
+      </Box>
+    </Flex>
+  );
+};
 
 const NotFound = () => (
   <ResponsiveCard>

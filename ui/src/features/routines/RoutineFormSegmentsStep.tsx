@@ -3,12 +3,12 @@ import { Button, Flex, Heading, Text, useToast } from '@chakra-ui/react';
 import { useState } from 'react';
 import RoutineSegmentForm from './RoutineSegmentForm';
 import Routine, { DraggableSegment, RoutineSegment } from '../../model/routines/Routine';
-import RoutineService from '../../services/api/RoutineService';
 import AlertToast from '../../components/common/alert-toast/AlertToast';
 import RoutineSegmentList from './RoutineSegmentList';
 import RoutineUtils from '../../utils/RoutineUtils';
 import { useNavigate } from 'react-router-dom';
 import { BRoutes } from '../../router/routes';
+import InstructorService from '../../services/api/InstructorService';
 
 interface Props {
   routine: Routine;
@@ -55,7 +55,7 @@ const RoutineFormSegmentsStep = ({ routine, onPrevious, displayOnly, editMode }:
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    const res = await RoutineService.createRoutine({ ...routine, segments });
+    const res = await InstructorService.createRoutine({ ...routine, segments });
     setIsSubmitting(false);
     if (res.hasError) return;
     toast({

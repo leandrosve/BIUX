@@ -1,4 +1,5 @@
 import { InstructorCode } from '../../model/instructor/InstructorCode';
+import Routine, { ReducedRoutine } from '../../model/routines/Routine';
 import { User } from '../../model/user/User';
 import APIService from './APIService';
 
@@ -14,6 +15,22 @@ export default class InstructorService extends APIService {
   }
 
   static async checkCode(code: string) {
-    return this.post<{valid: boolean, user:User}>('/code/check', {code});
+    return this.post<{ valid: boolean; user: User }>('/code/check', { code });
+  }
+
+  static async createRoutine(data: Routine) {
+    return await this.post<Routine>('/routines', data);
+  }
+
+  static async getRoutines() {
+    return await this.get<ReducedRoutine[]>('/routines');
+  }
+
+  static async getRoutineDetail(id: number) {
+    return await this.get<Routine>(`/routines/${id}`);
+  }
+
+  static async editRoutine(id: number, data: Partial<Routine>) {
+    return await this.patch<Routine>(`/routines/${id}`, data);
   }
 }
