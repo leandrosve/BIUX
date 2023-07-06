@@ -9,19 +9,19 @@ import { UsersEntity } from 'src/users/entities/users.entity';
 import { ErrorManager } from 'src/utils/error.manager';
 import { RoutineUpdateDTO } from './dto/routine.update.dto';
 import { SegmentCreateDTO } from 'src/segments/dto/segment.create.dto';
+import { RoutineReducedDTO } from './dto/routine.reduced.dto';
+import { RoutineRepository } from './routines.repository';
 
 @Injectable()
 export class RoutinesService {
   constructor(
-    @InjectRepository(RoutinesEntity)
-    private readonly routineRepository: Repository<RoutinesEntity>,
-    @InjectRepository(RoutinesEntity)
-    private readonly userRepository: Repository<UsersEntity>,
+ 
+    private readonly routineRepository: RoutineRepository,
     private readonly userService: UsersService
   ) {}
 
-  public async routinesByInstructor(userId: number) {
-    return await this.routineRepository.createQueryBuilder('routines').where('routines.instructor_id = :userId', { userId }).getMany();
+  public async routinesByInstructor(instructorId: number) {
+    return this.routineRepository.getReducedRoutinesForInstructor(instructorId);
   }
 
   public async getStudentRoutines(routineId: number) {
@@ -40,7 +40,7 @@ export class RoutinesService {
     //console.log(user)
     return result;
   }
-  public async details(userId:number, routineId: number) {
+  public async details(userId: number, routineId: number) {
     const result = await this.routineRepository
       .createQueryBuilder('routines')
       .leftJoinAndSelect('routines.segments', 'segments')
@@ -59,23 +59,22 @@ export class RoutinesService {
   public async update(userId: number, routineId: number, body: RoutineUpdateDTO) {
     const routine = await this.details(userId, routineId);
     this.checkSegmentsOrder(body.segments);
-    const resultUpdated =await this.routineRepository.save({routine, ...body})
-   
-    if(!resultUpdated){
+    const resultUpdated = await this.routineRepository.save({ routine, ...body });
+
+    if (!resultUpdated) {
       throw new ErrorManager({
-        type:'BAD_REQUEST',
-        message: 'No se pudo realizar la actualizacion'
-      })
+        type: 'BAD_REQUEST',
+        message: 'No se pudo realizar la actualizacion',
+      });
     }
     return resultUpdated;
-
   }
 
   private checkSegmentsOrder(segments: SegmentCreateDTO[]) {
-    const orderSequence = Array.from({length: segments.length}, (_, i) => i + 1)
-    let orders:number[] = segments.map(s => s.order);
-    let valid = orders.every(v => orderSequence.includes(v));
-  
+    const orderSequence = Array.from({ length: segments.length }, (_, i) => i + 1);
+    let orders: number[] = segments.map((s) => s.order);
+    let valid = orders.every((v) => orderSequence.includes(v));
+
     if (!valid) {
       throw new ErrorManager({
         type: 'BAD_REQUEST',

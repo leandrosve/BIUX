@@ -51,7 +51,7 @@ export class InstructorController {
     public async routines(@Req() request: Request){
         return await this.instructorService.routines(request.idUser);
     }
-    @Get('/routine/:id_routine')
+    @Get('/routines/:id_routine')
     @ApiHeader({name:"token",required:true})
     @Roles('INSTRUCTOR')
     public async routine(@Req() request: Request,@Param('id_routine') id_routine: number){
@@ -70,7 +70,7 @@ export class InstructorController {
     @ApiHeader({name:'token',required: true})
     @Roles('INSTRUCTOR')
     public async students(@Req() request: Request){
-        return await 'students'
+        return await this.instructorService.getStudents(request.idUser)
     }
 
 }

@@ -6,9 +6,10 @@ import { InstructorService } from './instructor.service';
 import { InstructorCodeEntity } from './entities/instructorCode.entity';
 import { InstructorStudentEntity } from './entities/InstructorStudent.entity';
 import { RoutinesModule } from 'src/routines/routines.module';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UsersEntity, InstructorCodeEntity,InstructorStudentEntity]),RoutinesModule ],
+  imports: [TypeOrmModule.forFeature([UsersEntity, InstructorCodeEntity,InstructorStudentEntity]),RoutinesModule],
   controllers: [InstructorController],
   providers: [InstructorService],
   exports:[InstructorService,TypeOrmModule]

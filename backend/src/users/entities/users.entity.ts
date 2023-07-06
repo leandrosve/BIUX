@@ -23,7 +23,7 @@ export class UsersEntity extends BaseEntity  implements IUser{
     email: string;
 
     @Exclude()
-    @Column()
+    @Column({ select: false })
     password: string;
 
     @Column({type:'enum',enum:ROLES})

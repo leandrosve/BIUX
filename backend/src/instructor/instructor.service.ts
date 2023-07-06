@@ -17,7 +17,7 @@ export class InstructorService {
     private readonly instructorCodeRepository: Repository<InstructorCodeEntity>,
     @InjectRepository(InstructorStudentEntity)
     private readonly instructorStudentRepository: Repository<InstructorStudentEntity>,
-    private readonly routinesService: RoutinesService,
+    private readonly routinesService: RoutinesService
   ) {}
 
   public async code(user_id: number): Promise<InstructorCodeEntity> {
@@ -29,11 +29,11 @@ export class InstructorService {
 
       return instructor_code;
     } catch (error) {
-     throw error;
+      throw error;
     }
   }
 
-  public async checkCode(code: string): Promise<{valid: boolean, user: UsersEntity}> {
+  public async checkCode(code: string): Promise<{ valid: boolean; user: UsersEntity }> {
     try {
       const instructorCode = await this.instructorCodeRepository
         .createQueryBuilder('instructor_code')
@@ -46,7 +46,7 @@ export class InstructorService {
       }
       return {
         valid: true,
-        user: instructorCode.user
+        user: instructorCode.user,
       };
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
@@ -78,7 +78,7 @@ export class InstructorService {
       const updatedCode = await this.instructorCodeRepository.save({ id: currentCode.id, code: newCode });
       return updatedCode;
     } catch (error) {
-     throw error;
+      throw error;
     }
   }
 
@@ -95,35 +95,42 @@ export class InstructorService {
     return result;
   }
 
-  public async findByCode(code:string):Promise<InstructorCodeEntity>{
+  public async findByCode(code: string): Promise<InstructorCodeEntity> {
     const objectInstructorCode = await this.instructorCodeRepository.findOne({
       where: { code },
       relations: ['user'], // Indica que quieres cargar la relación con la entidad 'user'
     });
 
-    return objectInstructorCode
+    return objectInstructorCode;
   }
 
-  public async createdrelationshipWithStudent(student:UsersEntity,instructor:UsersEntity ){
-   const body:InstructorStudentDTO={
-      instructor:instructor ,
+  public async createdrelationshipWithStudent(student: UsersEntity, instructor: UsersEntity) {
+    const body: InstructorStudentDTO = {
+      instructor: instructor,
       student: student,
-    }
+    };
     return await this.instructorStudentRepository.save(body);
   }
-  public async updateRoutine(userId:number,routineId,body:RoutineUpdateDTO){
-
-    return await this.routinesService.update(userId,routineId,body)
+  public async updateRoutine(userId: number, routineId, body: RoutineUpdateDTO) {
+    return await this.routinesService.update(userId, routineId, body);
   }
-  public async createRoutine(instructorId: number, body: RoutineCreateDTO){
+  public async createRoutine(instructorId: number, body: RoutineCreateDTO) {
     //return this.routinesService.details(request.idUser,id_routine)
-    return await this.routinesService.createdRoutine(instructorId,body)
+    return await this.routinesService.createdRoutine(instructorId, body);
   }
-  public async routines(instructorId:number){
-    return await this.routinesService.routinesByInstructor(instructorId)
+  public async routines(instructorId: number) {
+    return await this.routinesService.routinesByInstructor(instructorId);
   }
 
-  public async routineDetails(instructorId:number,routineId:number){
-    return await this.routinesService.details(instructorId,routineId)
+  public async routineDetails(instructorId: number, routineId: number) {
+    return await this.routinesService.details(instructorId, routineId);
+  }
+  public async getStudents(instructorId: number) {
+    const res =  await this.instructorStudentRepository
+      .createQueryBuilder('instructor_students')
+      .leftJoinAndSelect('instructor_students.student', 'student')
+      .where('instructor_students.instructor_id = :instructorId', { instructorId })
+      .getMany(); 
+    return res.map(instructorStudent => instructorStudent.student);
   }
 }
