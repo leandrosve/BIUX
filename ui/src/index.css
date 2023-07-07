@@ -50,7 +50,7 @@ html[data-theme='light'] {
   --bg-200: #eeeaff;
   --bg-100: #f7f5fe; /* Background */
 
-  --text-500: #000000;
+  --text-500: #101010;
   --text-300: #4c5654;
 }
 
@@ -61,7 +61,7 @@ html[data-theme='dark'] {
   --bg-200: hsl(235.4, 31%, 16.5%);
   --bg-100: hsl(235.4, 36.1%, 14.1%);
 
-  --text-500: #ffffff;
+  --text-500: #f2f1f1;
   --text-300: #f4f4f4;
 }
 

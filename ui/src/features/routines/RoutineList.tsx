@@ -1,5 +1,6 @@
 import ResponsiveCard from '../../components/common/ResponsiveCard';
 import {
+  Button,
   Divider,
   Flex,
   Heading,
@@ -76,9 +77,21 @@ const RoutineList = () => {
       </form>
       <SkeletonWrapper repeat={7} height={50} loading={loading} marginBottom={2}>
         {!loading && !filteredRoutines.length && (
-          <Text paddingY={5} textAlign='center'>
-            {!routines.length ? 'Aún no has agregado ninguna rutina' : 'No se han encontrado rutinas'}
-          </Text>
+          <Flex direction='column' alignItems='center'>
+            <Text paddingY={5} textAlign='center'>
+              {!routines.length ? 'Aún no has agregado ninguna rutina' : 'No se han encontrado rutinas'}
+            </Text>
+            {searchText && (
+              <Button
+                onClick={() => {
+                  setSearchInputValue('');
+                  onSearchTextChange('');
+                }}
+              >
+                Limpiar búsqueda
+              </Button>
+            )}
+          </Flex>
         )}
         <Flex direction='column' grow={1}>
           <List spacing={1} bg='bg.400' borderRadius='lg' mb={3}>
@@ -124,9 +137,11 @@ const RoutineListItem = ({ routine }: { routine: ReducedRoutine }) => (
             </Tag>
           </Tooltip>
         )}
-        <LinkButton to={`${routine.id}`} size='sm'>
-          Ver detalles
-        </LinkButton>
+        <Flex marginLeft='auto'>
+          <LinkButton to={`${routine.id}`} size='sm'>
+            Ver detalles
+          </LinkButton>
+        </Flex>
       </Flex>
     </Flex>
   </ListItem>

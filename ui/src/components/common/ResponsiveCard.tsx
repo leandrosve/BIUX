@@ -6,7 +6,6 @@ export interface ResponsiveCardProps extends CardProps {
 }
 
 const getDefaultWidth = (value?: number | string) => {
-  console.log("render")
   const max = '(100vw - 17rem)'
   value = Number(value) ? value + 'px' : value;
   return `calc(min(${max}, ${value}))`

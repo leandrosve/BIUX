@@ -9,8 +9,10 @@ const ToggleThemeButton = () => {
 
   const handleToggle = useCallback(() => {
     const next = colorMode == 'light' ? 'dark' : 'light'
-    SettingsService.updateSettings({colorMode: next})
     setColorMode(next);
+    if(session) {
+      SettingsService.updateSettings({colorMode: next})
+    }
   }, [session, colorMode, setColorMode])
 
   return (
