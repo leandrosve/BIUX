@@ -1,4 +1,4 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { ApiHeader, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { RoutinesService } from './routines.service';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
@@ -19,6 +19,14 @@ export class RoutinesController {
   @Roles('STUDENT')
   public async student(@Req() request: Request){
     return this.routinesService.getStudentRoutines(request.idUser)
+  }
+
+  @Get(':id_routine/students')
+  @ApiProperty()
+  @ApiHeader({name:'token',required: true})
+  @Roles('STUDENT')
+  public async getStudentsByRoutine(@Req() request: Request,@Param('id_routine') id_routine:number){
+    return this.routinesService.getStudentsByRoutine(request.idUser,id_routine)
   }
 
 }

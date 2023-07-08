@@ -3,11 +3,17 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from "class-validator";
 import { ISegment } from "src/interfaces/segment.interface";
 
-export class SegmentCreateDTO implements ISegment{
+export class SegmentUpdateDTO implements ISegment{
+  
+  @ApiProperty()
+  @IsInt()
+  @IsOptional()
+  id:number
+  
   @ApiProperty()
   @IsInt()
   @Min(1)
-  @IsNotEmpty()
+  @IsOptional()
   order: number;
 
   @ApiProperty()
@@ -19,25 +25,23 @@ export class SegmentCreateDTO implements ISegment{
   @ApiProperty()
   @IsInt()
   @Min(0)
-  @IsNotEmpty()
+  @IsOptional()
   cadence: number;
 
   @ApiProperty()
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   pulseRate: number;
 
   @ApiProperty()
   @IsInt()
   @Min(0)
-  @IsNotEmpty()
+  @IsOptional()
   duration: number;
   
 
   @IsString()@ApiProperty()
   @Optional()
   description: string;
-
-
 
 }

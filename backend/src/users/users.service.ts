@@ -5,17 +5,15 @@ import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { UserUpdateDTO } from './dto/user.update.dto';
 import { ErrorManager } from 'src/utils/error.manager';
 import { IResponse } from 'src/utils/responseAPI';
-import { RoutineAssignmentEntity } from './entities/RoutineAssignmentEntity.entity';
-import { StudentIntoRoutineDTO } from './dto/studentIntoRoutine.dto';
 import { RegisterUserDTO } from 'src/auth/dto/register.dto';
+import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(UsersEntity)
-    private readonly userRepository: Repository<UsersEntity>,
-    @InjectRepository(RoutineAssignmentEntity)
-    private readonly routineAssigEntity: Repository<RoutineAssignmentEntity>
+    
+    private readonly userRepository: UsersRepository,
+
     ){
 
     }
@@ -107,6 +105,8 @@ export class UsersService {
        throw error;
       }
     }
+    
+
   
 
 }

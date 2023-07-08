@@ -10,6 +10,7 @@ import { SettingsModule } from './settings/settings.module';
 import 'dotenv/config'
 import { StatusModule } from './status/status.module';
 import { InstructorModule } from './instructor/instructor.module';
+import { StudentsModule } from './students/students.module';
 
 
 @Module({
@@ -30,6 +31,7 @@ import { InstructorModule } from './instructor/instructor.module';
     SettingsModule,
     StatusModule,
     InstructorModule,
+    StudentsModule,
   ],
   controllers: [],
   providers: [],

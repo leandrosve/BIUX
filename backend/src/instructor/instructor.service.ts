@@ -1,23 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { InstructorCodeEntity } from './entities/instructorCode.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult } from 'typeorm';
-import { ErrorManager } from 'src/utils/error.manager';
-import { UsersEntity } from 'src/users/entities/users.entity';
-import { InstructorStudentEntity } from './entities/InstructorStudent.entity';
-import { InstructorStudentDTO } from './dto/instructorStudent.dto';
-import { RoutinesService } from 'src/routines/routines.service';
-import { RoutineUpdateDTO } from 'src/routines/dto/routine.update.dto';
 import { RoutineCreateDTO } from 'src/routines/dto/routine.create.dto';
+import { RoutineUpdateDTO } from 'src/routines/dto/routine.update.dto';
+import { RoutinesService } from 'src/routines/routines.service';
+import { UserReducedDTO } from 'src/users/dto/user.reducerd.dto';
+import { UsersEntity } from 'src/users/entities/users.entity';
+import { UsersService } from 'src/users/users.service';
+import { ErrorManager } from 'src/utils/error.manager';
+import { Repository } from 'typeorm';
+import { InstructorStudentDTO } from './dto/instructorStudent.dto';
+import { InstructorCodeEntity } from './entities/instructorCode.entity';
+import { RoutineInstructorStudentEntity } from './entities/routines-instructor-students.entity';
+import { InstructorStudentRepository } from './repository/instructorStudent.repository';
 
 @Injectable()
 export class InstructorService {
   constructor(
     @InjectRepository(InstructorCodeEntity)
     private readonly instructorCodeRepository: Repository<InstructorCodeEntity>,
-    @InjectRepository(InstructorStudentEntity)
-    private readonly instructorStudentRepository: Repository<InstructorStudentEntity>,
-    private readonly routinesService: RoutinesService
+  
+    private readonly instructorStudentRepository: InstructorStudentRepository,
+    private readonly routinesService: RoutinesService,
+    @InjectRepository(RoutineInstructorStudentEntity)
+    private readonly routineInstructorStudentRepository: Repository<RoutineInstructorStudentEntity>,
+    private readonly usersService:UsersService
   ) {}
 
   public async code(user_id: number): Promise<InstructorCodeEntity> {
@@ -116,14 +122,38 @@ export class InstructorService {
   }
   public async createRoutine(instructorId: number, body: RoutineCreateDTO) {
     //return this.routinesService.details(request.idUser,id_routine)
-    return await this.routinesService.createdRoutine(instructorId, body);
+    let resultStudents:UserReducedDTO[]=[]
+    if(body.students){
+      resultStudents=  await this.instructorStudentRepository.getStudentsByInstructorForIds(instructorId,body.students)
+      if(resultStudents.length!=body.students.length){
+        throw new ErrorManager({ type: 'BAD_REQUEST', message: 'Puede ser que los alumnos no pertenezcan al instructor' })
+      };
+      
+    }
+    const newRoutine= await this.routinesService.createdRoutine(instructorId, body);
+    if (resultStudents.length > 0) {
+      const routineInstructorStudents: RoutineInstructorStudentEntity[] = resultStudents.map(student => {
+        let studentObj=new UsersEntity();
+        studentObj.id=student.id;
+        let instructorObj=new UsersEntity();
+        instructorObj.id=instructorId;
+        const entity = new RoutineInstructorStudentEntity();
+        entity.instructor= instructorObj;
+        entity.routine = newRoutine;
+        entity.student = studentObj;
+        return entity;
+      });
+      await this.routineInstructorStudentRepository.save(routineInstructorStudents);
+    }
+    return newRoutine;
   }
   public async routines(instructorId: number) {
     return await this.routinesService.routinesByInstructor(instructorId);
   }
 
   public async routineDetails(instructorId: number, routineId: number) {
-    return await this.routinesService.details(instructorId, routineId);
+
+    return await this.routinesService.getFullRoutine(instructorId, routineId);
   }
   public async getStudents(instructorId: number) {
     const res =  await this.instructorStudentRepository
@@ -133,4 +163,5 @@ export class InstructorService {
       .getMany(); 
     return res.map(instructorStudent => instructorStudent.student);
   }
+
 }
