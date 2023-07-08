@@ -73,7 +73,7 @@ const InstructorCodeDisplay = () => {
     retrieveCode();
   }, []);
   return (
-    <ResponsiveCard marginTop={5} alignItems='start' gap={3} minWidth={360} minHeight='auto' defaultWidth='auto' defaultHeight='auto'>
+    <ResponsiveCard marginTop={5} alignItems='start' gap={3} minWidth='fit-content' minHeight='auto' defaultWidth='400px' defaultHeight='auto'>
       <Heading size='md'>Código de instructor</Heading>
       <Text display='inline-flex' maxWidth='360px'>
         Comparte este código con tus alumnos para que puedan unirse a tu grupo.

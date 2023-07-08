@@ -1,6 +1,6 @@
 import { useState, useMemo, useContext } from 'react';
 import Routine, { DraggableSegment, ReducedRoutine } from '../../model/routines/Routine';
-import { Box, Button, Collapse, Flex, FormControl, FormErrorMessage, Input, Text, Tooltip } from '@chakra-ui/react';
+import { Box, Button, Collapse, Flex, FormControl, FormErrorMessage, FormHelperText, Input, Text, Tooltip } from '@chakra-ui/react';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import RoutineSegmentList from './RoutineSegmentList';
 import RoutineUtils from '../../utils/RoutineUtils';
@@ -9,6 +9,8 @@ import { RoutineDetailLabel } from './RoutineDetails';
 import BAlert from '../../components/common/BAlert';
 import InstructorService from '../../services/api/InstructorService';
 import { InstructorRoutinesContext } from '../../context/ListsProviders';
+import useSimpleList from '../../hooks/useSimpleList';
+import StudentSearch from '../students/StudentSearch';
 
 interface RoutineEditProps {
   routine: Routine;
@@ -19,6 +21,8 @@ const RoutineEditForm = ({ routine, segments, onSuccess }: RoutineEditProps) => 
   const [newSegments, setNewSegments] = useState<DraggableSegment[]>(segments);
   const [name, setName] = useState(routine.name);
   const [description, setDescription] = useState(routine.description);
+  const students = useSimpleList<number>([]);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -79,6 +83,10 @@ const RoutineEditForm = ({ routine, segments, onSuccess }: RoutineEditProps) => 
             fontWeight='bold'
             id='routine-description'
           />
+        </FormControl>
+        <FormControl display='flex' flexDirection='column' flexGrow={1}>
+          <RoutineDetailLabel htmlFor='search-students-button'>Alumnos</RoutineDetailLabel>
+          <StudentSearch selected={students.items} onAdd={students.add} onRemove={students.remove} />
         </FormControl>
         <Flex direction='column' grow={1} position='relative' marginTop={2}>
           <RoutineDetailLabel marginBottom={3} marginTop={0}>

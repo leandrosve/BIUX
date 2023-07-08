@@ -24,6 +24,7 @@ import Paginator from '../../components/common/Paginator';
 import usePagination from '../../hooks/usePagination';
 import { StopwatchIcon } from '../../components/common/Icons';
 import { InstructorRoutinesContext } from '../../context/ListsProviders';
+import SimpleBreadcrumbs from '../../components/common/SimpleBreadcrumbs';
 
 const RoutineList = () => {
   const {
@@ -53,6 +54,7 @@ const RoutineList = () => {
 
   return (
     <ResponsiveCard defaultHeight='auto' defaultWidth='800px'>
+      <SimpleBreadcrumbs items={[{ title: 'Rutinas' }]} />
       <Flex justifyContent='space-between' marginY={3} alignItems='center'>
         <Heading>Rutinas</Heading>
         <LinkButton to='crear' colorScheme='primary' gap={2} size={['sm', 'md']} whiteSpace='initial'>

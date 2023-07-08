@@ -1,4 +1,5 @@
-.initial-role-option {
+/* Selectable Item */
+.selectable-item {
   cursor: pointer;
   transition: 200ms all;
   position: relative;
@@ -9,11 +10,18 @@
   background: var(--primary-50);
 }
 
-html[data-theme='dark'] .initial-role-option {
+.selectable-item:hover .checkbox {
+  border-color: var(--primary-200);
+}
+.checkbox {
+  transition: border-color 200ms;
+}
+
+html[data-theme='dark'] .selectable-item {
   background: var(--bg-400);
 }
 
-.initial-role-option::before {
+.selectable-item::before {
   content: ' ';
   top: 0;
   left: 0;
@@ -29,15 +37,15 @@ html[data-theme='dark'] .initial-role-option {
   overflow: hidden;
 }
 
-.initial-role-option:hover::before {
+.selectable-item:hover::before {
   opacity: 0.2;
 }
 
-html[data-theme='dark'] .initial-role-option:hover::before {
+html[data-theme='dark'] .selectable-item:hover::before {
   opacity: 0.4;
 }
 
-.initial-role-option[data-checked] {
+.selectable-item[data-checked] {
   border: none;
   background: var(--primary-300);
   background: linear-gradient(130deg, var(--primary-500), var(--primary-400));
@@ -46,7 +54,7 @@ html[data-theme='dark'] .initial-role-option:hover::before {
   outline-offset: -4px;
 }
 
-html[data-theme='dark'] .initial-role-option[data-checked] {
+html[data-theme='dark'] .selectable-item[data-checked] {
   background: var(--primary-500);
   background: linear-gradient(130deg, var(--primary-700), var(--primary-600));
 }

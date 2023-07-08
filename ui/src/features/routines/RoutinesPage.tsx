@@ -9,7 +9,6 @@ import { InstructorRoutinesProvider } from '../../context/ListsProviders';
 const RoutinesPage = () => {
   return (
     <>
-      <AutoBreadcrumbs />
       <InstructorRoutinesProvider>
         <Routes>
           <Route path='crear' element={<RoutineForm />} />

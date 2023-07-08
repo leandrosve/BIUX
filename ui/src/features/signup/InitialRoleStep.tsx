@@ -185,7 +185,7 @@ const InitialRoleOption = (props: InitialRoleOptionProps) => {
       <input {...input} />
       <Box
         {...checkbox}
-        className='initial-role-option'
+        className='selectable-item'
         _focusVisible={{
           boxShadow: 'outline',
         }}

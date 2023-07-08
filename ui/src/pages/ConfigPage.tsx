@@ -8,6 +8,7 @@ import AlertToast from '../components/common/alert-toast/AlertToast';
 import ResponsiveCard from '../components/common/ResponsiveCard';
 import AutoBreadcrumbs from '../layout/AutoBreadcrumbs';
 import SettingsService from '../services/api/SettingsService';
+import SimpleBreadcrumbs from '../components/common/SimpleBreadcrumbs';
 
 const ConfigPage = () => {
   const [fontFamily, setFontFamily] = useState<string>(AccesibilityService.getLocalSettings().fontFamily);
@@ -73,90 +74,88 @@ const ConfigPage = () => {
   }, []);
 
   return (
-    <>
-      <AutoBreadcrumbs />
-      <ResponsiveCard defaultWidth={700}>
-        <form onSubmit={handleSave}>
-          <Stack align='stretch' gap={3}>
-            <Heading mt={2}>Configuración</Heading>
-            <Card
-              fontFamily={fontFamily}
-              fontSize={fontSize}
-              paddingX={5}
-              paddingY={2}
-              background={`${color}.500`}
-              color='white'
-              border='5px solid'
-              borderColor={`${color}.300`}
-              textAlign={'center'}
-              alignItems='center'
-              justify='center'
-              minHeight={110}
-            >
-              <Text fontSize={'1em'}>Asi es como se veran los textos en la aplicación!</Text>
-              <Heading fontSize={'1.875em'} fontFamily={fontFamily}>
-                Títulos y encabezados
-              </Heading>
-              <Text fontSize={'0.875em'}>Algunos otros detalles son un poco mas pequeños...</Text>
-            </Card>
+    <ResponsiveCard defaultWidth={700}>
+      <SimpleBreadcrumbs items={[{ title: 'Configuración' }]} />
+      <form onSubmit={handleSave}>
+        <Stack align='stretch' gap={3}>
+          <Heading mt={2}>Configuración</Heading>
+          <Card
+            fontFamily={fontFamily}
+            fontSize={fontSize}
+            paddingX={5}
+            paddingY={2}
+            background={`${color}.500`}
+            color='white'
+            border='5px solid'
+            borderColor={`${color}.300`}
+            textAlign={'center'}
+            alignItems='center'
+            justify='center'
+            minHeight={110}
+          >
+            <Text fontSize={'1em'}>Asi es como se veran los textos en la aplicación!</Text>
+            <Heading fontSize={'1.875em'} fontFamily={fontFamily}>
+              Títulos y encabezados
+            </Heading>
+            <Text fontSize={'0.875em'}>Algunos otros detalles son un poco mas pequeños...</Text>
+          </Card>
 
-            <FormControl>
-              <FormLabel fontWeight={'semibold'}>Tipo de fuente</FormLabel>
-              <Select value={fontFamily} onChange={(e) => setFontFamily(e.target.value)} autoComplete='on'>
-                <option label='Nunito (Predeterminado)' value='Nunito' />
-                <option label='Arial' value='Arial' />
-                <option label='Raleway' value='Raleway' />
-                <option label='Sans Serif' value='sans-serif' />
-                <option label='Verdana' value='Verdana' />
-                <option label='Montserrat' value='Montserrat' />
-                <option label='Poppins' value='Poppins' />
-              </Select>
-            </FormControl>
+          <FormControl>
+            <FormLabel fontWeight={'semibold'}>Tipo de fuente</FormLabel>
+            <Select value={fontFamily} onChange={(e) => setFontFamily(e.target.value)} autoComplete='on'>
+              <option label='Nunito (Predeterminado)' value='Nunito' />
+              <option label='Arial' value='Arial' />
+              <option label='Raleway' value='Raleway' />
+              <option label='Sans Serif' value='sans-serif' />
+              <option label='Verdana' value='Verdana' />
+              <option label='Montserrat' value='Montserrat' />
+              <option label='Poppins' value='Poppins' />
+            </Select>
+          </FormControl>
 
-            <FormControl>
-              <FormLabel fontWeight={'semibold'} as='span'>
-                Tamaño de fuente
-              </FormLabel>
-              <ButtonSelect name='Selector de tamaño de fuente' value={fontSize} onChange={(value) => setFontSize(value)} checkIcon>
-                <ButtonSelectItem value='14px' label='Pequeño' fontSize={14} width={150} />
-                <ButtonSelectItem value='18px' label='Mediano' fontSize={18} width={150} />
-                <ButtonSelectItem value='24px' label='Grande' fontSize={24} width={150} />
-              </ButtonSelect>
-            </FormControl>
+          <FormControl>
+            <FormLabel fontWeight={'semibold'} as='span'>
+              Tamaño de fuente
+            </FormLabel>
+            <ButtonSelect name='Selector de tamaño de fuente' value={fontSize} onChange={(value) => setFontSize(value)} checkIcon>
+              <ButtonSelectItem value='14px' label='Pequeño' fontSize={14} width={150} />
+              <ButtonSelectItem value='18px' label='Mediano' fontSize={18} width={150} />
+              <ButtonSelectItem value='24px' label='Grande' fontSize={24} width={150} />
+            </ButtonSelect>
+          </FormControl>
 
-            <FormControl>
-              <FormLabel fontWeight={'semibold'} as='legend'>
-                Color principal
-              </FormLabel>
-              <ColorPicker onChange={(c) => setColor(c)} value={color} />
-            </FormControl>
+          <FormControl>
+            <FormLabel fontWeight={'semibold'} as='legend'>
+              Color principal
+            </FormLabel>
+            <ColorPicker onChange={(c) => setColor(c)} value={color} />
+          </FormControl>
 
-            <FormControl>
-              <FormLabel fontWeight={'semibold'} as='span'>
-                Tema
-              </FormLabel>
-              <ButtonSelect  name='Selector de modo del color' value={colorMode} onChange={(v) => setColorMode(v)} checkIcon>
-                <ButtonSelectItem value='light' width={150}>
-                  <Icon as={SunIcon} w={6} h={6} /> Claro
-                </ButtonSelectItem>
-                <ButtonSelectItem value='dark' width={150}>
-                  <Icon as={MoonIcon} w={5} h={5} /> Oscuro
-                </ButtonSelectItem>
-              </ButtonSelect>
-            </FormControl>
+          <FormControl>
+            <FormLabel fontWeight={'semibold'} as='span'>
+              Tema
+            </FormLabel>
+            <ButtonSelect name='Selector de modo del color' value={colorMode} onChange={(v) => setColorMode(v)} checkIcon>
+              <ButtonSelectItem value='light' width={150}>
+                <Icon as={SunIcon} w={6} h={6} /> Claro
+              </ButtonSelectItem>
+              <ButtonSelectItem value='dark' width={150}>
+                <Icon as={MoonIcon} w={5} h={5} /> Oscuro
+              </ButtonSelectItem>
+            </ButtonSelect>
+          </FormControl>
 
-            <Stack>
-              <Button colorScheme='primary' width='100%' mt={5} type='submit' isLoading={loading}>
-                Guardar
-              </Button>
-              <Button colorScheme='primary' variant='ghost' width='100%' onClick={restoreDefaults}>
-                Restablecer Ajustes
-              </Button>
-            </Stack>
+          <Stack>
+            <Button colorScheme='primary' width='100%' mt={5} type='submit' isLoading={loading}>
+              Guardar
+            </Button>
+            <Button colorScheme='primary' variant='ghost' width='100%' onClick={restoreDefaults}>
+              Restablecer Ajustes
+            </Button>
           </Stack>
-        </form>
-      </ResponsiveCard>
-    </>
+        </Stack>
+      </form>
+    </ResponsiveCard>
   );
 };
 

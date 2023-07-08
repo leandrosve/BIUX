@@ -4,6 +4,7 @@ import {
   Flex,
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   Heading,
   Icon,
@@ -27,6 +28,15 @@ import Routine, { RoutineSegment } from '../../model/routines/Routine';
 import ResponsiveCard from '../../components/common/ResponsiveCard';
 import LinkButton from '../../components/common/LinkButton';
 import { ArrowBackIcon } from '@chakra-ui/icons';
+import StudentSearch from '../students/StudentSearch';
+import useSimpleList from '../../hooks/useSimpleList';
+import { BRoutes } from '../../router/routes';
+import SimpleBreadcrumbs from '../../components/common/SimpleBreadcrumbs';
+
+const breadcrumb = [
+  { to: BRoutes.ROUTINES, title: 'Rutinas' },
+  { to: '#contenido', title: 'Nueva rutina' },
+];
 
 const RoutineForm = () => {
   const { activeStep, goToNext, goToPrevious } = useSteps({
@@ -48,9 +58,17 @@ const RoutineForm = () => {
 
   return (
     <>
-      <ResponsiveCard defaultWidth={710} defaultHeight={650}>
-        <RutineStepper index={activeStep} />
-        <Heading mt={2} as='h1'>
+      <ResponsiveCard defaultWidth={800} defaultHeight={650}>
+        <SimpleBreadcrumbs items={breadcrumb} />
+        <Flex justifyContent='space-between' alignItems={{ base: 'stretch', xl: 'center' }} direction={{ base: 'column-reverse', xl: 'row' }}>
+          <RutineStepper index={activeStep} />
+          {activeStep === 0 && (
+            <LinkButton to='/rutinas' type='submit' leftIcon={<ArrowBackIcon />} size={['sm', 'md']} mt={{ sm: 2, xl: 0 }} mb={2}>
+              Volver al listado
+            </LinkButton>
+          )}
+        </Flex>
+        <Heading as='h1'>
           Nueva Rutina
         </Heading>
         <Flex direction='column' position='relative' grow={1}>
@@ -64,6 +82,7 @@ const RoutineForm = () => {
 const Step1 = (props: { initialData: Routine; onSubmit: (name: string, description: string) => void }) => {
   const [name, setName] = useState(props.initialData.name);
   const [description, setDescription] = useState(props.initialData.description ?? '');
+  const students = useSimpleList<number>([]);
   const disableSubmit = useMemo(() => {
     if (!name) return true;
     if (description.length > 500 || name.length > 120) return true;
@@ -80,23 +99,38 @@ const Step1 = (props: { initialData: Routine; onSubmit: (name: string, descripti
       <Flex as='form' direction='column' grow={1} onSubmit={() => props.onSubmit(name, description)}>
         <Flex grow={1} direction='column'>
           <FormControl isInvalid={name.length > 500}>
-            <FormLabel mt={2}>
+            <FormLabel mt={2} fontWeight='bold'>
               Nombre de la rutina <b>*</b>
             </FormLabel>
             <Input value={name} type='text' boxShadow='sm' placeholder='Nombre' onChange={(e) => setName(e.target.value)} />
             {name.length > 120 && <FormErrorMessage>La cantidad máxima de caracteres es 120</FormErrorMessage>}
           </FormControl>
           <FormControl isInvalid={description.length > 500} display='flex' flexDirection='column' flexGrow={1}>
-            <FormLabel mt={2}>Descripción</FormLabel>
-            <Textarea value={description} boxShadow='sm' flexGrow={1} maxHeight='100px' placeholder='Descripcion' resize='none' onChange={(e) => setDescription(e.target.value)} />
+            <FormLabel mt={2} fontWeight='bold'>
+              Descripción
+            </FormLabel>
+            <Textarea
+              value={description}
+              boxShadow='sm'
+              flexGrow={1}
+              placeholder='Descripcion'
+              resize='none'
+              onChange={(e) => setDescription(e.target.value)}
+            />
             {description.length > 500 && <FormErrorMessage>La cantidad máxima de caracteres es 500</FormErrorMessage>}
+          </FormControl>
+          <FormControl display='flex' flexDirection='column' flexGrow={1}>
+            <FormLabel mt={2} mb={0} fontWeight='bold'>
+              Alumnos
+            </FormLabel>
+            <FormHelperText mb={2} mt={0} color='text.300'>
+              Puedes asignar alumnos a esta rutina ahora o en cualquier momento
+            </FormHelperText>
+            <StudentSearch selected={students.items} onAdd={students.add} onRemove={students.remove} />
           </FormControl>
         </Flex>
 
-        <Flex justifyContent='space-between' mt={5}>
-          <LinkButton to='/rutinas' type='submit' leftIcon={<ArrowBackIcon />}>
-            Volver al listado
-          </LinkButton>
+        <Flex justifyContent='end' mt={5}>
           <Tooltip
             placement='left'
             hasArrow
@@ -119,7 +153,7 @@ const Step1 = (props: { initialData: Routine; onSubmit: (name: string, descripti
 const steps = ['detalles', 'planificación'];
 const RutineStepper = (props: { index: number }) => {
   return (
-    <Stepper {...props} maxWidth={{ base: 325, md: 400 }} colorScheme='primary'>
+    <Stepper {...props} maxWidth={{ base: 325, md: 400 }} colorScheme='primary' flexGrow={1}>
       {steps.map((step, index) => (
         <Step key={index}>
           <StepIndicator>

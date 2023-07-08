@@ -62,7 +62,7 @@ const RoutineFormSegmentsStep = ({ routine, onPrevious, displayOnly, editMode }:
     if (res.hasError) return;
     onUpdate(RoutineUtils.toReducedRoutine(res.data))
     toast({
-      position: 'bottom-right',
+      position: 'top-right',
       duration: 15000,
       render: (t) => (
         <AlertToast colorScheme='primary' status='success' hasProgress duration={15000} hasIcon isClosable onClose={() => toast.close(t.id || '')}>

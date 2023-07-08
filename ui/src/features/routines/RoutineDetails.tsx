@@ -14,9 +14,13 @@ import {
   Heading,
   Icon,
   Image,
+  List,
+  ListItem,
+  SimpleGrid,
   Tag,
   Text,
   Tooltip,
+  VisuallyHidden,
 } from '@chakra-ui/react';
 import missingIllustration from '../../assets/illustrations/missing-page.png';
 import LinkButton from '../../components/common/LinkButton';
@@ -25,11 +29,14 @@ import { ArrowBackIcon, InfoIcon } from '@chakra-ui/icons';
 import SkeletonWrapper from '../../components/common/SkeletonWrapper';
 import RoutineSegmentList from './RoutineSegmentList';
 import RoutineUtils from '../../utils/RoutineUtils';
-import { EditIcon, EditOffIcon, StopwatchIcon } from '../../components/common/Icons';
+import { EditIcon, EditOffIcon, StopwatchIcon, UserLinkIcon } from '../../components/common/Icons';
 import useAlertDialog from '../../hooks/useAlertDialog';
 import RoutineEditForm from './RoutineEditForm';
 import BAlert from '../../components/common/BAlert';
 import InstructorService from '../../services/api/InstructorService';
+import SimpleBreadcrumbs from '../../components/common/SimpleBreadcrumbs';
+import studentsMock from '../students/studentsMock';
+import BAvatar from '../../components/common/BAvatar';
 
 const RoutineDetails = () => {
   let { id } = useParams();
@@ -86,6 +93,12 @@ const RoutineDetails = () => {
   if (!loading && !routine) return <NotFound />;
   return (
     <ResponsiveCard defaultHeight='auto' position='relative' defaultWidth='800px'>
+      <SimpleBreadcrumbs
+        items={[
+          { to: BRoutes.ROUTINES, title: 'Rutinas' },
+          { to: '#contenido', title: 'Detalle' },
+        ]}
+      />
       <SkeletonWrapper loading={loading} heights={['60px', '90px', '60px']} height='70px' repeat={7} marginY={1}>
         <Flex justifyContent='space-between' mb={3} alignItems='center'>
           <LinkButton to={BRoutes.ROUTINES} leftIcon={<ArrowBackIcon />} size={['sm', 'md']}>
@@ -140,12 +153,14 @@ const RoutineDetailsContent = ({ routine, segments }: RoutineDetailsContentProps
         <RoutineDetailLabel htmlFor='routine-name' mb={0}>
           Nombre
         </RoutineDetailLabel>
-        <Heading aria-label='Routine Name' color='text.500'>{routine.name}</Heading>
+        <Heading aria-label='Routine Name' color='text.500'>
+          {routine.name}
+        </Heading>
       </FormControl>
 
       {routine.description && (
         <FormControl>
-          <RoutineDetailLabel htmlFor='routine-description' mb={0} >
+          <RoutineDetailLabel htmlFor='routine-description' mb={0}>
             Descripción
           </RoutineDetailLabel>
           <Heading size='md' as='h2' paddingY={2} color='text.500'>
@@ -153,6 +168,52 @@ const RoutineDetailsContent = ({ routine, segments }: RoutineDetailsContentProps
           </Heading>
         </FormControl>
       )}
+
+      <FormControl>
+        <RoutineDetailLabel htmlFor='routine-students' mb={0}>
+          Alumnos
+        </RoutineDetailLabel>
+        {!!studentsMock?.length && (
+          <SimpleGrid columns={{sm:1, md:2}} spacing={'4px'} mt={3}>
+            {studentsMock.map(({ user, id }) => (
+              <Box
+                position='relative'
+                bg='bg.400'
+                key={user.id}
+                overflow='hidden'
+                borderRadius='lg'
+                padding={2}
+                borderColor='chakra-border-color'
+                borderWidth='1px'
+                display='flex'
+                gap={3}
+                alignItems='center'
+                justifyContent='space-between'
+              >
+                <Flex gap={3} alignItems='center'>
+                  <BAvatar aria-hidden size='sm' name={`${user.firstName} ${user.lastName}`} />
+                  <Flex direction='column' alignItems='start' justifyContent='start'>
+                    <Text noOfLines={1} textOverflow='ellipsis'>
+                      {user.firstName} {user.lastName}
+                    </Text>
+                    <Text fontSize='sm' fontWeight='light' aria-label='email' noOfLines={1} textOverflow='ellipsis' wordBreak='break-all'>
+                      {user.email}
+                    </Text>
+                  </Flex>
+                </Flex>
+                <Tooltip label='Ir a detalle del alumno' hasArrow placement='right'>
+                  <div>
+                    <LinkButton to={`/alumnos/${id}`} height='auto' width='auto' minWidth={0} padding={2} background='transparent'>
+                      <Icon as={UserLinkIcon} aria-hidden/>
+                      <VisuallyHidden>Ir a detalle del alumno</VisuallyHidden>
+                    </LinkButton>
+                  </div>
+                </Tooltip>
+              </Box>
+            ))}
+          </SimpleGrid>
+        )}
+      </FormControl>
       <Box position='relative' marginTop={2}>
         <Flex justifyContent='space-between' alignItems='center'>
           <RoutineDetailLabel marginBottom={3} marginTop={0}>
