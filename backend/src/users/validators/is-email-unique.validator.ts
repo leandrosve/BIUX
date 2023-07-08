@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { ValidationArguments, ValidatorConstraint } from 'class-validator';
-import { UsersService } from '../users.service';
-import { EntityManager } from 'typeorm';
 import { AppDS } from 'src/config/data.source';
 
 /**

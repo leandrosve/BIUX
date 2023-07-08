@@ -27,7 +27,6 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const idUserParams = request.params.id; // Obtener el valor del parámetro 'id' del request
 
-    //console.log("ID  DEL USER: ", idUserParams)
     if(isPublic) return true;
 
     //para leer el header de la funcion

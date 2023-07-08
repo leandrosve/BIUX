@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Req, UseGuards, UsePipes } from '@nestjs/common';
 import { ApiHeader, ApiParam, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { PublicAccess } from 'src/auth/decorators/public.decorator';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
@@ -9,6 +9,7 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { CodeCheckDTO } from './dto/code-check.dto';
 import { RoutineUpdateDTO } from 'src/routines/dto/routine.update.dto';
 import { RoutineCreateDTO } from 'src/routines/dto/routine.create.dto';
+import { IsStudentsCodePipe } from './pipes/isStudents.pipe';
 
 @ApiTags('Instructor')
 @Controller('instructor')
@@ -37,6 +38,7 @@ export class InstructorController {
         return await this.instructorService.checkCode(body.code);
     }
 
+    
     @Post('/routines')
     @ApiProperty()
     @ApiHeader({name:'token',required: true})
