@@ -4,7 +4,7 @@ import { IRoutine } from "../../interfaces/routine.interface";
 import { UsersEntity } from "../../users/entities/users.entity";
 import {  Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { SegmentsEntity } from "../../segments/entities/segments.entity";
-import { RoutineInstructorStudentEntity } from "src/instructor/entities/routines-instructor-students.entity";
+import { RoutineInstructorStudentEntity } from "../../instructor/entities/routines-instructor-students.entity";
 
 @Entity({ name: 'routines' })
 export class RoutinesEntity extends BaseEntity implements IRoutine{
