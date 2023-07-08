@@ -8,6 +8,7 @@ import SessionProvider from './context/SessionProvider';
 import BRouter from './router/BRouter';
 import APIService from './services/api/APIService';
 import StatusService from './services/api/StatusService';
+import ErrorBoundary from './pages/error-boundary-page/ErrorBoundaryPage';
 
 const EnsureInitialized = (props: PropsWithChildren) => {
   const [initialized, setInitialized] = useState(false);
@@ -25,11 +26,13 @@ const EnsureInitialized = (props: PropsWithChildren) => {
 function App() {
   return (
     <ChakraProvider theme={theme}>
-      <EnsureInitialized>
-        <SessionProvider>
-          <BRouter />
-        </SessionProvider>
-      </EnsureInitialized>
+      <ErrorBoundary>
+        <EnsureInitialized>
+          <SessionProvider>
+            <BRouter />
+          </SessionProvider>
+        </EnsureInitialized>
+      </ErrorBoundary>
     </ChakraProvider>
   );
 }

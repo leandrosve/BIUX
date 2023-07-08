@@ -85,7 +85,7 @@ const RoutineDetails = () => {
   }, [id]);
   if (!loading && !routine) return <NotFound />;
   return (
-    <ResponsiveCard defaultHeight='auto' position='relative' defaultWidth='700px'>
+    <ResponsiveCard defaultHeight='auto' position='relative' defaultWidth='800px'>
       <SkeletonWrapper loading={loading} heights={['60px', '90px', '60px']} height='70px' repeat={7} marginY={1}>
         <Flex justifyContent='space-between' mb={3} alignItems='center'>
           <LinkButton to={BRoutes.ROUTINES} leftIcon={<ArrowBackIcon />} size={['sm', 'md']}>
@@ -101,7 +101,7 @@ const RoutineDetails = () => {
             >
               <Flex gap={2}>
                 {editMode ? <EditOffIcon /> : <EditIcon />}
-                <Text display={['none', 'inline']}>{editMode ? 'Dejar de editar' : 'Editar'}</Text>
+                <Text display={['none', 'none', 'inline']}>{editMode ? 'Dejar de editar' : 'Editar'}</Text>
               </Flex>
             </Button>
           </Tooltip>
@@ -140,15 +140,15 @@ const RoutineDetailsContent = ({ routine, segments }: RoutineDetailsContentProps
         <RoutineDetailLabel htmlFor='routine-name' mb={0}>
           Nombre
         </RoutineDetailLabel>
-        <Heading aria-label='Routine Name'>{routine.name}</Heading>
+        <Heading aria-label='Routine Name' color='text.500'>{routine.name}</Heading>
       </FormControl>
 
       {routine.description && (
         <FormControl>
-          <RoutineDetailLabel htmlFor='routine-description' mb={0}>
+          <RoutineDetailLabel htmlFor='routine-description' mb={0} >
             Descripción
           </RoutineDetailLabel>
-          <Heading size='md' as='h2' paddingY={2}>
+          <Heading size='md' as='h2' paddingY={2} color='text.500'>
             {routine.description}
           </Heading>
         </FormControl>

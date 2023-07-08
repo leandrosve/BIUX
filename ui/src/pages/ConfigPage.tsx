@@ -55,9 +55,9 @@ const ConfigPage = () => {
   const showUndoToast = (restoredDefaults?: boolean) => {
     toast({
       position: 'bottom-right',
-      duration: 5000,
+      duration: 15000,
       render: (t) => (
-        <AlertToast colorScheme='primary' status='success' hasProgress duration={5000} hasIcon isClosable onClose={() => toast.close(t.id || '')}>
+        <AlertToast colorScheme='primary' status='success' hasProgress duration={15000} hasIcon isClosable onClose={() => toast.close(t.id || '')}>
           {restoredDefaults ? 'Se restablecieron los ajustes por defecto' : 'Se han guardado los cambios!'}
           <Button onClick={undoChanges} ml={5} colorScheme='primary' variant='ghost' gap={1}>
             <Icon as={UndoIcon} />
@@ -117,7 +117,7 @@ const ConfigPage = () => {
               <FormLabel fontWeight={'semibold'} as='span'>
                 Tamaño de fuente
               </FormLabel>
-              <ButtonSelect value={fontSize} onChange={(value) => setFontSize(value)} checkIcon>
+              <ButtonSelect name='Selector de tamaño de fuente' value={fontSize} onChange={(value) => setFontSize(value)} checkIcon>
                 <ButtonSelectItem value='14px' label='Pequeño' fontSize={14} width={150} />
                 <ButtonSelectItem value='18px' label='Mediano' fontSize={18} width={150} />
                 <ButtonSelectItem value='24px' label='Grande' fontSize={24} width={150} />
@@ -135,7 +135,7 @@ const ConfigPage = () => {
               <FormLabel fontWeight={'semibold'} as='span'>
                 Tema
               </FormLabel>
-              <ButtonSelect value={colorMode} onChange={(v) => setColorMode(v)} checkIcon>
+              <ButtonSelect  name='Selector de modo del color' value={colorMode} onChange={(v) => setColorMode(v)} checkIcon>
                 <ButtonSelectItem value='light' width={150}>
                   <Icon as={SunIcon} w={6} h={6} /> Claro
                 </ButtonSelectItem>

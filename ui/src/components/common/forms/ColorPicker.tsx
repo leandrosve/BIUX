@@ -64,7 +64,7 @@ const ColorRadioOption = (props: RadioProps) => {
         cursor='pointer'
         transition={'100ms'}
       />
-      <span aria-label={t[props.value || '']}></span>
+      <VisuallyHidden>{t[props.value || '']}</VisuallyHidden>
     </Box>
   );
 };

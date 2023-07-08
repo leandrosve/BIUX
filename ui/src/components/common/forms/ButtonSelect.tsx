@@ -1,5 +1,5 @@
-import { Button, ButtonProps, Flex, Icon } from '@chakra-ui/react';
-import { ReactElement, cloneElement } from 'react';
+import { Box, Button, ButtonGroup, ButtonProps, Flex, Icon, RadioGroup, RadioProps, useRadio, useRadioGroup } from '@chakra-ui/react';
+import { ReactElement, ReactNode, cloneElement } from 'react';
 import { CheckIcon } from '../Icons';
 
 interface Props {
@@ -7,64 +7,59 @@ interface Props {
   onChange: (value: string) => void;
   children: Array<ReactElement<ButtonSelectItemProps>>;
   checkIcon?: boolean;
+  name: string; // description
 }
 
-interface ButtonSelectItemProps extends Omit<ButtonProps, 'onClick'> {
-  value: string;
-  selected?: string;
-  label?: string;
-  onClick?: (value: string) => void;
-  first?: boolean;
-  last?: boolean;
-  checkIcon?: boolean;
-}
+const ButtonSelect = ({ value, onChange, checkIcon, children, name }: Props) => {
+  const { getRootProps, getRadioProps } = useRadioGroup({
+    name: name,
+    onChange: onChange,
+    defaultValue: '',
+    value,
+  });
 
-const ButtonSelect = ({ value, onChange, checkIcon, children }: Props) => {
+  const group = getRootProps()
   return (
-    <Flex borderRadius={10} border='1px solid' borderColor='chakra-border-color' display='inline-flex' maxWidth={'100%'}>
-      {children.map((c, i) =>
-        cloneElement(c, { key: i, onClick: onChange, selected: value, checkIcon, first: i == 0, last: i + 1 == children.length })
-      )}
-    </Flex>
+    <ButtonGroup {...group} isAttached border='1px solid' borderRadius='lg' borderColor='chakra-border-color' display='inline-flex' maxWidth={'100%'}>
+      {children.map((c, i) => {
+        const radioProps = getRadioProps({ value: c.props.value});
+        return cloneElement(c, { key: i, checkIcon, radioProps });
+      })}
+    </ButtonGroup>
   );
 };
 
-export const ButtonSelectItem = ({ value, selected, onClick, label, first, last, children, checkIcon, ...rest }: ButtonSelectItemProps) => {
-  const isSelected = selected == value;
+interface ButtonSelectItemProps extends ButtonProps {
+  children?: ReactNode;
+  checkIcon?: boolean;
+  label?: string;
+  radioProps?: RadioProps;
+}
 
-  const handleClick = (v: string) => {
-    if (isSelected) return;
-    onClick?.(v);
-  };
+export const ButtonSelectItem = ({ children, label, checkIcon, radioProps, ...props }: ButtonSelectItemProps) => {
+  const { getInputProps, getRadioProps } = useRadio(radioProps);
 
+  const input = getInputProps();
+  const checkbox = getRadioProps();
   return (
     <Button
-      background={`primary.${isSelected ? 500 : 50}`}
-      color={isSelected ? 'white' : 'gray.600'}
-      cursor={'pointer'}
-      _hover={!isSelected ? { background: 'primary.100', color: 'gray.800' } : {}}
-      onClick={() => handleClick?.(value)}
+      as='label'
+      colorScheme={radioProps?.isChecked ? 'primary' : undefined}
+      background={radioProps?.isChecked ? undefined : 'whiteAlpha.100'}
+      variant={radioProps?.isChecked ? 'solid' : 'outline'}
       padding={3}
       fontWeight='semibold'
-      textAlign={'center'}
-      justifyContent={'center'}
-      display='flex'
-      alignItems={'center'}
-      href='#'
-      borderLeftRadius={first ? 10 : 0}
-      borderRightRadius={last ? 10 : 0}
-      borderRightWidth={last ? 0 : '1px'}
-      borderColor='#a4a4a430'
-      tabIndex={0}
       transition={'200ms'}
       position='relative'
-      {...rest}
+      {...checkbox}
+      {...props}
     >
+      <input {...input} />
       <Flex gap={1} alignItems={'center'}>
         {label}
         {children}
       </Flex>
-      {isSelected && checkIcon && (
+      {radioProps?.isChecked && checkIcon && (
         <Flex position='absolute' bottom={0.5} right={0.5}>
           <Icon as={CheckIcon} w={4} h={4} />
         </Flex>
