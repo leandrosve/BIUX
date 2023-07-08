@@ -22,7 +22,6 @@ import {
 } from '@chakra-ui/react';
 import { useState, SVGProps, useMemo, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import './initial-role-form.css';
 import { StudentIcon2, TeacherIcon } from '../../components/common/Icons';
 import { InfoIcon } from '@chakra-ui/icons';
 import BAlert from '../../components/common/BAlert';
