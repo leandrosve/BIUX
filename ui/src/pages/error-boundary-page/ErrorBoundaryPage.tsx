@@ -40,6 +40,7 @@ const ErrorPage = () => {
   const onDeleteData = () => {
     setLoading(true);
     localStorage.clear();
+    sessionStorage.clear();
     document.cookie = '';
     setTimeout(() => location.replace('/'), 2000);
   };

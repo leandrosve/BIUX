@@ -52,9 +52,9 @@ const StudentSearch = ({ selected, onAdd, onRemove }: Props) => {
               _notLast={{ borderBottomWidth: '1px' }}
             >
               <Flex justifyContent='space-between' alignItems='center' gap={1}>
-                <Flex alignItems='center' gap={3}>
+                <Flex alignItems='center' gap={3} overflow='hidden'>
                   <BAvatar aria-hidden size='sm' name={`${user.firstName} ${user.lastName}`} />
-                  <Flex direction='column'>
+                  <Flex direction='column' minWidth={0}>
                     <Text>
                       {user.firstName} {user.lastName}
                     </Text>

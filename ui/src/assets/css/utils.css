@@ -58,3 +58,7 @@ html[data-theme='dark'] .selectable-item[data-checked] {
   background: var(--primary-500);
   background: linear-gradient(130deg, var(--primary-700), var(--primary-600));
 }
+
+.text-color-class{
+  color: red;
+}

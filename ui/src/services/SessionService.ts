@@ -15,6 +15,8 @@ export default class SessionService {
 
   static destroyLocalSession() {
     localStorage.removeItem('session');
+    localStorage.clear();
+    sessionStorage.clear();
     AccesibilityService.restoreDefaults();
     location.replace("/login?logout=true");
   }

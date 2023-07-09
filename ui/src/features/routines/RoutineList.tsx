@@ -57,7 +57,7 @@ const RoutineList = () => {
       <SimpleBreadcrumbs items={[{ title: 'Rutinas' }]} />
       <Flex justifyContent='space-between' marginY={3} alignItems='center'>
         <Heading>Rutinas</Heading>
-        <LinkButton to='crear' colorScheme='primary' gap={2} size={['sm', 'md']} whiteSpace='initial'>
+        <LinkButton to='/rutinas/crear' colorScheme='primary' gap={2} size={['sm', 'md']} whiteSpace='initial'>
           <Icon as={PlusSquareIcon} /> Nueva Rutina
         </LinkButton>
       </Flex>
@@ -120,7 +120,7 @@ const RoutineListItem = ({ routine }: { routine: ReducedRoutine }) => (
   <ListItem paddingY={1} paddingX={3} borderRadius='md' borderColor='chakra-border-color'>
     <Flex justifyContent='space-between' alignItems={['start', 'center']} flexDirection={['column', 'row']} overflow='hidden'>
       <Flex direction='column' minWidth={0}>
-        <Heading size='md' aria-label='nombre' noOfLines={1} color='primary.700' _dark={{ color: 'primary.200' }}>
+        <Heading size='md' noOfLines={1} color='primary.700' _dark={{ color: 'primary.200' }}>
           {routine.name}
         </Heading>
         <Flex minHeight='1rem' overflow='hidden' minWidth={0}>
@@ -135,12 +135,12 @@ const RoutineListItem = ({ routine }: { routine: ReducedRoutine }) => (
         {!!routine.totalDuration && (
           <Tooltip hasArrow label={`Duracion total`}>
             <Tag borderRadius='20px' colorScheme='cyan' justifyContent='center' aria-label={`${10} minutos`}>
-              <Icon as={StopwatchIcon} mr={1} /> {routine.totalDuration} min
+              <Icon as={StopwatchIcon} mr={1} aria-hidden /> {routine.totalDuration} min
             </Tag>
           </Tooltip>
         )}
         <Flex marginLeft='auto'>
-          <LinkButton to={`${routine.id}`} size='sm'>
+          <LinkButton to={`/rutinas/${routine.id}`} size='sm'>
             Ver detalles
           </LinkButton>
         </Flex>
