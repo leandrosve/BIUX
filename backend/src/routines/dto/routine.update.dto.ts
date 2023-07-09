@@ -26,11 +26,21 @@ export class RoutineUpdateDTO implements IRoutine{
     @Type(() => SegmentUpdateDTO)
     segments: SegmentUpdateDTO[]
 
-    @ApiProperty({ isArray: true, type: Number, example: [1, 2, 3] })
-    @IsArray()
-    @IsOptional()
-    @IsInt({ each: true })
-    @Type(() => Number)
-    students: number[];
+    // @ApiProperty({ isArray: true, type: Number|StudentDTO , example: [1, 2, 3] })
+    // @IsArray()
+    // @IsOptional()
+    // @IsInt({ each: true })
+    // @Type(() => Number)
+    // students?: number[];
     
 } 
+
+// export class StudentDTO {
+//     readonly createdAt: string;
+//     readonly email: string;
+//     readonly firstName: string;
+//     readonly id: number;
+//     readonly lastName: string;
+//     readonly role: string;
+//     readonly updatedAt: string;
+//   }

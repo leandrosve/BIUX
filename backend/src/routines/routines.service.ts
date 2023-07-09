@@ -76,11 +76,12 @@ export class RoutinesService {
   }
 
   public async update(userId: number, routineId: number, body: RoutineUpdateDTO) {
-    const { segments, students,...routineData } = body;
+    const { segments, ...routineData } = body;
 
     const routine=await this.details(userId, routineId);
     await this.checkSegmentsOrder(body.segments);
 
+    delete routineData['students']
     // Actualizar los datos de la rutina
     const resultUpdated:UpdateResult =await this.routineRepository.update(routineId, routineData);
     
@@ -91,12 +92,14 @@ export class RoutinesService {
         await this.segmentsRepository.update(data.id, data);
     }));
 
-    await Promise.all(newSegments.map(async data=>{
-       // Segmento nuevo, crearlo y asociarlo a la rutina
-       const newSegment = await this.segmentsRepository.create(data);
-       newSegment.routine = routine;
-       await this.segmentsRepository.save(newSegment);
-    }))
+    if(newSegments.length>=1){
+      await Promise.all(newSegments.map(async data=>{
+        // Segmento nuevo, crearlo y asociarlo a la rutina
+        const newSegment = await this.segmentsRepository.create(data);
+        newSegment.routine = routine;
+        await this.segmentsRepository.save(newSegment);
+     }))
+    }
     
     // Eliminar los segmentos que no están presentes en la lista actualizada
     const segmentIdsToRemove = routine.segments

@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import 'dotenv/config'
+
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
@@ -7,10 +9,10 @@ import { DataSourceConfig } from './config/data.source';
 import { RoutinesModule } from './routines/routines.module';
 import { SegmentsModule } from './segments/segments.module';
 import { SettingsModule } from './settings/settings.module';
-import 'dotenv/config'
 import { StatusModule } from './status/status.module';
 import { InstructorModule } from './instructor/instructor.module';
 import { StudentsModule } from './students/students.module';
+import { PipesModule } from './pipes/pipes.module';
 
 
 @Module({
@@ -32,6 +34,8 @@ import { StudentsModule } from './students/students.module';
     StatusModule,
     InstructorModule,
     StudentsModule,
+    PipesModule,
+    
   ],
   controllers: [],
   providers: [],

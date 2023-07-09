@@ -10,6 +10,7 @@ import { CodeCheckDTO } from './dto/code-check.dto';
 import { RoutineUpdateDTO } from 'src/routines/dto/routine.update.dto';
 import { RoutineCreateDTO } from 'src/routines/dto/routine.create.dto';
 import { IsStudentsCodePipe } from './pipes/isStudents.pipe';
+import { RemoveFieldsRoutineUpdatePipe } from 'src/pipes/remove-fields-routine-update';
 
 @ApiTags('Instructor')
 @Controller('instructor')
@@ -61,6 +62,7 @@ export class InstructorController {
     }
 
     @Patch('/routines/:id_routine')
+    @UsePipes(new RemoveFieldsRoutineUpdatePipe())
     @ApiProperty({name:'id_routine'})
     @ApiHeader({name:'token',required: true})
     @Roles('INSTRUCTOR')
