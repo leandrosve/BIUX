@@ -44,7 +44,7 @@ const RoutineForm = () => {
     count: steps.length,
   });
 
-  const [routine, setRoutine] = useState<Routine>({ name: '', description: '', segments: [] });
+  const [routine, setRoutine] = useState<Routine>({ name: '', description: '', segments: [], students: []});
 
   const handleSubmitDetails = (name: string, description: string) => {
     setRoutine((prev) => ({ ...prev, name, description }));

@@ -1,6 +1,6 @@
 import { useState, useMemo, useContext } from 'react';
-import Routine, { DraggableSegment, ReducedRoutine } from '../../model/routines/Routine';
-import { Box, Button, Collapse, Flex, FormControl, FormErrorMessage, FormHelperText, Input, Text, Tooltip } from '@chakra-ui/react';
+import Routine, { DraggableSegment } from '../../model/routines/Routine';
+import { Box, Button, Collapse, Flex, FormControl, FormErrorMessage, Input, Text, Tooltip } from '@chakra-ui/react';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import RoutineSegmentList from './RoutineSegmentList';
 import RoutineUtils from '../../utils/RoutineUtils';

@@ -1,7 +1,10 @@
+import { User } from '../user/User';
+
 export default interface Routine {
   name: string;
   description?: string;
   segments: RoutineSegment[];
+  students: User[];
   id?: number;
 }
 

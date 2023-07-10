@@ -6,7 +6,6 @@ import {
   Alert,
   Box,
   Button,
-  Collapse,
   Flex,
   FormControl,
   FormLabel,
@@ -14,8 +13,6 @@ import {
   Heading,
   Icon,
   Image,
-  List,
-  ListItem,
   SimpleGrid,
   Tag,
   Text,
@@ -35,7 +32,6 @@ import RoutineEditForm from './RoutineEditForm';
 import BAlert from '../../components/common/BAlert';
 import InstructorService from '../../services/api/InstructorService';
 import SimpleBreadcrumbs from '../../components/common/SimpleBreadcrumbs';
-import studentsMock from '../students/studentsMock';
 import BAvatar from '../../components/common/BAvatar';
 
 const RoutineDetails = () => {
@@ -173,9 +169,9 @@ const RoutineDetailsContent = ({ routine, segments }: RoutineDetailsContentProps
         <RoutineDetailLabel htmlFor='routine-students' mb={0}>
           Alumnos
         </RoutineDetailLabel>
-        {!!studentsMock?.length && (
+        {!!routine.students?.length && (
           <SimpleGrid columns={{sm:1, md:2}} spacing={'4px'} mt={3}>
-            {studentsMock.map(({ user, id }) => (
+            {routine.students.map((user) => (
               <Box
                 position='relative'
                 bg='bg.400'
@@ -203,7 +199,7 @@ const RoutineDetailsContent = ({ routine, segments }: RoutineDetailsContentProps
                 </Flex>
                 <Tooltip label='Ir a detalle del alumno' hasArrow placement='right'>
                   <div>
-                    <LinkButton to={`/alumnos/${id}`} height='auto' width='auto' minWidth={0} padding={2} background='transparent'>
+                    <LinkButton to={`/alumnos/${user.id}`} height='auto' width='auto' minWidth={0} padding={2} background='transparent'>
                       <Icon as={UserLinkIcon} aria-hidden/>
                       <VisuallyHidden>Ir a detalle del alumno</VisuallyHidden>
                     </LinkButton>

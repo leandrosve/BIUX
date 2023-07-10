@@ -1,5 +1,5 @@
 import { DragHandleIcon, InfoIcon, UpDownIcon } from '@chakra-ui/icons';
-import { Button, Divider, Flex, Icon, List, ListItem, VisuallyHidden } from '@chakra-ui/react';
+import { Button, Flex, Icon, List, ListItem, VisuallyHidden } from '@chakra-ui/react';
 import RoutineSegmentListItem from './RoutineSegmentListItem';
 import { useState } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';

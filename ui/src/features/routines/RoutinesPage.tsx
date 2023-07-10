@@ -1,8 +1,6 @@
 import RoutineForm from './RoutineForm';
-import AutoBreadcrumbs from '../../layout/AutoBreadcrumbs';
 import RoutineList from './RoutineList';
-import { Link, Outlet, Route, Routes } from 'react-router-dom';
-import { Fade, Text } from '@chakra-ui/react';
+import { Outlet, Route, Routes } from 'react-router-dom';
 import RoutineDetails from './RoutineDetails';
 import { InstructorRoutinesProvider } from '../../context/ListsProviders';
 
