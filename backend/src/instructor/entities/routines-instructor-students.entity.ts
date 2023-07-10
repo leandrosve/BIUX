@@ -15,7 +15,7 @@ export class RoutineInstructorStudentEntity extends BaseEntity {
 
   //a un estudiante se le puede asignar muchas rutinas
   @ManyToOne(() => UsersEntity)
-  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
+  @JoinColumn({ name: 'student_id', referencedColumnName: 'id' })
   student: UsersEntity;
   
   //a un estudiante se le puede asignar muchas rutinas

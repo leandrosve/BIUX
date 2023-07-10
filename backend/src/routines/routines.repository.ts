@@ -20,6 +20,18 @@ export class RoutineRepository extends Repository<RoutinesEntity> {
       .getRawMany();
   }
 
+  async getReducedRoutinesForStudent(studentUserId: number): Promise<RoutineReducedDTO[]> {
+    return await this
+      .createQueryBuilder('routines')
+      .innerJoin('routines_instructors_students', 'ris', 'routines.id = ris.routine_id')
+      .leftJoin('routines.segments', 'segments')
+      .where('ris.student_id = :studentUserId', { studentUserId })
+      .select('routines.id,routines.name, routines.description, SUM(segments.duration)', 'totalDuration')
+      .groupBy('routines.id')
+      .orderBy('routines.createdAt', 'DESC')
+      .getRawMany();
+  }
+
   async getFullRoutine(instructorId:number,routineId:number):Promise<RoutineReducedFullDTO>{
     const result= await this
     .createQueryBuilder('routines')

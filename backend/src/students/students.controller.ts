@@ -19,4 +19,10 @@ export class StudentsController {
   public async me(@Req() request: Request) {
     return await this.studentsService.getDetails(request.idUser);
   }
+
+  @Get('/routines')
+  @Roles('STUDENT')
+  public async getRoutines(@Req() request: Request) {
+    return await this.studentsService.getRoutinesV2(request.idUser);
+  }
 }
