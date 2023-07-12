@@ -1,9 +1,9 @@
 import { ChatIcon, ChevronDownIcon, ChevronUpIcon, DeleteIcon, DragHandleIcon, EditIcon } from '@chakra-ui/icons';
-import { Flex, FlexProps, Grid, GridItem, Icon, IconButton, Tag, TagLabel, TagProps, Text, Tooltip, useMediaQuery } from '@chakra-ui/react';
+import { Flex, FlexProps, Grid, GridItem, Icon, IconButton, Tag, TagProps, Text, Tooltip, useMediaQuery } from '@chakra-ui/react';
 import { DistanceIcon, StopwatchIcon } from '../../components/common/Icons';
 import { DraggableProvidedDragHandleProps } from '@hello-pangea/dnd';
 import { DraggableSegment, RoutineSegment } from '../../model/routines/Routine';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 
 const items = [
   {
@@ -63,7 +63,7 @@ const RoutineSegmentListItem = ({
   orderMethod = 'drag',
   hideButtons,
 }: Props) => {
-  const [smallScreen, mobile ] = useMediaQuery(['(max-width: 700px)', '(max-width: 400px)'], { ssr: false, fallback: true });
+  const [smallScreen, mobile] = useMediaQuery(['(max-width: 700px)', '(max-width: 400px)'], { ssr: false, fallback: true });
 
   const sortUpRef = useRef<HTMLButtonElement>(null);
   const sortDownRef = useRef<HTMLButtonElement>(null);
@@ -107,7 +107,7 @@ const RoutineSegmentListItem = ({
               return (
                 <GridItem key={item.key}>
                   <Tooltip hasArrow label={item.description} aria-label='A tooltip' openDelay={600}>
-                    <Tag colorScheme={item.colorScheme} gap={2} padding={1} borderRadius='lg' boxShadow='sm'>
+                    <Tag colorScheme={item.colorScheme} gap={2} padding={1} borderRadius='lg'>
                       <Flex direction={'column'} alignItems='center' justifyContent='center' minWidth='85px'>
                         <Flex alignItems='center' gap='3px'>
                           {item.icon && <Icon as={item.icon} strokeWidth={5} />}

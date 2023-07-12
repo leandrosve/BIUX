@@ -7,6 +7,8 @@ import Role from '../model/user/Role';
 import { useNavigate } from 'react-router-dom';
 import { ResponsiveDashBoard } from '../components/ResponsiveDashboard';
 import StudentInstructorWidget from '../features/students/StudentInstructorWidget';
+import StudentRoutineList from '../features/students/StudentRoutineList';
+import ResponsiveCard from '../components/common/ResponsiveCard';
 
 const DashboardPage = () => {
   const { session } = useContext(SessionContext);
@@ -19,7 +21,12 @@ const DashboardPage = () => {
     <>
       <ResponsiveDashBoard>
         {role == Role.INSTRUCTOR && <InstructorCodeDisplay />}
-        {role == Role.STUDENT && <StudentInstructorWidget />}
+        {role == Role.STUDENT && (
+          <>
+            <StudentRoutineList />
+            <StudentInstructorWidget />
+          </>
+        )}
         <Flex
           flexDirection={{ sm: 'column', md: 'column', lx: 'row' }}
           justifyContent={'center'}
@@ -29,7 +36,7 @@ const DashboardPage = () => {
           gap={'5px'}
         >
           {itemsRoutes.map((item) => (
-            <div key={item.label}>
+            <div key={item.path}>
               <Box
                 onClick={() => navigate(item.path)}
                 transition={' 0.5s all'}

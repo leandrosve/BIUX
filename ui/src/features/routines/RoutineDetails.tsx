@@ -215,8 +215,8 @@ const RoutineDetailsContent = ({ routine, segments }: RoutineDetailsContentProps
           <RoutineDetailLabel marginBottom={3} marginTop={0}>
             Planificación
           </RoutineDetailLabel>
-          {!!segments?.length && (
-            <Tag colorScheme='cyan' fontWeight='bold' borderRadius='20px' paddingY='3px'>
+          {!!Number(totalDuration) && (
+            <Tag colorScheme='blue' fontWeight='bold' borderRadius='20px' paddingY='3px'>
               <Icon as={StopwatchIcon} aria-hidden mr={1} />
               Duración total: {`${totalDuration}`} min
             </Tag>

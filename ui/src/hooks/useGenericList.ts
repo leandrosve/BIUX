@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { APIResponse } from '../services/api/APIService';
 
 interface ID {
@@ -17,7 +17,11 @@ export interface GenericListProps<T extends ID> {
   onSearchTextChange: (text: string) => void;
 }
 
-const useGenericList = <T extends ID>(fetchData: () => Promise<APIResponse<T[]>>): GenericListProps<T> => {
+interface ExtraOptions {
+  initialFetch?: boolean;
+}
+
+const useGenericList = <T extends ID>(fetchData: () => Promise<APIResponse<T[]>>, options?: ExtraOptions): GenericListProps<T> => {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
@@ -50,6 +54,12 @@ const useGenericList = <T extends ID>(fetchData: () => Promise<APIResponse<T[]>>
     },
     [setLoading, setData]
   );
+
+  useEffect(() => {
+    if (options?.initialFetch && !initialized) {
+      fetch();
+    }
+  }, [initialized]);
   return { data, loading, page, onPageChange, fetch, onUpdate, initialized, searchText, onSearchTextChange };
 };
 

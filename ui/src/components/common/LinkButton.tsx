@@ -1,17 +1,17 @@
 import { Button, ButtonProps } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { Link as ReactRouterLink } from 'react-router-dom';
 
-interface Props extends ButtonProps {
+export interface LinkButtonProps extends ButtonProps {
   to: string;
+  label?: string;
 }
-const LinkButton = ({ to, ...props }: Props) => {
+const LinkButton = ({ to, label, ...props }: LinkButtonProps) => {
   return (
-    <Link to={to}>
-      <Button as='span' {...props}>
-        {props.children}
-      </Button>
-    </Link>
+    <Button as={ReactRouterLink} to={to} {...props}>
+      {label}
+      {props.children}
+    </Button>
   );
-}
+};
 
 export default LinkButton;

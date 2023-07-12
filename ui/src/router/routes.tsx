@@ -3,6 +3,7 @@ import SignupPage from '../pages/SignupPage';
 import LoginPage from '../pages/LoginPage';
 import { lazy } from 'react';
 import Role from '../model/user/Role';
+import StudentRoutinesPage from '../features/students/StudentRoutinesPage';
 
 const RoutinesPage = lazy(() => import('../features/routines/RoutinesPage'));
 const ConfigPage = lazy(() => import('../pages/ConfigPage'));
@@ -18,6 +19,7 @@ export enum BRoutes {
   ROUTINES = '/rutinas',
   DASHBOARD = '/dashboard',
   PROFILE = '/perfil',
+  STUDENT_ROUTINES = '/alumno/rutinas',
 }
 
 const routes = [
@@ -35,6 +37,14 @@ const routes = [
     subroutes: [{ path: 'crear', title: 'Nueva Rutina' }],
     element: <RoutinesPage />,
     role: Role.INSTRUCTOR
+  },
+  {
+    path: '/alumno/rutinas',
+    type: 'private',
+    title: 'Rutinas',
+    hasSubroutes: true,
+    element: <StudentRoutinesPage />,
+    role: Role.STUDENT
   },
   {
     type: 'guest',

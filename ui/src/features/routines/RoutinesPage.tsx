@@ -10,7 +10,6 @@ const RoutinesPage = () => {
       <InstructorRoutinesProvider>
         <Routes>
           <Route path='crear' element={<RoutineForm />} />
-
           <Route path='' element={<RoutineList />} />
           <Route path='/:id' element={<RoutineDetails />} />
         </Routes>

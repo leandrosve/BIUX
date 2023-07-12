@@ -47,4 +47,18 @@ export class RoutineRepository extends Repository<RoutinesEntity> {
       ...result,totalDuration
     }
   }
+
+  async getFullRoutineForStudent(studentId:number,routineId:number):Promise<RoutineReducedFullDTO>{
+    const result= await this
+    .createQueryBuilder('routines')
+    .innerJoin('routines_instructors_students', 'ris', 'routines.id = ris.routine_id')
+    .where('routines.id = :routineId and ris.student_id = :studentId', { routineId, studentId })
+    .leftJoinAndSelect('routines.segments', 'segments')
+    .addSelect('SUM(segments.duration)', 'totalDuration')
+    .groupBy('routines.id, segments.id')
+    .getOne();
+    return{
+      ...result,totalDuration:0,
+    }
+  }
 }

@@ -132,9 +132,9 @@ const RoutineListItem = ({ routine }: { routine: ReducedRoutine }) => (
         </Flex>
       </Flex>
       <Flex gap={3} alignSelf='stretch' alignItems='center' justifyContent={['space-between', 'center']} shrink={0}>
-        {!!routine.totalDuration && (
+        {!!Number(routine.totalDuration) && (
           <Tooltip hasArrow label={`Duracion total`}>
-            <Tag borderRadius='20px' colorScheme='cyan' justifyContent='center' aria-label={`${10} minutos`}>
+            <Tag borderRadius='20px' colorScheme='blue' justifyContent='center' aria-label={`${10} minutos`}>
               <Icon as={StopwatchIcon} mr={1} aria-hidden /> {routine.totalDuration} min
             </Tag>
           </Tooltip>

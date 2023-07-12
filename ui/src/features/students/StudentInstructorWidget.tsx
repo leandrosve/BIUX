@@ -18,7 +18,7 @@ const StudentInstructorWidget = () => {
     retrieveInstructor();
   }, []);
   return (
-    <ResponsiveCard marginTop={5} alignItems='start' gap={3} minWidth='fit-content' minHeight='auto' defaultWidth='400px' defaultHeight='auto'>
+    <ResponsiveCard marginTop={5} alignItems='start' gap={3} paddingX={[2, 6]} minWidth='fit-content' minHeight='auto' defaultWidth='400px' defaultHeight='auto'>
       <SkeletonWrapper loading={!instructor} heights={[30, '80px']} width='100%' repeat={2}>
         <Flex direction='column' gap={2} alignSelf='stretch'>
           <Text textTransform='uppercase' fontSize='xs' fontWeight='bold' color='primary.600' _dark={{ color: 'primary.200' }}>
@@ -26,7 +26,7 @@ const StudentInstructorWidget = () => {
           </Text>
           <Flex gap={4} justifyContent='space-between' alignItems='center'>
             <Flex gap={4} alignItems='center'>
-              <BAvatar name={`${instructor?.firstName} ${instructor?.lastName}`} boxShadow='xs' />
+              <BAvatar boxSize={['45px', '60px']} name={`${instructor?.firstName} ${instructor?.lastName}`} boxShadow='xs' />
               <Flex direction='column'>
                 <Heading size='md'>
                   {instructor?.firstName} {instructor?.lastName}

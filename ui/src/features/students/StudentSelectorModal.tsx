@@ -43,7 +43,6 @@ const StudentSelectorModal = ({ selected, onAdd, onRemove, isOpen, onClose }: Pr
   }, [studentsMock, searchText]);
 
   const handleToggle = (id: number) => {
-    console.log(id, 'toggle');
     if (selectedIds.has(id)) {
       onRemove(id);
       return;

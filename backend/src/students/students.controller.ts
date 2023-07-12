@@ -1,7 +1,7 @@
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { ApiHeader, ApiTags } from '@nestjs/swagger';
 import { StudentsService } from './students.service';
 import { Request } from 'express';
@@ -24,5 +24,12 @@ export class StudentsController {
   @Roles('STUDENT')
   public async getRoutines(@Req() request: Request) {
     return await this.studentsService.getRoutinesV2(request.idUser);
+  }
+
+  
+  @Get('/routines/:id_routine')
+  @Roles('STUDENT')
+  public async routine(@Req() request: Request,@Param('id_routine') routineId: number){
+      return await this.studentsService.getRoutineDetails(request.idUser, routineId);
   }
 }

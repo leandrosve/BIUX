@@ -1,3 +1,4 @@
+import Routine, { ReducedRoutine } from '../../model/routines/Routine';
 import { StudentDetail } from '../../model/student/Student';
 import APIService from './APIService';
 
@@ -17,5 +18,13 @@ export default class StudentService extends APIService {
       sessionStorage.setItem('student', JSON.stringify(res.data));
     }
     return res;
+  }
+
+  static async getRoutines() {
+    return await this.get<ReducedRoutine[]>('/routines');
+  }
+
+  static async getRoutineDetail(routineId: number) {
+    return await this.get<Routine>(`/routines/${routineId}`);
   }
 }

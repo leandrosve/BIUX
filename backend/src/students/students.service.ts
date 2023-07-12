@@ -65,4 +65,13 @@ export class StudentsService {
       throw error;
     }
   }
+
+  public async getRoutineDetails(studentUserId: number, routineId: number): Promise<any> {
+    try {
+      return await this.routineRepository.getFullRoutineForStudent(studentUserId, routineId);
+    } catch (error) {
+      throw error;
+    }
+  }
+  
 }
