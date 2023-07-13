@@ -43,8 +43,8 @@ const AlertToast = ({ duration = 0, hasIcon, hasProgress, children, colorScheme 
 
   return (
     <Flex direction={'column'} onPointerEnter={onEnter} onPointerLeave={onPointerLeave} autoFocus ref={alertRef}>
-      <Box bgColor={'gray.700'} overflow='hidden' borderTopRadius={5} borderBottomRadius={hasProgress ? 0 : 5}>
-        <Alert colorScheme={colorScheme} {...rest}>
+      <Box bgColor='gray.700' _dark={{bg:'bg.400'}} borderLeftWidth='4px' borderColor='primary.200'  overflow='hidden' borderTopRadius={5} borderBottomRadius={hasProgress ? 0 : 5}>
+        <Alert  colorScheme={colorScheme} {...rest}>
           {hasIcon && !mobile && <AlertIcon />}
           {children}
           {isClosable && (

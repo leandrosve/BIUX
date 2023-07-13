@@ -3,9 +3,9 @@ import SignupPage from '../pages/SignupPage';
 import LoginPage from '../pages/LoginPage';
 import { lazy } from 'react';
 import Role from '../model/user/Role';
-import StudentRoutinesPage from '../features/students/StudentRoutinesPage';
 
 const RoutinesPage = lazy(() => import('../features/routines/RoutinesPage'));
+const StudentRoutinesPage = lazy(() => import('../features/students/StudentRoutinesPage'));
 const ConfigPage = lazy(() => import('../pages/ConfigPage'));
 const NotFoundPage = lazy(() => import('../pages/not-found-page/NotFoundPage'));
 const MaintenancePage = lazy(() => import('../pages/maintenance-page/MaintenancePage'));

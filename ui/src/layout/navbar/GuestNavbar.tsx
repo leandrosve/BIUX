@@ -1,13 +1,4 @@
-import {
-  Flex,
-  Heading,
-  Icon,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList, useMediaQuery
-} from '@chakra-ui/react';
+import { Flex, Heading, Icon, IconButton, Menu, MenuButton, MenuItem, MenuList, useMediaQuery } from '@chakra-ui/react';
 import { BrandIcon } from '../../components/common/Icons';
 import { Link, useLocation } from 'react-router-dom';
 import { BRoutes } from '../../router/routes';
@@ -30,10 +21,10 @@ const GuestNavbar = () => {
     if (desktop)
       return (
         <>
-          <LinkButton to={BRoutes.LOGIN} colorScheme='primary' as='span' variant={location.pathname !== BRoutes.LOGIN ? 'ghost' : undefined}>
+          <LinkButton to={BRoutes.LOGIN} colorScheme='primary' variant={location.pathname !== BRoutes.LOGIN ? 'ghost' : undefined}>
             Iniciar Sesión
           </LinkButton>
-          <LinkButton to={BRoutes.SIGNUP} colorScheme='primary' as='span' variant={location.pathname !== BRoutes.SIGNUP ? 'ghost' : undefined}>
+          <LinkButton to={BRoutes.SIGNUP} colorScheme='primary' variant={location.pathname !== BRoutes.SIGNUP ? 'ghost' : undefined}>
             Registrarme
           </LinkButton>
         </>

@@ -10,7 +10,7 @@ import SkeletonWrapper from '../../components/common/SkeletonWrapper';
 import SimpleBreadcrumbs from '../../components/common/SimpleBreadcrumbs';
 import BAlert from '../../components/common/BAlert';
 import { RoutineDetailLabel } from '../routines/RoutineDetails';
-import { BikeIcon, StopwatchIcon, ThumbUpIcon } from '../../components/common/Icons';
+import { BikeIcon, StopwatchIcon, ThumbUpIcon, TrainingDetailIcon } from '../../components/common/Icons';
 import RoutineSegmentList from '../routines/RoutineSegmentList';
 import ResourceNotFound from '../../components/common/ResourceNotFound';
 import RoutineUtils from '../../utils/RoutineUtils';
@@ -97,7 +97,7 @@ const RoutineDetailsContent = ({ routine }: RoutineDetailsContentProps) => {
       )}
       <Box position='relative' marginTop={2}>
         <Flex justifyContent='space-between' alignItems='start' marginBottom={1}>
-          <RoutineDetailLabel  marginTop={0} marginBottom={0}>
+          <RoutineDetailLabel marginTop={0} marginBottom={0}>
             Planificación
           </RoutineDetailLabel>
           {!!Number(totalDuration) && (
@@ -164,19 +164,29 @@ const PastTrainingList = () => {
         <React.Fragment key={index}>
           <ListItem bg='bg.400' p={3} borderRadius='lg'>
             <Flex direction='column' alignItems='stretch' justifyContent='center' gap={3}>
-              <Text fontSize='sm' display='inline'>
-                <Tooltip hasArrow label='Comentario de tu instructor' placement='top'>
-                  <Icon as={ChatIcon} boxSize={3} mt='-3px' mr={2} aria-label='Comentario de tu instructor' display='inline' />
-                </Tooltip>
-                {item.instructorComment}
-              </Text>
+              <Flex justifyContent='space-between'>
+                <Text display='inline'>
+                  <Tooltip hasArrow label='Comentario de tu instructor' placement='top'>
+                    <Icon as={ChatIcon} boxSize={3} mt='-3px' mr={2} aria-label='Comentario de tu instructor' display='inline' />
+                  </Tooltip>
+                  {item.instructorComment}
+                </Text>
+                <LinkButton
+                  to={`#no-implementado`}
+                  size='sm'
+                  whiteSpace='normal'
+                  leftIcon={<Icon as={TrainingDetailIcon} boxSize={4}/>}
+                >
+                  Ver detalles
+                </LinkButton>
+              </Flex>
               <Flex alignSelf='stretch' justifyContent='space-between'>
                 <Tooltip hasArrow label='Calificación' placement='top'>
                   <Tag fontSize='sm' borderRadius='25px' justifyContent='center' colorScheme='primary' aria-label='calificación' gap={1}>
                     <Icon as={StarIcon} aria-label='Calificación' /> {item.score}/10
                   </Tag>
                 </Tooltip>
-                <Tag variant='outline' fontWeight='bold' gap={2}>
+                <Tag variant='outline' fontWeight='bold' gap={2} boxShadow='none'>
                   <CalendarIcon aria-label='fecha' />
                   {formatStringDate(item.date)}
                 </Tag>

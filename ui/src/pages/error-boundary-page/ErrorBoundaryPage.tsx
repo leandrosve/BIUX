@@ -1,9 +1,7 @@
 import { Component, ErrorInfo, ReactNode, useState } from 'react';
 import { Button, Flex, Heading, Icon, Image, Text, Wrap, WrapItem } from '@chakra-ui/react';
 import illustration from '../../assets/illustrations/missing-page.png';
-import { ArrowBackIcon, RepeatIcon } from '@chakra-ui/icons';
-import LinkButton from '../../components/common/LinkButton';
-import ToggleThemeButton from '../../components/common/ToggleThemeButton';
+import { RepeatIcon } from '@chakra-ui/icons';
 import { BrandIcon } from '../../components/common/Icons';
 interface Props {
   children: ReactNode;

@@ -52,7 +52,7 @@ const StudentSelectorModal = ({ selected, onAdd, onRemove, isOpen, onClose }: Pr
   return (
     <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={searchInputRef} finalFocusRef={buttonRef}>
       <ModalOverlay />
-      <ModalContent bg='bg.300'>
+      <ModalContent bg='bg.300' backdropFilter='blur(10px)'>
         <ModalHeader pb={0}>Asignar alumnos</ModalHeader>
         <ModalCloseButton />
         <ModalBody pt={0} padding={{ base: '4px', sm: 5 }}>
