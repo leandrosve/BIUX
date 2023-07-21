@@ -11,8 +11,18 @@ export default class RoutineUtils {
     const orderedItems = [...items];
     const el = orderedItems.splice(previousIndex, 1)[0];
     orderedItems.splice(newIndex, 0, el);
-    return orderedItems.map((item, index) => ({ ...item, order: index + 1 }));
+    return this.reorderItems(orderedItems)
   };
+
+  public static removeAndReorderItems(items: DraggableSegment[], segment: DraggableSegment) {
+    const filtered = items.filter((s) => s.localId !== segment.localId);
+    console.log(filtered);
+    return this.reorderItems(filtered);
+  }
+
+  public static reorderItems(items: DraggableSegment[]) {
+    return items.map((item, index) => ({ ...item, order: index + 1 }));
+  }
 
   public static toReducedRoutine(routine: Routine): ReducedRoutine {
     return {

@@ -47,7 +47,8 @@ const RoutineFormSegmentsStep = ({ routine, onPrevious, displayOnly, editMode }:
   };
 
   const handleRemoveSegment = (segment: DraggableSegment) => {
-    setSegments((prev) => prev.filter((s) => s.localId !== segment.localId));
+    console.log("WTF");
+    setSegments((prev) => RoutineUtils.removeAndReorderItems(prev, segment));
   };
 
   const handleOpenEditSegment = (segment: DraggableSegment) => {
@@ -60,7 +61,7 @@ const RoutineFormSegmentsStep = ({ routine, onPrevious, displayOnly, editMode }:
     const res = await InstructorService.createRoutine({ ...routine, segments });
     setIsSubmitting(false);
     if (res.hasError) return;
-    onUpdate(RoutineUtils.toReducedRoutine(res.data))
+    onUpdate(RoutineUtils.toReducedRoutine(res.data));
     toast({
       position: 'top-right',
       duration: 15000,

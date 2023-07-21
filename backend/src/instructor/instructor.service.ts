@@ -12,18 +12,19 @@ import { InstructorStudentDTO } from './dto/instructorStudent.dto';
 import { InstructorCodeEntity } from './entities/instructorCode.entity';
 import { RoutineInstructorStudentEntity } from './entities/routines-instructor-students.entity';
 import { InstructorStudentRepository } from './repository/instructorStudent.repository';
+import { RoutineRepository } from 'src/routines/routines.repository';
+import InstructorStudentFullDTO from './dto/instructor-student-full.dto';
 
 @Injectable()
 export class InstructorService {
   constructor(
     @InjectRepository(InstructorCodeEntity)
     private readonly instructorCodeRepository: Repository<InstructorCodeEntity>,
-  
+
     private readonly instructorStudentRepository: InstructorStudentRepository,
     private readonly routinesService: RoutinesService,
     @InjectRepository(RoutineInstructorStudentEntity)
     private readonly routineInstructorStudentRepository: Repository<RoutineInstructorStudentEntity>,
-    private readonly usersService:UsersService
   ) {}
 
   public async code(user_id: number): Promise<InstructorCodeEntity> {
@@ -122,23 +123,22 @@ export class InstructorService {
   }
   public async createRoutine(instructorId: number, body: RoutineCreateDTO) {
     //return this.routinesService.details(request.idUser,id_routine)
-    let resultStudents:UserReducedDTO[]=[]
-    if(body.students){
-      resultStudents=  await this.instructorStudentRepository.getStudentsByInstructorForIds(instructorId,body.students)
-      if(resultStudents.length!=body.students.length){
-        throw new ErrorManager({ type: 'BAD_REQUEST', message: 'Puede ser que los alumnos no pertenezcan al instructor' })
-      };
-      
+    let resultStudents: UserReducedDTO[] = [];
+    if (body.students) {
+      resultStudents = await this.instructorStudentRepository.getStudentsByInstructorForIds(instructorId, body.students);
+      if (resultStudents.length != body.students.length) {
+        throw new ErrorManager({ type: 'BAD_REQUEST', message: 'Puede ser que los alumnos no pertenezcan al instructor' });
+      }
     }
-    const newRoutine= await this.routinesService.createdRoutine(instructorId, body);
+    const newRoutine = await this.routinesService.createdRoutine(instructorId, body);
     if (resultStudents.length > 0) {
-      const routineInstructorStudents: RoutineInstructorStudentEntity[] = resultStudents.map(student => {
-        let studentObj=new UsersEntity();
-        studentObj.id=student.id;
-        let instructorObj=new UsersEntity();
-        instructorObj.id=instructorId;
+      const routineInstructorStudents: RoutineInstructorStudentEntity[] = resultStudents.map((student) => {
+        let studentObj = new UsersEntity();
+        studentObj.id = student.id;
+        let instructorObj = new UsersEntity();
+        instructorObj.id = instructorId;
         const entity = new RoutineInstructorStudentEntity();
-        entity.instructor= instructorObj;
+        entity.instructor = instructorObj;
         entity.routine = newRoutine;
         entity.student = studentObj;
         return entity;
@@ -152,16 +152,31 @@ export class InstructorService {
   }
 
   public async routineDetails(instructorId: number, routineId: number) {
-
     return await this.routinesService.getFullRoutine(instructorId, routineId);
   }
   public async getStudents(instructorId: number) {
-    const res =  await this.instructorStudentRepository
+    const res = await this.instructorStudentRepository
       .createQueryBuilder('instructor_students')
       .leftJoinAndSelect('instructor_students.student', 'student')
       .where('instructor_students.instructor_id = :instructorId', { instructorId })
-      .getMany(); 
-    return res.map(instructorStudent => instructorStudent.student);
+      .getMany();
+    return res.map((instructorStudent) => instructorStudent.student);
   }
 
+  public async getStudentDetail(instructorId: number, studentId: number):Promise<InstructorStudentFullDTO> {
+    const student = await this.instructorStudentRepository
+      .createQueryBuilder('instructor_students')
+      .leftJoinAndSelect('instructor_students.student', 'student')
+      .innerJoinAndSelect('routines_instructors_students', 'ris', 'ris.student_id = :studentId and ris.instructor_id = :instructorId')
+      .leftJoinAndSelect('routines', 'r', 'r.id = ris.routine_id')
+      .where('instructor_students.instructor_id = :instructorId and instructor_students.student_id = :studentId', { instructorId, studentId })
+      .getOne();
+    if (!student) throw new ErrorManager({ type: 'NOT_FOUND', message: 'student_not_found' });
+    const routines = await this.routinesService.getReducedRoutinesForStudent(studentId)
+    const user = student.student;
+    return {
+      ...user,
+      routines,
+    };
+  }
 }

@@ -97,7 +97,7 @@ const RoutineEditForm = ({ routine, segments, onSuccess }: RoutineEditProps) => 
               <RoutineSegmentList
                 segments={newSegments}
                 onChange={(v) => setNewSegments(v)}
-                onRemove={(seg) => setNewSegments((prev) => prev.filter((s) => s.localId !== seg.localId))}
+                onRemove={(seg) => setNewSegments((prev) => RoutineUtils.removeAndReorderItems(prev, seg))}
                 onEdit={(s) => {
                   setShowForm(true);
                   setEdittingSegment(s);

@@ -131,7 +131,7 @@ interface RoutineDetailsContentProps {
 }
 
 export const RoutineDetailLabel = ({ children, ...props }: FormLabelProps) => (
-  <FormLabel fontWeight='semibold' marginTop={3} color='text.300' _dark={{ color: 'primary.200' }} {...props}>
+  <FormLabel fontWeight='semibold' marginTop={3} mr={0} color='text.300' _dark={{ color: 'primary.200' }} {...props}>
     {children}
   </FormLabel>
 );
@@ -165,12 +165,13 @@ const RoutineDetailsContent = ({ routine, segments }: RoutineDetailsContentProps
         </FormControl>
       )}
 
-      <FormControl>
-        <RoutineDetailLabel htmlFor='routine-students' mb={0}>
-          Alumnos
-        </RoutineDetailLabel>
-        {!!routine.students?.length && (
-          <SimpleGrid columns={{sm:1, md:2}} spacing={'4px'} mt={3}>
+      {!!routine.students?.length && (
+        <FormControl>
+          <RoutineDetailLabel htmlFor='routine-students' mb={0}>
+            Alumnos
+          </RoutineDetailLabel>
+
+          <SimpleGrid columns={{ sm: 1, md: 2 }} spacing={'4px'} mt={3}>
             {routine.students.map((user) => (
               <Box
                 position='relative'
@@ -199,8 +200,8 @@ const RoutineDetailsContent = ({ routine, segments }: RoutineDetailsContentProps
                 </Flex>
                 <Tooltip label='Ir a detalle del alumno' hasArrow placement='right'>
                   <div>
-                    <LinkButton to={`/alumnos/${user.id}`} height='auto' width='auto' minWidth={0} padding={2} background='transparent'>
-                      <Icon as={UserLinkIcon} aria-hidden/>
+                    <LinkButton to={`alumno/${user.id}`} height='auto' width='auto' minWidth={0} padding={2} background='transparent'>
+                      <Icon as={UserLinkIcon} aria-hidden />
                       <VisuallyHidden>Ir a detalle del alumno</VisuallyHidden>
                     </LinkButton>
                   </div>
@@ -208,8 +209,8 @@ const RoutineDetailsContent = ({ routine, segments }: RoutineDetailsContentProps
               </Box>
             ))}
           </SimpleGrid>
-        )}
-      </FormControl>
+        </FormControl>
+      )}
       <Box position='relative' marginTop={2}>
         <Flex justifyContent='space-between' alignItems='center'>
           <RoutineDetailLabel marginBottom={3} marginTop={0}>
