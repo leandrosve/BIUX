@@ -1,5 +1,6 @@
 import ResponsiveCard from '../../components/common/ResponsiveCard';
 import {
+  Box,
   Button,
   Flex,
   Heading,
@@ -9,14 +10,18 @@ import {
   InputGroup,
   InputRightElement,
   Menu,
-  MenuButton, MenuItem,
+  MenuButton,
+  MenuItem,
   MenuList,
-  Table, TableContainer,
+  Table,
+  TableContainer,
   Tag,
   Tbody,
   Td,
+  Text,
   Th,
-  Thead, Tr
+  Thead,
+  Tr,
 } from '@chakra-ui/react';
 import AutoBreadcrumbs from '../../layout/AutoBreadcrumbs';
 import { PlusSquareIcon, Search2Icon } from '@chakra-ui/icons';
@@ -40,7 +45,7 @@ const columns = [
     title: 'Performance',
     accesor: (s: ReducedStudent) => (
       <Tag variant='solid' colorScheme='green'>
-        { '-'}
+        {'-'}
       </Tag>
     ),
   },
@@ -50,8 +55,6 @@ const columns = [
   },
 ];
 
-
-
 const Actions = ({ student }: { student: ReducedStudent }) => (
   <Flex>
     <Button size='sm' onClick={() => null}>
@@ -60,9 +63,8 @@ const Actions = ({ student }: { student: ReducedStudent }) => (
   </Flex>
 );
 
-
 const StudentList = () => {
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState('');
 
   const {
     fetch: fetchStudents,
@@ -83,20 +85,23 @@ const StudentList = () => {
 
   useEffect(() => {
     if (!initialized) fetchStudents();
-  }, [initialized,fetchStudents]);
+  }, [initialized, fetchStudents]);
 
   useEffect(() => {
     retrieveCode();
   }, []);
   return (
     <>
-     
       <ResponsiveCard defaultHeight='auto' paddingY={3} marginBottom={5} rounded='md'>
-      <SimpleBreadcrumbs items={[{ title: 'Alumnos' }]} />
+        <SimpleBreadcrumbs items={[{ title: 'Alumnos' }]} />
         <Flex justifyContent='space-between' alignItems='center'>
-          <Heading size='md' m={0}>Invita a un alumno</Heading>
-          <InstructorShareButton code={code}  />
-         
+          <Box>
+            <Heading size='md' m={0}>
+              Invita a un alumno
+            </Heading>
+            <Text>Comparte una invitacion tus alumnos para que puedan unirse a tu grupo.</Text>
+          </Box>
+          <InstructorShareButton code={code} />
         </Flex>
       </ResponsiveCard>
       <ResponsiveCard defaultHeight='auto'>

@@ -1,5 +1,6 @@
 import { Search2Icon } from '@chakra-ui/icons';
 import {
+  Box,
   Button,
   Checkbox,
   Flex,
@@ -14,6 +15,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   Text,
   VisuallyHidden,
 } from '@chakra-ui/react';
@@ -21,11 +23,14 @@ import { useState, useRef, useMemo } from 'react';
 import Form from '../../components/common/Form';
 import BAvatar from '../../components/common/BAvatar';
 import studentsMock from './studentsMock';
+import useGenericList from '../../hooks/useGenericList';
+import InstructorService from '../../services/api/InstructorService';
+import { ReducedStudent } from '../../model/student/Student';
 
 interface Props {
   selected: number[];
-  onAdd: (id: number) => void;
-  onRemove: (id: number) => void;
+  onAdd: (student: ReducedStudent) => void;
+  onRemove: (student: ReducedStudent) => void;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -35,20 +40,22 @@ const StudentSelectorModal = ({ selected, onAdd, onRemove, isOpen, onClose }: Pr
   const searchInputRef = useRef<HTMLInputElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const selectedIds = useMemo(() => new Set(selected), [selected]);
-
+  const {data:students, loading} = useGenericList(() => InstructorService.getStudents(), {initialFetch: true});
   const filteredStudents = useMemo(() => {
-    if (!searchText) return studentsMock;
+    if (!students.length) return [];
+    if (!searchText) return students;
     const sanitized = searchText.toLowerCase();
-    return studentsMock.filter(({ user }) => [user.firstName, user.lastName, user.email].find((v) => v?.toLowerCase().includes(sanitized)));
-  }, [studentsMock, searchText]);
+    return students.filter((user) => [user.firstName, user.lastName, user.email].find((v) => v?.toLowerCase().includes(sanitized)));
+  }, [students, searchText]);
 
-  const handleToggle = (id: number) => {
-    if (selectedIds.has(id)) {
-      onRemove(id);
+  const handleToggle = (student: ReducedStudent) => {
+    if (selectedIds.has(student.id)) {
+      onRemove(student);
       return;
     }
-    onAdd(id);
+    onAdd(student);
   };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={searchInputRef} finalFocusRef={buttonRef}>
       <ModalOverlay />
@@ -72,24 +79,24 @@ const StudentSelectorModal = ({ selected, onAdd, onRemove, isOpen, onClose }: Pr
               />
             </InputGroup>
           </Form>
-
+          {loading && <Box><Spinner mt={5} size='lg' color='primary.400' boxSize={['50px', 100]}/></Box>}
           <List spacing={2} maxHeight={500} overflowY='auto'>
-            {filteredStudents.map(({ user, id }) => (
+            {filteredStudents.map((user) => (
               <ListItem
                 position='relative'
                 bg='bg.400'
-                key={id}
+                key={user.id}
                 padding={2}
                 transition='200ms'
                 cursor='pointer'
-                aria-selected={selectedIds.has(id)}
+                aria-selected={selectedIds.has(user.id)}
                 borderRadius='lg'
                 borderColor='chakra-border-color'
                 _notLast={{ borderBottomWidth: '1px' }}
                 className='selectable-item'
                 onClick={(e) => {
                   e.preventDefault();
-                  handleToggle(id);
+                  handleToggle(user);
                 }}
               >
                 <Flex justifyContent='space-between' alignItems='center' gap={1}>
@@ -110,9 +117,9 @@ const StudentSelectorModal = ({ selected, onAdd, onRemove, isOpen, onClose }: Pr
                     className='checkbox'
                     onChange={(e) => {
                       e.preventDefault();
-                      handleToggle(id);
+                      handleToggle(user);
                     }}
-                    isChecked={selectedIds.has(id)}
+                    isChecked={selectedIds.has(user.id)}
                   />
                 </Flex>
               </ListItem>

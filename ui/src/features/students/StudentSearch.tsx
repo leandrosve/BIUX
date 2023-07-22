@@ -2,23 +2,19 @@ import { DeleteIcon, Search2Icon } from '@chakra-ui/icons';
 import { Button, Flex, IconButton, List, ListItem, Text, Tooltip, useDisclosure } from '@chakra-ui/react';
 import { useMemo, useRef } from 'react';
 import StudentSelectorModal from './StudentSelectorModal';
-import studentsMock from './studentsMock';
 import BAvatar from '../../components/common/BAvatar';
-import Student from '../../model/student/Student';
+import { ReducedStudent } from '../../model/student/Student';
 
 interface Props {
-  selected: number[];
-  onAdd: (id: number) => void;
-  onRemove: (id: number) => void;
+  selected: ReducedStudent[];
+  onAdd: (student: ReducedStudent) => void;
+  onRemove: (student: ReducedStudent) => void;
 }
 
 const StudentSearch = ({ selected, onAdd, onRemove }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const selectedIds = useMemo(() => selected.map((s) => s.id), [selected]);
   const buttonRef = useRef<HTMLButtonElement>(null);
-
-  const students:Student[]= useMemo(() => {
-    return selected.map(id => studentsMock.find((s) => s.id === id)).filter((i): i is Student => !!i);
-  }, [selected, studentsMock]);
   return (
     <>
       <Button
@@ -38,11 +34,11 @@ const StudentSearch = ({ selected, onAdd, onRemove }: Props) => {
       >
         <Search2Icon /> <span>Buscar alumnos</span>
       </Button>
-      <StudentSelectorModal isOpen={isOpen} onClose={onClose} selected={selected} onAdd={onAdd} onRemove={onRemove} />
+      <StudentSelectorModal isOpen={isOpen} onClose={onClose} selected={selectedIds} onAdd={onAdd} onRemove={onRemove} />
 
-      {!!students?.length && (
+      {!!selected?.length && (
         <List mt={3} maxHeight={250} overflowY='auto' borderRadius='lg' border='1px solid' borderColor='chakra-border-color'>
-          {students.map(({ user, id }) => (
+          {selected.map((user) => (
             <ListItem
               position='relative'
               bg='bg.400'
@@ -64,7 +60,7 @@ const StudentSearch = ({ selected, onAdd, onRemove }: Props) => {
                   </Flex>
                 </Flex>
                 <Tooltip hasArrow label='Desasignar alumno de esta rutina' placement='right' aria-label='A tooltip' openDelay={600}>
-                  <IconButton icon={<DeleteIcon />} aria-label='Eliminar segmento' variant='ghost' colorScheme='red' onClick={() => onRemove(id)} />
+                  <IconButton icon={<DeleteIcon />} aria-label='Eliminar segmento' variant='ghost' colorScheme='red' onClick={() => onRemove(user)} />
                 </Tooltip>
               </Flex>
             </ListItem>

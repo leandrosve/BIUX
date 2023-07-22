@@ -15,7 +15,6 @@ import RoutineSegmentList from '../routines/RoutineSegmentList';
 import ResourceNotFound from '../../components/common/ResourceNotFound';
 import RoutineUtils from '../../utils/RoutineUtils';
 import StudentService from '../../services/api/StudentService';
-import Role from '../../model/user/Role';
 
 const StudentRoutineDetails = () => {
   let { id } = useParams();

@@ -11,6 +11,7 @@ import InstructorService from '../../services/api/InstructorService';
 import { InstructorRoutinesContext } from '../../context/ListsProviders';
 import useSimpleList from '../../hooks/useSimpleList';
 import StudentSearch from '../students/StudentSearch';
+import { ReducedStudent } from '../../model/student/Student';
 
 interface RoutineEditProps {
   routine: Routine;
@@ -21,7 +22,7 @@ const RoutineEditForm = ({ routine, segments, onSuccess }: RoutineEditProps) => 
   const [newSegments, setNewSegments] = useState<DraggableSegment[]>(segments);
   const [name, setName] = useState(routine.name);
   const [description, setDescription] = useState(routine.description);
-  const students = useSimpleList<number>([]);
+  const students = useSimpleList<ReducedStudent>(routine.students || [], (s) => s.id);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -52,7 +53,8 @@ const RoutineEditForm = ({ routine, segments, onSuccess }: RoutineEditProps) => 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!routine.id) return;
-    const data = { ...routine, name, description, segments: newSegments };
+    const studentIds = students.items.map((s) => s.id);
+    const data = { ...routine, name, description, segments: newSegments, students: studentIds };
     setIsSubmitting(true);
     const res = await InstructorService.editRoutine(routine.id, data);
     if (res.hasError) {

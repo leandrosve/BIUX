@@ -1,4 +1,4 @@
-import { Box, Flex, Icon, IconProps, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react';
+import { Box, Flex, Icon, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { SVGProps, useMemo } from 'react';
 import ChakraUtils from '../../utils/ChakraUtils';

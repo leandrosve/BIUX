@@ -7,7 +7,6 @@ import {
   FormHelperText,
   FormLabel,
   Heading,
-  Icon,
   Input,
   Step,
   StepDescription,
@@ -32,6 +31,7 @@ import StudentSearch from '../students/StudentSearch';
 import useSimpleList from '../../hooks/useSimpleList';
 import { BRoutes } from '../../router/routes';
 import SimpleBreadcrumbs from '../../components/common/SimpleBreadcrumbs';
+import { ReducedStudent } from '../../model/student/Student';
 
 const breadcrumb = [
   { to: BRoutes.ROUTINES, title: 'Rutinas' },
@@ -46,8 +46,8 @@ const RoutineForm = () => {
 
   const [routine, setRoutine] = useState<Routine>({ name: '', description: '', segments: [], students: []});
 
-  const handleSubmitDetails = (name: string, description: string) => {
-    setRoutine((prev) => ({ ...prev, name, description }));
+  const handleSubmitDetails = (name: string, description: string, students: ReducedStudent[]) => {
+    setRoutine((prev) => ({ ...prev, name, description, students }));
     goToNext();
   };
 
@@ -79,10 +79,10 @@ const RoutineForm = () => {
     </>
   );
 };
-const Step1 = (props: { initialData: Routine; onSubmit: (name: string, description: string) => void }) => {
+const Step1 = (props: { initialData: Routine; onSubmit: (name: string, description: string, students:ReducedStudent[]) => void }) => {
   const [name, setName] = useState(props.initialData.name);
   const [description, setDescription] = useState(props.initialData.description ?? '');
-  const students = useSimpleList<number>([]);
+  const students = useSimpleList<ReducedStudent>(props.initialData.students || [], (s) => s.id);
   const disableSubmit = useMemo(() => {
     if (!name) return true;
     if (description.length > 500 || name.length > 120) return true;
@@ -96,7 +96,7 @@ const Step1 = (props: { initialData: Routine; onSubmit: (name: string, descripti
       <Text fontSize='sm'>
         Los campos marcados con <b>*</b> son requeridos
       </Text>
-      <Flex as='form' direction='column' grow={1} onSubmit={() => props.onSubmit(name, description)}>
+      <Flex as='form' direction='column' grow={1} onSubmit={() => props.onSubmit(name, description, students.items)}>
         <Flex grow={1} direction='column'>
           <FormControl isInvalid={name.length > 500}>
             <FormLabel mt={2} fontWeight='bold'>

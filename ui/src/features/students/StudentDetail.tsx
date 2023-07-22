@@ -33,7 +33,7 @@ const StudentDetail = () => {
       { to: `#contenido`, title: 'Alumno' },
     ];
   }, [id, routineId]);
-  const { data: student, loading } = useAPIRequest<StudentFullDetails>(() => InstructorService.getStudent(Number(9)), [id]);
+  const { data: student, loading } = useAPIRequest<StudentFullDetails>(() => InstructorService.getStudent(Number(id)), [id]);
   if (!loading && !student)
     return <ResourceNotFound defaultWidth='600px' defaultHeight='600px' backButtonProps={{ label: 'Volver al inicio', to: BRoutes.DASHBOARD }} />;
 

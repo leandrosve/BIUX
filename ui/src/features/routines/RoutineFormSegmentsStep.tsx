@@ -58,7 +58,8 @@ const RoutineFormSegmentsStep = ({ routine, onPrevious, displayOnly, editMode }:
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    const res = await InstructorService.createRoutine({ ...routine, segments });
+    const studentIds = routine.students.map(s => s.id);
+    const res = await InstructorService.createRoutine({ ...routine, segments, students: studentIds });
     setIsSubmitting(false);
     if (res.hasError) return;
     onUpdate(RoutineUtils.toReducedRoutine(res.data));

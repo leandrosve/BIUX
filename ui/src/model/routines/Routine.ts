@@ -1,10 +1,18 @@
-import { User } from '../user/User';
+import { ReducedStudent } from '../student/Student';
 
 export default interface Routine {
   name: string;
   description?: string;
   segments: RoutineSegment[];
-  students: User[];
+  students: ReducedStudent[];
+  id?: number;
+}
+
+export interface RoutineCreateRequest {
+  name: string;
+  description?: string;
+  segments: RoutineSegment[];
+  students: number[];
   id?: number;
 }
 
