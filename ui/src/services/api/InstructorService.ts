@@ -1,5 +1,6 @@
 import { InstructorCode } from '../../model/instructor/InstructorCode';
 import Routine, { ReducedRoutine } from '../../model/routines/Routine';
+import { ReducedStudent } from '../../model/student/Student';
 import { User } from '../../model/user/User';
 import APIService from './APIService';
 
@@ -32,5 +33,9 @@ export default class InstructorService extends APIService {
 
   static async editRoutine(id: number, data: Partial<Routine>) {
     return await this.patch<Routine>(`/routines/${id}`, data);
+  }
+
+  static async getStudents() {
+    return await this.get<ReducedStudent[]>('/students');
   }
 }

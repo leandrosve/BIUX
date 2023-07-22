@@ -10,3 +10,11 @@ export interface StudentDetail {
     id: number;
     instructor: User;
 }
+
+export interface ReducedStudent{
+    id: 2,
+    firstName: string,
+    lastName: string,
+    email: string,
+    role: string
+}
