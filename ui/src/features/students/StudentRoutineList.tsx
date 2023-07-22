@@ -8,6 +8,7 @@ import { BikeIcon, StopwatchIcon } from '../../components/common/Icons';
 import useGenericList from '../../hooks/useGenericList';
 import StudentService from '../../services/api/StudentService';
 import SimpleBreadcrumbs from '../../components/common/SimpleBreadcrumbs';
+import Role from '../../model/user/Role';
 
 interface Props {
   showBreadcrumbs?: boolean;
@@ -23,12 +24,7 @@ const StudentRoutineList = ({ showBreadcrumbs }: Props) => {
       </Flex>
       <SkeletonWrapper repeat={7} height={50} loading={loading} marginBottom={2}>
         {!loading && !routines.length && (
-          <Flex
-            direction='column'
-            alignItems='center'
-            textAlign='center'
-            paddingY={5}
-          >
+          <Flex direction='column' alignItems='center' textAlign='center' paddingY={5}>
             <Text>Aquí podrás ver las rutinas que te asigne tu instructor.</Text>
             <Text fontWeight='bold'>Aún no te han asignado ninguna rutina</Text>
           </Flex>
@@ -48,7 +44,7 @@ const StudentRoutineList = ({ showBreadcrumbs }: Props) => {
   );
 };
 
-const StudentRoutineListItem = ({ routine }: { routine: ReducedRoutine }) => (
+export const StudentRoutineListItem = ({ routine, role = Role.STUDENT }: { routine: ReducedRoutine; role?: Role }) => (
   <ListItem paddingY={2} paddingX={3} borderRadius='md' borderColor='chakra-border-color' bg='bg.400'>
     <Flex justifyContent='space-between' alignItems={{ base: 'start', lg: 'center' }} flexDirection={{ base: 'column', lg: 'row' }} overflow='hidden'>
       <Flex direction='column' grow={1} shrink={0} alignSelf='start'>
@@ -73,20 +69,16 @@ const StudentRoutineListItem = ({ routine }: { routine: ReducedRoutine }) => (
             </Tooltip>
           </WrapItem>
         )}
-        <WrapItem>
-          <LinkButton
-            to={`#no-implementado`}
-            size='sm'
-            colorScheme='primary'
-            whiteSpace='normal'
-            leftIcon={<Icon as={BikeIcon} boxSize={4} />}
-          >
-            Registrar Entrenamiento
-          </LinkButton>
-        </WrapItem>
+        {role == Role.STUDENT && (
+          <WrapItem>
+            <LinkButton to={`#no-implementado`} size='sm' colorScheme='primary' whiteSpace='normal' leftIcon={<Icon as={BikeIcon} boxSize={4} />}>
+              Registrar Entrenamiento
+            </LinkButton>
+          </WrapItem>
+        )}
         <WrapItem>
           <Flex marginLeft='auto' gap={2}>
-            <LinkButton to={`/alumno/rutinas/${routine.id}`} size='sm'>
+            <LinkButton to={role == Role.INSTRUCTOR ? `/rutinas/${routine.id}` : `/alumno/rutinas/${routine.id}`} size='sm'>
               Ver detalles
             </LinkButton>
           </Flex>

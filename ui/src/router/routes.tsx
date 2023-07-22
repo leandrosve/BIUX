@@ -10,6 +10,8 @@ const ConfigPage = lazy(() => import('../pages/ConfigPage'));
 const NotFoundPage = lazy(() => import('../pages/not-found-page/NotFoundPage'));
 const MaintenancePage = lazy(() => import('../pages/maintenance-page/MaintenancePage'));
 const DashboardPage = lazy(() => import('../pages/DashboardPage'));
+const StudentDetail = lazy(() => import('../features/students/StudentDetail'));
+const StudentsPageForInstructor= lazy(()=> import('../features/students/StudentsPage'))
 
 export enum BRoutes {
   HOME = '/',
@@ -20,6 +22,7 @@ export enum BRoutes {
   DASHBOARD = '/dashboard',
   PROFILE = '/perfil',
   STUDENT_ROUTINES = '/alumno/rutinas',
+  STUDENTS_LIST='/alumnos'
 }
 
 const routes = [
@@ -36,6 +39,20 @@ const routes = [
     hasSubroutes: true,
     subroutes: [{ path: 'crear', title: 'Nueva Rutina' }],
     element: <RoutinesPage />,
+    role: Role.INSTRUCTOR
+  },
+  {
+    path: '/alumnos',
+    type: 'private',
+    title: 'Alumnos',
+    element: <StudentsPageForInstructor />,
+    role: Role.INSTRUCTOR
+  },
+  {
+    path: '/alumnos/9',
+    type: 'private',
+    title: 'Alumno',
+    element: <StudentDetail />,
     role: Role.INSTRUCTOR
   },
   {

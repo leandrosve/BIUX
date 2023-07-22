@@ -1,3 +1,4 @@
+import { ReducedRoutine } from '../routines/Routine';
 import { User } from '../user/User';
 
 export default interface Student {
@@ -12,9 +13,13 @@ export interface StudentDetail {
 }
 
 export interface ReducedStudent{
-    id: 2,
+    id: number,
     firstName: string,
     lastName: string,
     email: string,
     role: string
+}
+
+export interface StudentFullDetails extends User {
+   routines: ReducedRoutine[];
 }

@@ -15,6 +15,9 @@ const DashboardPage = () => {
   const role = useMemo(() => session?.user.role, [session]);
   const navigate = useNavigate();
   const [isLargerThan1510] = useMediaQuery('(max-width: 1510px)');
+  const sidebarItems = useMemo(() => {
+    return itemsRoutes.filter((item) => !item.role || item.role == session?.user.role);
+  }, [itemsRoutes, session]);
 
   const styleFlex = '';
   return (
@@ -35,7 +38,7 @@ const DashboardPage = () => {
           padding={'1.5%'}
           gap={'5px'}
         >
-          {itemsRoutes.map((item) => (
+          {sidebarItems.map((item) => (
             <div key={item.path}>
               <Box
                 onClick={() => navigate(item.path)}

@@ -63,7 +63,7 @@ const RoutineForm = () => {
         <Flex justifyContent='space-between' alignItems={{ base: 'stretch', xl: 'center' }} direction={{ base: 'column-reverse', xl: 'row' }}>
           <RutineStepper index={activeStep} />
           {activeStep === 0 && (
-            <LinkButton to='/rutinas' type='submit' leftIcon={<ArrowBackIcon />} size={['sm', 'md']} mt={{ sm: 2, xl: 0 }} mb={2}>
+            <LinkButton to='/rutinas' alignSelf='end' type='submit' leftIcon={<ArrowBackIcon />} size={['sm', 'md']} mt={{ sm: 2, xl: 0 }} mb={2}>
               Volver al listado
             </LinkButton>
           )}

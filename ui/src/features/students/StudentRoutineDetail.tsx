@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import ResponsiveCard from '../../components/common/ResponsiveCard';
 import { useParams } from 'react-router-dom';
 import Routine from '../../model/routines/Routine';
-import { Box, Divider, Flex, FormControl, Heading, Icon, List, ListItem, Tag, Text, Tooltip, VisuallyHidden, Wrap, WrapItem } from '@chakra-ui/react';
+import { Box, Divider, Flex, FormControl, Heading, Icon, List, ListItem, Tag, Text, Tooltip } from '@chakra-ui/react';
 import LinkButton from '../../components/common/LinkButton';
 import { BRoutes } from '../../router/routes';
 import { ArrowBackIcon, CalendarIcon, ChatIcon, InfoIcon, StarIcon } from '@chakra-ui/icons';
@@ -10,11 +10,12 @@ import SkeletonWrapper from '../../components/common/SkeletonWrapper';
 import SimpleBreadcrumbs from '../../components/common/SimpleBreadcrumbs';
 import BAlert from '../../components/common/BAlert';
 import { RoutineDetailLabel } from '../routines/RoutineDetails';
-import { BikeIcon, StopwatchIcon, ThumbUpIcon, TrainingDetailIcon } from '../../components/common/Icons';
+import { BikeIcon, StopwatchIcon, TrainingDetailIcon } from '../../components/common/Icons';
 import RoutineSegmentList from '../routines/RoutineSegmentList';
 import ResourceNotFound from '../../components/common/ResourceNotFound';
 import RoutineUtils from '../../utils/RoutineUtils';
 import StudentService from '../../services/api/StudentService';
+import Role from '../../model/user/Role';
 
 const StudentRoutineDetails = () => {
   let { id } = useParams();
@@ -141,11 +142,13 @@ const RoutineDetailsContent = ({ routine }: RoutineDetailsContentProps) => {
 const pastTrainingsMock = [
   {
     date: '2023-07-10T02:03:52.743Z',
+    routine: { name: 'Rutina corta' },
     score: 7,
     liked: true,
     instructorComment: 'Muy buen trabajo! sigue así',
   },
   {
+    routine: { name: 'Rutina larga' },
     date: '2023-07-08T02:03:52.743Z',
     score: 4,
     instructorComment: 'Buen trabajo! Controlar RPM hacia el final',
@@ -157,7 +160,7 @@ const formatStringDate = (stringDate: string) => {
   if (!date) return '';
   return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
 };
-const PastTrainingList = () => {
+export const PastTrainingList = ({ showRoutineName }: { showRoutineName?: boolean }) => {
   return (
     <List spacing={3}>
       {pastTrainingsMock.map((item, index) => (
@@ -171,21 +174,23 @@ const PastTrainingList = () => {
                   </Tooltip>
                   {item.instructorComment}
                 </Text>
-                <LinkButton
-                  to={`#no-implementado`}
-                  size='sm'
-                  whiteSpace='normal'
-                  leftIcon={<Icon as={TrainingDetailIcon} boxSize={4}/>}
-                >
+                <LinkButton to={`#no-implementado`} size='sm' whiteSpace='normal' leftIcon={<Icon as={TrainingDetailIcon} boxSize={4} />}>
                   Ver detalles
                 </LinkButton>
               </Flex>
               <Flex alignSelf='stretch' justifyContent='space-between'>
-                <Tooltip hasArrow label='Calificación' placement='top'>
-                  <Tag fontSize='sm' borderRadius='25px' justifyContent='center' colorScheme='primary' aria-label='calificación' gap={1}>
-                    <Icon as={StarIcon} aria-label='Calificación' /> {item.score}/10
-                  </Tag>
-                </Tooltip>
+                <Flex gap={3}>
+                  {showRoutineName && (
+                    <Tag aria-label='nombre de la rutina' fontSize='sm' borderRadius='25px' justifyContent='center' gap={1}>
+                      {item.routine.name}
+                    </Tag>
+                  )}
+                  <Tooltip hasArrow label='Calificación' placement='top'>
+                    <Tag fontSize='sm' borderRadius='25px' justifyContent='center' colorScheme='primary' aria-label='calificación' gap={1}>
+                      <Icon as={StarIcon} aria-label='Calificación' /> {item.score}/10
+                    </Tag>
+                  </Tooltip>
+                </Flex>
                 <Tag variant='outline' fontWeight='bold' gap={2} boxShadow='none'>
                   <CalendarIcon aria-label='fecha' />
                   {formatStringDate(item.date)}

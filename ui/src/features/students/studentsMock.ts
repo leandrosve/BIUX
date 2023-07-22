@@ -1,6 +1,6 @@
 import Student from '../../model/student/Student';
 
-let studentsMock: Student[] = [
+const studentsMock: Student[] = [
   {
     id: 1,
     user: {

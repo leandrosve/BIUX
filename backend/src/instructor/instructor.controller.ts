@@ -77,4 +77,13 @@ export class InstructorController {
         return await this.instructorService.getStudents(request.idUser)
     }
 
+    
+    @Get('/students/:id_student')
+    @ApiProperty({name:'id_student'})
+    @ApiHeader({name:'token',required: true})
+    @Roles('INSTRUCTOR')
+    public async studentDetails(@Req() request: Request,@Param('id_student') id_student: number){
+      return await this.instructorService.getStudentDetail(request.idUser,id_student)
+    }
+
 }

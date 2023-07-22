@@ -1,4 +1,3 @@
-import React from 'react';
 import ResponsiveCard from '../../components/common/ResponsiveCard';
 import {
   Button,
@@ -10,93 +9,47 @@ import {
   InputGroup,
   InputRightElement,
   Menu,
-  MenuButton,
-  MenuGroup,
-  MenuItem,
+  MenuButton, MenuItem,
   MenuList,
-  Table,
-  TableCaption,
-  TableContainer,
+  Table, TableContainer,
   Tag,
   Tbody,
   Td,
   Th,
-  Thead,
-  Tooltip,
-  Tr,
+  Thead, Tr
 } from '@chakra-ui/react';
 import AutoBreadcrumbs from '../../layout/AutoBreadcrumbs';
-import { ChevronDownIcon, EditIcon, PlusSquareIcon, Search2Icon } from '@chakra-ui/icons';
+import { PlusSquareIcon, Search2Icon } from '@chakra-ui/icons';
+import { InstructorStudentsContext } from '../../context/ListsProviders';
+import { useState, useEffect, Fragment, useMemo, useContext } from 'react';
+import { ReducedStudent } from '../../model/student/Student';
 
-interface Student {
-  firstName: string;
-  lastName: string;
-  email: string;
-  id: number;
-  entrenamientos: number;
-}
 const columns = [
   {
     title: 'Nombre',
-    accesor: (s: Student) => `${s.firstName} ${s.lastName}`,
+    accesor: (s: ReducedStudent) => `${s.firstName} ${s.lastName}`,
   },
   {
     title: 'Email',
-    accesor: (s: Student) => s.email,
+    accesor: (s: ReducedStudent) => s.email,
   },
   {
     title: 'Performance',
-    accesor: (s: Student) => (
+    accesor: (s: ReducedStudent) => (
       <Tag variant='solid' colorScheme='green'>
-        {s.entrenamientos || '-'}
+        { '-'}
       </Tag>
     ),
   },
   {
     title: 'Acciones',
-    accesor: (s: Student) => <Actions student={s} />,
+    accesor: (s: ReducedStudent) => <Actions student={s} />,
   },
 ];
 
-const studentsMock: Student[] = [
-  {
-    id: 1,
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-    entrenamientos: 5,
-  },
-  {
-    id: 2,
-    firstName: 'Jane',
-    lastName: 'Smith',
-    email: 'jane.smith@example.com',
-    entrenamientos: 3,
-  },
-  {
-    id: 3,
-    firstName: 'Michael',
-    lastName: 'Johnson',
-    email: 'michael.johnson@example.com',
-    entrenamientos: 2,
-  },
-  {
-    id: 4,
-    firstName: 'Emily',
-    lastName: 'Brown',
-    email: 'emily.brown@example.com',
-    entrenamientos: 1,
-  },
-  {
-    id: 5,
-    firstName: 'David',
-    lastName: 'Davis',
-    email: 'david.davis@example.com',
-    entrenamientos: 4,
-  },
-];
 
-const Actions = ({ student }: { student: Student }) => (
+
+const Actions = ({ student }: { student: ReducedStudent }) => (
   <Flex>
     <Button size='sm' onClick={() => null}>
       Ver detalle
@@ -104,10 +57,29 @@ const Actions = ({ student }: { student: Student }) => (
   </Flex>
 );
 
+
 const StudentList = () => {
+
+  const {
+    fetch: fetchStudents,
+    initialized,
+    data: students,
+    loading,
+    page,
+    onPageChange,
+    searchText,
+    onSearchTextChange,
+  } = useContext(InstructorStudentsContext);
+
+
+  useEffect(() => {
+    fetchStudents()
+    if (!initialized) fetchStudents();
+  }, []);
+
   return (
     <>
-      <AutoBreadcrumbs />
+     
       <ResponsiveCard defaultHeight='auto' paddingY={3} marginBottom={5} rounded='md'>
         <Flex justifyContent='space-between' alignItems='center'>
           <Heading size='md' m={0}>Invita a un alumno</Heading>
@@ -143,8 +115,8 @@ const StudentList = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {studentsMock.map((s) => (
-                <Tr>
+              {students.map((s) => (
+                <Tr key={s.id}>
                   {columns.map((c, index) => (
                     <Td key={index}>{c.accesor(s)}</Td>
                   ))}

@@ -9,6 +9,7 @@ import { RoutineGetFullDTO } from './dto/routine.full.dto';
 import { Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SegmentsEntity } from 'src/segments/entities/segments.entity';
+import { RoutineReducedDTO } from './dto/routine.reduced.dto';
 
 @Injectable()
 export class RoutinesService {
@@ -135,5 +136,9 @@ export class RoutinesService {
   
   public async getStudentsByRoutine(instructorId:number,routineId:number){
     return await "students"
+  }
+
+  public async getReducedRoutinesForStudent(studentUserId: number): Promise<RoutineReducedDTO[]> {
+      return await this.routineRepository.getReducedRoutinesForStudent(studentUserId);
   }
 }
