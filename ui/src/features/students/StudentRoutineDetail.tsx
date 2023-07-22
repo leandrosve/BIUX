@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import ResponsiveCard from '../../components/common/ResponsiveCard';
 import { useParams } from 'react-router-dom';
 import Routine from '../../model/routines/Routine';
-import { Box, Divider, Flex, FormControl, Heading, Icon, List, ListItem, Tag, Text, Tooltip } from '@chakra-ui/react';
+import { Box, Button, Divider, Flex, FormControl, Heading, Icon, List, ListItem, Tag, Text, Tooltip } from '@chakra-ui/react';
 import LinkButton from '../../components/common/LinkButton';
 import { BRoutes } from '../../router/routes';
 import { ArrowBackIcon, CalendarIcon, ChatIcon, InfoIcon, StarIcon } from '@chakra-ui/icons';
@@ -160,7 +160,7 @@ const formatStringDate = (stringDate: string) => {
   if (!date) return '';
   return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
 };
-export const PastTrainingList = ({ showRoutineName }: { showRoutineName?: boolean }) => {
+export const PastTrainingList = ({ showRoutineName, onOpenDetails }: { showRoutineName?: boolean; onOpenDetails?: () => void }) => {
   return (
     <List spacing={3}>
       {pastTrainingsMock.map((item, index) => (
@@ -174,9 +174,9 @@ export const PastTrainingList = ({ showRoutineName }: { showRoutineName?: boolea
                   </Tooltip>
                   {item.instructorComment}
                 </Text>
-                <LinkButton to={`#no-implementado`} size='sm' whiteSpace='normal' leftIcon={<Icon as={TrainingDetailIcon} boxSize={4} />}>
+                <Button onClick={onOpenDetails} size='sm' whiteSpace='normal' leftIcon={<Icon as={TrainingDetailIcon} boxSize={4} />}>
                   Ver detalles
-                </LinkButton>
+                </Button>
               </Flex>
               <Flex alignSelf='stretch' justifyContent='space-between'>
                 <Flex gap={3}>

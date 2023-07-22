@@ -15,8 +15,9 @@ import { PastTrainingList } from './StudentRoutineDetail';
 import BList from '../../components/common/BList';
 import LinkButton from '../../components/common/LinkButton';
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Role from '../../model/user/Role';
+import RoutineTrainingChart from '../routines/RoutineTrainingChart';
 
 const StudentDetail = () => {
   let { id, routineId } = useParams();
@@ -28,7 +29,7 @@ const StudentDetail = () => {
       ];
     return [
       { to: '/rutinas', title: 'Rutinas' },
-      { to:  `/rutinas/${routineId}`, title: 'Detalle' },
+      { to: `/rutinas/${routineId}`, title: 'Detalle' },
       { to: `#contenido`, title: 'Alumno' },
     ];
   }, [id, routineId]);
@@ -38,9 +39,7 @@ const StudentDetail = () => {
 
   return (
     <ResponsiveCard defaultHeight='auto' position='relative' defaultWidth='800px'>
-      <SimpleBreadcrumbs
-        items={breadcrumbItems}
-      />
+      <SimpleBreadcrumbs items={breadcrumbItems} />
       <SkeletonWrapper loading={loading} heights={['60px', '90px', '60px']} height='70px' repeat={7} marginY={1}>
         {student && <StudentDetailContent student={student} routineId={routineId} />}
       </SkeletonWrapper>
@@ -53,6 +52,7 @@ interface StudentDetailContentProps {
   routineId?: string | number;
 }
 const StudentDetailContent = ({ student, routineId }: StudentDetailContentProps) => {
+  const [showTrainingDetails, setShowTrainingDetails] = useState(false);
   return (
     <Flex direction='column'>
       <LinkButton
@@ -66,14 +66,11 @@ const StudentDetailContent = ({ student, routineId }: StudentDetailContentProps)
       >
         {routineId ? 'Volver a la rutina' : 'Volver al listado'}
       </LinkButton>
-      <Flex direction={{ base: 'column', md: 'row-reverse' }} justifyContent='space-between'>
-        <Flex direction='column' alignItems={{ base: 'start', md: 'center' }}>
-          <RoutineDetailLabel>Imagen de perfil</RoutineDetailLabel>
-          <BAvatar name={`${student.firstName} ${student.lastName}`} size='lg' ml={{ base: 3, md: 0 }} />
-        </Flex>
+      <Flex alignItems='center' gap={5} mt={3}>
+        <BAvatar name={`${student.firstName} ${student.lastName}`} size='xl' ml={{ base: 3, md: 0 }} />
 
         <Flex direction='column'>
-          <RoutineDetailLabel htmlFor='student-name' mb={0}>
+          <RoutineDetailLabel htmlFor='student-name' mb={0} mt={0}>
             Nombre y apellido
           </RoutineDetailLabel>
           <Heading id='student-name' color='text.500' size='md'>
@@ -107,12 +104,13 @@ const StudentDetailContent = ({ student, routineId }: StudentDetailContentProps)
           <TabPanel padding={1} paddingTop={2}>
             <BList spacing={2} emptyPlaceholder='Este alumno no tiene ninguna rutina asignada'>
               {student.routines?.map((r) => (
-                <StudentRoutineListItem routine={r} key={r.id} role={Role.INSTRUCTOR}/>
+                <StudentRoutineListItem routine={r} key={r.id} role={Role.INSTRUCTOR} />
               ))}
             </BList>
           </TabPanel>
           <TabPanel padding={1} paddingTop={2}>
-            <PastTrainingList showRoutineName/>
+            <PastTrainingList showRoutineName onOpenDetails={() => setShowTrainingDetails(true)} />
+            <RoutineTrainingChart isOpen={showTrainingDetails} onClose={() => setShowTrainingDetails(false)} />
           </TabPanel>
         </TabPanels>
       </Tabs>

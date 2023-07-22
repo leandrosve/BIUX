@@ -23,7 +23,7 @@ const Navbar = ({ onOpenSidebar }: Props) => {
     return <IconButton icon={<HamburgerIcon width={30} height={30} />} aria-label='abrir/cerrar menú' variant='ghost' onClick={onOpenSidebar} />;
   };
   return (
-    <Flex as='header' align='center' justify='space-between' alignSelf='stretch' paddingX={5} paddingY={2} background='bg.300'>
+    <Flex as='header' align='center' justify='space-between' alignSelf='stretch' paddingX={5} paddingY={2} background='bg.300' boxShadow='sm'>
       <Link to={BRoutes.HOME}>
         <Flex alignItems='flex-end' gap={3}>
           <Icon as={BrandIcon} height={'40px'} width={'40px'} />

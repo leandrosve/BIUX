@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, AlertProps, Box, Button, Flex, Icon, useMediaQuery } from '@chakra-ui/react';
+import { Alert, AlertIcon, AlertProps, Box, Button, Flex, Icon, IconButton, useMediaQuery } from '@chakra-ui/react';
 import { useRef, useEffect } from 'react';
 
 import { CloseIcon } from '../Icons';
@@ -43,12 +43,20 @@ const AlertToast = ({ duration = 0, hasIcon, hasProgress, children, colorScheme 
 
   return (
     <Flex direction={'column'} onPointerEnter={onEnter} onPointerLeave={onPointerLeave} autoFocus ref={alertRef}>
-      <Box bgColor='gray.700' _dark={{bg:'bg.400'}} borderLeftWidth='4px' borderColor='primary.200'  overflow='hidden' borderTopRadius={5} borderBottomRadius={hasProgress ? 0 : 5}>
-        <Alert  colorScheme={colorScheme} {...rest}>
+      <Box
+        bgColor='gray.700'
+        _dark={{ bg: 'bg.400' }}
+        borderLeftWidth='4px'
+        borderColor='primary.200'
+        overflow='hidden'
+        borderTopRadius={5}
+        borderBottomRadius={hasProgress ? 0 : 5}
+      >
+        <Alert colorScheme={colorScheme} {...rest}>
           {hasIcon && !mobile && <AlertIcon />}
           {children}
           {isClosable && (
-            <Button
+            <IconButton
               colorScheme={colorScheme}
               variant='ghost'
               alignSelf='flex-start'
@@ -56,10 +64,10 @@ const AlertToast = ({ duration = 0, hasIcon, hasProgress, children, colorScheme 
               size='sm'
               right={-1}
               top={-1}
+              aria-label='close notification'
               onClick={onClose}
-            >
-              <Icon as={CloseIcon} w={2} h={2} />
-            </Button>
+              icon={<Icon as={CloseIcon} w={2} h={2} />}
+            />
           )}
         </Alert>
       </Box>

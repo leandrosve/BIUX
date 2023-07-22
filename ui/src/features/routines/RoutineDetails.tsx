@@ -3,7 +3,6 @@ import ResponsiveCard from '../../components/common/ResponsiveCard';
 import { useParams } from 'react-router-dom';
 import Routine, { DraggableSegment } from '../../model/routines/Routine';
 import {
-  Alert,
   Box,
   Button,
   Flex,
@@ -11,15 +10,12 @@ import {
   FormLabel,
   FormLabelProps,
   Heading,
-  Icon,
-  Image,
-  SimpleGrid,
+  Icon, SimpleGrid,
   Tag,
   Text,
   Tooltip,
-  VisuallyHidden,
+  VisuallyHidden
 } from '@chakra-ui/react';
-import missingIllustration from '../../assets/illustrations/missing-page.png';
 import LinkButton from '../../components/common/LinkButton';
 import { BRoutes } from '../../router/routes';
 import { ArrowBackIcon, InfoIcon } from '@chakra-ui/icons';
@@ -33,6 +29,7 @@ import BAlert from '../../components/common/BAlert';
 import InstructorService from '../../services/api/InstructorService';
 import SimpleBreadcrumbs from '../../components/common/SimpleBreadcrumbs';
 import BAvatar from '../../components/common/BAvatar';
+import ResourceNotFound from '../../components/common/ResourceNotFound';
 
 const RoutineDetails = () => {
   let { id } = useParams();
@@ -86,7 +83,7 @@ const RoutineDetails = () => {
     }
     retrieveRoutine(Number(id));
   }, [id]);
-  if (!loading && !routine) return <NotFound />;
+  if (!loading && !routine) return <ResourceNotFound />;
   return (
     <ResponsiveCard defaultHeight='auto' position='relative' defaultWidth='800px'>
       <SimpleBreadcrumbs
@@ -237,19 +234,5 @@ const RoutineDetailsContent = ({ routine, segments }: RoutineDetailsContentProps
     </Flex>
   );
 };
-
-const NotFound = () => (
-  <ResponsiveCard>
-    <Alert display='flex' gap={3} flexGrow={1} flexDirection='column' alignItems='center' justifyContent='center' background='transparent'>
-      <Image src={missingIllustration} aria-hidden width={150} className='hue-adaptative' />
-      <Text fontSize='lg' maxWidth={350} textAlign='center'>
-        Lo sentimos, no hemos podido encontrar la rutina solicitada.
-      </Text>
-      <LinkButton to={BRoutes.ROUTINES} leftIcon={<ArrowBackIcon />}>
-        Volver al listado
-      </LinkButton>
-    </Alert>
-  </ResponsiveCard>
-);
 
 export default RoutineDetails;
