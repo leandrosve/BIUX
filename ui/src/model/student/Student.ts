@@ -12,6 +12,13 @@ export interface StudentDetail {
     instructor: User;
 }
 
+export interface ReducedStudent{
+    id: number,
+    firstName: string,
+    lastName: string,
+    email: string,
+    role: string
+}
 
 export interface StudentFullDetails extends User {
    routines: ReducedRoutine[];
