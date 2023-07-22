@@ -7,8 +7,7 @@ import StudentList from './StudentList'
  const StudentsPage = () => {
   return (
     <>
-          <AutoBreadcrumbs />
-
+ 
      <InstructorStudentsProvider>
         <Routes>
           <Route path='' element={<StudentList />} />

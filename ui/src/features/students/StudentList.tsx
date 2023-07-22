@@ -23,6 +23,9 @@ import { PlusSquareIcon, Search2Icon } from '@chakra-ui/icons';
 import { InstructorStudentsContext } from '../../context/ListsProviders';
 import { useState, useEffect, Fragment, useMemo, useContext } from 'react';
 import { ReducedStudent } from '../../model/student/Student';
+import SimpleBreadcrumbs from '../../components/common/SimpleBreadcrumbs';
+import InstructorShareButton from '../instructor/InstructorShareButton';
+import InstructorService from '../../services/api/InstructorService';
 
 const columns = [
   {
@@ -59,6 +62,7 @@ const Actions = ({ student }: { student: ReducedStudent }) => (
 
 
 const StudentList = () => {
+  const [code, setCode] = useState("");
 
   const {
     fetch: fetchStudents,
@@ -71,19 +75,28 @@ const StudentList = () => {
     onSearchTextChange,
   } = useContext(InstructorStudentsContext);
 
+  const retrieveCode = async () => {
+    const res = await InstructorService.getCode();
+    if (res.hasError) return;
+    setCode(res.data?.code);
+  };
 
   useEffect(() => {
-    fetchStudents()
     if (!initialized) fetchStudents();
-  }, []);
+  }, [initialized,fetchStudents]);
 
+  useEffect(() => {
+    retrieveCode();
+  }, []);
   return (
     <>
      
       <ResponsiveCard defaultHeight='auto' paddingY={3} marginBottom={5} rounded='md'>
+      <SimpleBreadcrumbs items={[{ title: 'Alumnos' }]} />
         <Flex justifyContent='space-between' alignItems='center'>
           <Heading size='md' m={0}>Invita a un alumno</Heading>
-          <IconButton variant='ghost' borderRadius='50%' display='flex' aria-label='expand' icon={<Icon as={PlusSquareIcon} />} />
+          <InstructorShareButton code={code}  />
+         
         </Flex>
       </ResponsiveCard>
       <ResponsiveCard defaultHeight='auto'>

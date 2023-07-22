@@ -37,7 +37,7 @@ export default class InstructorService extends APIService {
   }
 
   static async getStudents() {
-    console.log("hola...")
+    
     return await this.get<ReducedStudent[]>('/students');
   }
   static async getStudent(studentUserId: number) {
