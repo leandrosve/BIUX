@@ -14,6 +14,7 @@ import { RoutineInstructorStudentEntity } from './entities/routines-instructor-s
 import { InstructorStudentRepository } from './repository/instructorStudent.repository';
 import { RoutineRepository } from 'src/routines/routines.repository';
 import InstructorStudentFullDTO from './dto/instructor-student-full.dto';
+import routineMockups from 'src/mockups/routine.mockups';
 
 @Injectable()
 export class InstructorService {
@@ -24,7 +25,7 @@ export class InstructorService {
     private readonly instructorStudentRepository: InstructorStudentRepository,
     private readonly routinesService: RoutinesService,
     @InjectRepository(RoutineInstructorStudentEntity)
-    private readonly routineInstructorStudentRepository: Repository<RoutineInstructorStudentEntity>,
+    private readonly routineInstructorStudentRepository: Repository<RoutineInstructorStudentEntity>
   ) {}
 
   public async code(user_id: number): Promise<InstructorCodeEntity> {
@@ -156,10 +157,9 @@ export class InstructorService {
   }
   public async getStudents(instructorId: number) {
     return await this.instructorStudentRepository.getStudents(instructorId);
-    
   }
 
-  public async getStudentDetail(instructorId: number, studentId: number):Promise<InstructorStudentFullDTO> {
+  public async getStudentDetail(instructorId: number, studentId: number): Promise<InstructorStudentFullDTO> {
     const student = await this.instructorStudentRepository
       .createQueryBuilder('instructor_students')
       .leftJoinAndSelect('instructor_students.student', 'student')
@@ -168,11 +168,24 @@ export class InstructorService {
       .where('instructor_students.instructor_id = :instructorId and instructor_students.student_id = :studentId', { instructorId, studentId })
       .getOne();
     if (!student) throw new ErrorManager({ type: 'NOT_FOUND', message: 'student_not_found' });
-    const routines = await this.routinesService.getReducedRoutinesForStudent(studentId)
+    const routines = await this.routinesService.getReducedRoutinesForStudent(studentId);
     const user = student.student;
     return {
       ...user,
       routines,
     };
+  }
+
+  public async createMockedRoutines(instructorId: number) {
+    const students = await this.getStudents(instructorId);
+    const studentIds = students.map((s) => s.id);
+    routineMockups.forEach((routine, index) => {
+      const [start, end] = index > 1 ? [2, 4] : [0, 2];
+      const dto: RoutineCreateDTO = {
+        ...routine,
+        students: studentIds.slice(start, end),
+      };
+      this.createRoutine(instructorId, dto);
+    });
   }
 }
