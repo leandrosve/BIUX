@@ -28,12 +28,7 @@ const DashboardPage = () => {
           <InstructorCodeDisplay />
         </>
       )}
-      {role == Role.STUDENT && (
-        <>
-          <StudentRoutineList />
-          <StudentInstructorWidget />
-        </>
-      )}
+      {role == Role.STUDENT && <StudentInstructorWidget />}
       <Heading size='md' marginY={4} marginLeft={{ base: 1, lg: 4 }}>
         Herramientas
       </Heading>
