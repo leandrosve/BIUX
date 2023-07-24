@@ -8,7 +8,6 @@ export class InstructorStudentRepository extends Repository<InstructorStudentEnt
   constructor(private dataSource: DataSource) {
     super(InstructorStudentEntity, dataSource.createEntityManager());
   }
-
   async getStudentsByInstructorForIds(instructorId: number, studentsIds:number[]): Promise<UserReducedDTO[]> {
     return await this.createQueryBuilder('instructor_students')
     .leftJoin('instructor_students.student', 'student')
@@ -18,4 +17,14 @@ export class InstructorStudentRepository extends Repository<InstructorStudentEnt
     .select(['student.id,student.email, student.role'])
     .getRawMany();
   }
+  async getStudents(instructorId:number){
+    const res = await this
+    .createQueryBuilder('instructor_students')
+    .leftJoinAndSelect('instructor_students.student', 'student')
+    .where('instructor_students.instructor_id = :instructorId', { instructorId })
+    .getMany();
+  return res.map((instructorStudent) => instructorStudent.student);
+  }
+
+
 }

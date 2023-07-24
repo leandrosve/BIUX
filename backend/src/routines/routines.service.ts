@@ -10,17 +10,18 @@ import { Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SegmentsEntity } from 'src/segments/entities/segments.entity';
 import { RoutineReducedDTO } from './dto/routine.reduced.dto';
+import { CollectionUtils } from 'src/utils/CollectionUtils';
+import { RoutineInstructorStudentRepository } from 'src/instructor/repository/routinesInstructorsStudents.repository';
 
 @Injectable()
 export class RoutinesService {
   constructor(
- 
     private readonly routineRepository: RoutineRepository,
     private readonly userService: UsersService,
-
+    private readonly routineInstructorStudentRepository: RoutineInstructorStudentRepository,
+    
     @InjectRepository(SegmentsEntity)
-    private readonly segmentsRepository: Repository<SegmentsEntity>,
-
+    private readonly segmentsRepository: Repository<SegmentsEntity>
   ) {}
 
   public async routinesByInstructor(instructorId: number) {
@@ -41,7 +42,7 @@ export class RoutinesService {
     };
     const result = await this.routineRepository.save(newRoutine);
     //console.log(user)
-    return this.details(userId,result.id);
+    return this.details(userId, result.id);
   }
   public async details(userId: number, routineId: number) {
     const result = await this.routineRepository
@@ -59,15 +60,15 @@ export class RoutinesService {
     });
   }
 
-  public async getFullRoutine(userId: number, routineId: number):Promise<RoutineGetFullDTO>{
-    const result =  await this.routineRepository.getFullRoutine(userId,routineId)
+  public async getFullRoutine(userId: number, routineId: number): Promise<RoutineGetFullDTO> {
+    const result = await this.routineRepository.getFullRoutine(userId, routineId);
 
-    const students=result.routineInstructorStudents.map(relation=> relation.student)
-    delete result.routineInstructorStudents
+    const students = result.routineInstructorStudents.map((relation) => relation.student);
+    delete result.routineInstructorStudents;
     if (result) {
       return {
         ...result,
-        students
+        students,
       };
     }
     throw new ErrorManager({
@@ -76,47 +77,79 @@ export class RoutinesService {
     });
   }
 
-  public async update(userId: number, routineId: number, body: RoutineUpdateDTO) {
-    const { segments, ...routineData } = body;
+  public async update(instructorId: number, routineId: number, body: RoutineUpdateDTO) {
+    const { segments, students:studentsBody, ...routineData } = body;
 
-    const routine=await this.details(userId, routineId);
+    const routine = await this.details(instructorId, routineId);
     await this.checkSegmentsOrder(body.segments);
 
-    delete routineData['students']
+    //delete routineData['students']
     // Actualizar los datos de la rutina
-    const resultUpdated:UpdateResult =await this.routineRepository.update(routineId, routineData);
-    
-    // Actualizar o crear los segmentos
-    const updateSegments = segments.filter(segment => segment.id != null || segment.id !=undefined);
-    const newSegments = segments.filter(segment => segment.id == null || segment.id ==undefined);
-    await Promise.all(updateSegments.map(async (data) => {
-        await this.segmentsRepository.update(data.id, data);
-    }));
+    const resultUpdated: UpdateResult = await this.routineRepository.update(routineId, routineData);
 
-    if(newSegments.length>=1){
-      await Promise.all(newSegments.map(async data=>{
-        // Segmento nuevo, crearlo y asociarlo a la rutina
-        const newSegment = await this.segmentsRepository.create(data);
-        newSegment.routine = routine;
-        await this.segmentsRepository.save(newSegment);
-     }))
+    // Actualizar o crear los segmentos
+    const updateSegments = segments.filter((segment) => segment.id != null || segment.id != undefined);
+    const newSegments = segments.filter((segment) => segment.id == null || segment.id == undefined);
+    await Promise.all(
+      updateSegments.map(async (data) => {
+        await this.segmentsRepository.update(data.id, data);
+      })
+    );
+
+    if (newSegments.length >= 1) {
+      await Promise.all(
+        newSegments.map(async (data) => {
+          // Segmento nuevo, crearlo y asociarlo a la rutina
+          const newSegment = await this.segmentsRepository.create(data);
+          newSegment.routine = routine;
+          await this.segmentsRepository.save(newSegment);
+        })
+      );
     }
-    
+
     // Eliminar los segmentos que no están presentes en la lista actualizada
     const segmentIdsToRemove = routine.segments
-        .filter(segment => !updateSegments.some(updatedSegment => updatedSegment.id === segment.id))
-        .map(segment => segment.id);
-      if (segmentIdsToRemove.length > 0) {
-        await this.segmentsRepository.delete(segmentIdsToRemove);
-      }
-    
-    if (resultUpdated.affected==0) {
+      .filter((segment) => !updateSegments.some((updatedSegment) => updatedSegment.id === segment.id))
+      .map((segment) => segment.id);
+    if (segmentIdsToRemove.length > 0) {
+      await this.segmentsRepository.delete(segmentIdsToRemove);
+    }
+    const oldStudentsIDs = (await this.routineInstructorStudentRepository.getStudentsByRoutineId(instructorId,routineId)).map((s) => s.id);
+
+    // Alumnos asignados
+    const {newItems,removedItems}=CollectionUtils.getChangesInCollection(oldStudentsIDs,studentsBody);
+    if (newItems.length >=1){
+      await Promise.all(
+        newItems.map(async (data) => {
+           await this.routineInstructorStudentRepository.createRoutineInstructorStudent(routineId,instructorId,data);
+        })
+      );
+    }
+
+    if(removedItems.length>=1){
+      await Promise.all(
+        removedItems.map( async (data)=>{
+          await this.routineInstructorStudentRepository
+          .createQueryBuilder()
+          .softDelete()
+          .where('student_id = :studentId', { studentId:data })
+          .execute();
+        })
+      )
+    }
+    console.log('newItems', newItems);
+
+    console.log('removedItems', removedItems)
+
+
+
+    if (resultUpdated.affected == 0) {
       throw new ErrorManager({
         type: 'BAD_REQUEST',
         message: 'No se pudo realizar la actualizacion',
       });
     }
-    return  await this.getFullRoutine(userId, routineId);
+    return await this.getFullRoutine(instructorId, routineId);
   }
 
   private checkSegmentsOrder(segments: SegmentCreateDTO[]) {
@@ -133,12 +166,12 @@ export class RoutinesService {
       });
     }
   }
-  
-  public async getStudentsByRoutine(instructorId:number,routineId:number){
-    return await "students"
+
+  public async getStudentsByRoutine(instructorId: number, routineId: number) {
+    return await 'students';
   }
 
   public async getReducedRoutinesForStudent(studentUserId: number): Promise<RoutineReducedDTO[]> {
-      return await this.routineRepository.getReducedRoutinesForStudent(studentUserId);
+    return await this.routineRepository.getReducedRoutinesForStudent(studentUserId);
   }
 }

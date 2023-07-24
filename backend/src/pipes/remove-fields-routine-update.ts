@@ -9,7 +9,6 @@ export class RemoveFieldsRoutineUpdatePipe implements PipeTransform {
     if (!value || typeof value !== 'object') {
       return value;
     }
-    console.log("hasta pipe")
 
     // Elimina los atributos del cuerpo especificados
     this.fieldsToRemove.forEach(field => {
@@ -23,7 +22,6 @@ export class RemoveFieldsRoutineUpdatePipe implements PipeTransform {
       segments: value['segments'].map(({ localId, ...rest }) => rest)
     };
 
-    console.log("hasta pipe")
 
     return updatedData;
   }

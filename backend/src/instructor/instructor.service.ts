@@ -155,12 +155,8 @@ export class InstructorService {
     return await this.routinesService.getFullRoutine(instructorId, routineId);
   }
   public async getStudents(instructorId: number) {
-    const res = await this.instructorStudentRepository
-      .createQueryBuilder('instructor_students')
-      .leftJoinAndSelect('instructor_students.student', 'student')
-      .where('instructor_students.instructor_id = :instructorId', { instructorId })
-      .getMany();
-    return res.map((instructorStudent) => instructorStudent.student);
+    return await this.instructorStudentRepository.getStudents(instructorId);
+    
   }
 
   public async getStudentDetail(instructorId: number, studentId: number):Promise<InstructorStudentFullDTO> {
