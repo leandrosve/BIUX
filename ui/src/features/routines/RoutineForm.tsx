@@ -60,7 +60,7 @@ const RoutineForm = () => {
     <>
       <ResponsiveCard defaultWidth={800} defaultHeight={650}>
         <SimpleBreadcrumbs items={breadcrumb} />
-        <Flex justifyContent='space-between' alignItems={{ base: 'stretch', xl: 'center' }} direction={{ base: 'column-reverse', xl: 'row' }}>
+        <Flex justifyContent='space-between' wrap='wrap-reverse'>
           <RutineStepper index={activeStep} />
           {activeStep === 0 && (
             <LinkButton to='/rutinas' alignSelf='end' type='submit' leftIcon={<ArrowBackIcon />} size={['sm', 'md']} mt={{ sm: 2, xl: 0 }} mb={2}>

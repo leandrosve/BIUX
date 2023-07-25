@@ -143,7 +143,7 @@ const RoutineDetailsContent = ({ routine, segments }: RoutineDetailsContentProps
   return (
     <Flex direction='column'>
       <FormControl>
-        <RoutineDetailLabel htmlFor='routine-name' mb={0}>
+        <RoutineDetailLabel as='span' mb={0}>
           Nombre
         </RoutineDetailLabel>
         <Heading aria-label='Routine Name' color='text.500'>
@@ -153,7 +153,7 @@ const RoutineDetailsContent = ({ routine, segments }: RoutineDetailsContentProps
 
       {routine.description && (
         <FormControl>
-          <RoutineDetailLabel htmlFor='routine-description' mb={0}>
+          <RoutineDetailLabel as='span' mb={0}>
             Descripción
           </RoutineDetailLabel>
           <Heading size='md' as='h2' paddingY={2} color='text.500'>
@@ -164,7 +164,7 @@ const RoutineDetailsContent = ({ routine, segments }: RoutineDetailsContentProps
 
       {!!routine.students?.length && (
         <FormControl>
-          <RoutineDetailLabel htmlFor='routine-students' mb={0}>
+          <RoutineDetailLabel as='span' mb={0}>
             Alumnos
           </RoutineDetailLabel>
 
@@ -210,7 +210,7 @@ const RoutineDetailsContent = ({ routine, segments }: RoutineDetailsContentProps
       )}
       <Box position='relative' marginTop={2}>
         <Flex justifyContent='space-between' alignItems='center'>
-          <RoutineDetailLabel marginBottom={3} marginTop={0}>
+          <RoutineDetailLabel as='span' marginBottom={3} marginTop={0}>
             Planificación
           </RoutineDetailLabel>
           {!!Number(totalDuration) && (

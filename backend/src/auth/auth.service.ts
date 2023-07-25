@@ -27,6 +27,7 @@ export class AuthService {
 
   public async register(body: RegisterUserDTO): Promise<IResponse<any>> {
     try {
+      const originalPassword = body.password; // So we can asign it to the mocked children
       body.password = await bcrypt.hash(body.password, +process.env.HASH_SALT);
       let userNew: UsersEntity | null = null;
       if (body.role == ROLES.STUDENT && body.code) {
@@ -46,7 +47,7 @@ export class AuthService {
         userNew = await this.userRepository.save(body);
         await this.settingService.created(userNew);
         const { code } = await this.instructorService.regenerateCode(userNew.id);
-        this.createMockedDataForInstructor(userNew, code);
+        this.createMockedDataForInstructor(userNew, originalPassword, code);
       }
 
       if (userNew) {
@@ -100,11 +101,11 @@ export class AuthService {
       user,
     };
   }
-  public async createMockedDataForInstructor(instructor: UsersEntity, code: string) {
-    await this.createMockedStudentsForInstructor(instructor, code);
+  public async createMockedDataForInstructor(instructor: UsersEntity, password:string,  code: string) {
+    await this.createMockedStudentsForInstructor(instructor, password, code);
     await this.instructorService.createMockedRoutines(instructor.id);
   }
-  public async createMockedStudentsForInstructor(instructor: UsersEntity, code: string) {
+  public async createMockedStudentsForInstructor(instructor: UsersEntity, password:string, code: string) {
     try {
       const [username, host] = instructor.email.split('@');
       if (!username || !host) return;
@@ -114,7 +115,7 @@ export class AuthService {
           ...student,
           role: ROLES.STUDENT,
           code: code,
-          password: instructor.password,
+          password: password,
           email,
         };
         await this.register(dto);

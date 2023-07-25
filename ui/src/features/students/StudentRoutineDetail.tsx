@@ -67,7 +67,7 @@ interface RoutineDetailsContentProps {
 }
 
 const RoutineDetailsContent = ({ routine }: RoutineDetailsContentProps) => {
-  const segments = useMemo(() => RoutineUtils.initializeSegments(routine.segments), [routine]);
+  const segments = useMemo(() => RoutineUtils.initializeSegments(routine.segments || []), [routine]);
 
   const totalDuration = useMemo(() => {
     let total = 0;
@@ -190,7 +190,7 @@ export const PastTrainingList = ({ showRoutineName, onOpenDetails }: { showRouti
                     </Tag>
                   </Tooltip>
                 </Flex>
-                <Tag variant='outline' fontWeight='bold' gap={2} boxShadow='none'>
+                <Tag variant='outline' fontWeight='bold' gap={2} boxShadow='none' _light={{color:'text.300'}}>
                   <CalendarIcon aria-label='fecha' />
                   {formatStringDate(item.date)}
                 </Tag>

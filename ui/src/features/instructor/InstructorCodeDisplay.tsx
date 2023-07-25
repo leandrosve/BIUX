@@ -80,7 +80,7 @@ const InstructorCodeDisplay = () => {
       defaultHeight="auto"
     >
       <Heading size="md">Código de instructor</Heading>
-      <Text display="inline-flex" maxWidth="360px">
+      <Text display="inline-flex" maxWidth={{base:'none', lg:"360px"}}>
         Comparte este código con tus alumnos para que puedan unirse a tu grupo.
       </Text>
       <BAlert size="sm" status="info" description={successMessage} autoFocus />

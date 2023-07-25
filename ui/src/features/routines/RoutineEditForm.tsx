@@ -87,11 +87,11 @@ const RoutineEditForm = ({ routine, segments, onSuccess }: RoutineEditProps) => 
           />
         </FormControl>
         <FormControl display='flex' flexDirection='column' flexGrow={1}>
-          <RoutineDetailLabel htmlFor='search-students-button'>Alumnos</RoutineDetailLabel>
+          <RoutineDetailLabel as='span'>Alumnos</RoutineDetailLabel>
           <StudentSearch selected={students.items} onAdd={students.add} onRemove={students.remove} />
         </FormControl>
         <Flex direction='column' grow={1} position='relative' marginTop={2}>
-          <RoutineDetailLabel marginBottom={3} marginTop={0}>
+          <RoutineDetailLabel as='span' marginBottom={3} marginTop={0}>
             Planificación
           </RoutineDetailLabel>
           {!!newSegments?.length && (

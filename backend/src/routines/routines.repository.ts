@@ -57,6 +57,7 @@ export class RoutineRepository extends Repository<RoutinesEntity> {
     .addSelect('SUM(segments.duration)', 'totalDuration')
     .groupBy('routines.id, segments.id')
     .getOne();
+    if (!result) return null;
     return{
       ...result,totalDuration:0,
     }

@@ -5,6 +5,7 @@ import {
   Button,
   Flex,
   Heading,
+  Icon,
   List,
   Tab,
   TabIndicator,
@@ -12,6 +13,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
   Wrap,
   WrapItem,
   useDisclosure,
@@ -30,7 +32,7 @@ import { StudentRoutineListItem } from './StudentRoutineList';
 import { PastTrainingList } from './StudentRoutineDetail';
 import BList from '../../components/common/BList';
 import LinkButton from '../../components/common/LinkButton';
-import { ArrowBackIcon, PlusSquareIcon } from '@chakra-ui/icons';
+import { ArrowBackIcon, InfoIcon, PlusSquareIcon } from '@chakra-ui/icons';
 import { useMemo, useState } from 'react';
 import Role from '../../model/user/Role';
 import RoutineTrainingChart from '../routines/RoutineTrainingChart';
@@ -108,16 +110,16 @@ const StudentDetailContent = ({ student, routineId }: StudentDetailContentProps)
         <BAvatar name={`${student.firstName} ${student.lastName}`} size='xl' ml={{ base: 3, md: 0 }} />
 
         <Flex direction='column'>
-          <RoutineDetailLabel htmlFor='student-name' mb={0} mt={0}>
+          <RoutineDetailLabel as='span' mb={0} mt={0}>
             Nombre y apellido
           </RoutineDetailLabel>
-          <Heading id='student-name' color='text.500' size='md'>
+          <Heading color='text.500' size='md'>
             {student.firstName} {student.lastName}
           </Heading>
-          <RoutineDetailLabel htmlFor='student-email' mb={0}>
+          <RoutineDetailLabel as='span' mb={0}>
             Email
           </RoutineDetailLabel>
-          <Heading id='student-email' color='text.500' size='md'>
+          <Heading color='text.500' size='md'>
             {student.email}
           </Heading>
         </Flex>
@@ -173,6 +175,9 @@ const StudentDetailContent = ({ student, routineId }: StudentDetailContentProps)
             />
           </TabPanel>
           <TabPanel padding={1} paddingTop={2}>
+            <Text fontSize='sm' color='text.300' alignItems='center' gap={2} mb={2}>
+              <InfoIcon display='inline'/> Estos entrenamientos son únicamente datos de ejemplo.
+            </Text>
             <PastTrainingList showRoutineName onOpenDetails={() => setShowTrainingDetails(true)} />
             <RoutineTrainingChart isOpen={showTrainingDetails} onClose={() => setShowTrainingDetails(false)} />
           </TabPanel>

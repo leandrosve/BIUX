@@ -19,7 +19,7 @@ const InstructorWelcome = () => {
               <Icon as={BrandIcon} boxSize={6} aria-hidden/>
               <Heading size='md'>Bienvenido a BIUX!</Heading>
             </Flex>
-            <Text>Ya puedes comenzar a crear invitar alumnos, crear rutinas, y asignarlas a tus alumnos!</Text>
+            <Text>Ya puedes comenzar a invitar alumnos, crear rutinas, y asignarlas a tus alumnos!</Text>
             <Divider marginY={3} />
             <Text color='text.300' fontSize='sm'>
               <Icon as={InfoIcon} marginRight={2} />
