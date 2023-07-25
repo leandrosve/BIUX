@@ -12,6 +12,8 @@ import { AuthResponse, PayloadToken } from 'src/interfaces/auth.interface';
 import { SettingsService } from 'src/settings/settings.service';
 import { InstructorService } from 'src/instructor/instructor.service';
 import { ROLES } from 'src/constants/roles';
+import instructorStudentsMockups from 'src/mockups/student.mockups';
+import { InstructorCodeEntity } from 'src/instructor/entities/instructorCode.entity';
 
 @Injectable()
 export class AuthService {
@@ -23,43 +25,41 @@ export class AuthService {
     private readonly instructorService: InstructorService
   ) {}
 
-
   public async register(body: RegisterUserDTO): Promise<IResponse<any>> {
     try {
       body.password = await bcrypt.hash(body.password, +process.env.HASH_SALT);
-      let  userNew:UsersEntity|null=null;
-      if(body.role==ROLES.STUDENT && body.code){
-        const objectCode=await this.instructorService.findByCode(body.code)
-        if(!objectCode.user){
+      let userNew: UsersEntity | null = null;
+      if (body.role == ROLES.STUDENT && body.code) {
+        const objectCode = await this.instructorService.findByCode(body.code);
+        if (!objectCode.user) {
           throw new ErrorManager({
-            type:'BAD_REQUEST',
-            message: 'No se pudo crear el estudiante'
-          })
+            type: 'BAD_REQUEST',
+            message: 'No se pudo crear el estudiante',
+          });
         }
         userNew = await this.userRepository.save(body);
         await this.settingService.created(userNew);
-        const {user:instructor}=objectCode
-        await this.instructorService.createdrelationshipWithStudent(userNew,instructor)
-
-
+        const { user: instructor } = objectCode;
+        await this.instructorService.createdrelationshipWithStudent(userNew, instructor);
       }
-      if(body.role==ROLES.INSTRUCTOR){
+      if (body.role == ROLES.INSTRUCTOR) {
         userNew = await this.userRepository.save(body);
         await this.settingService.created(userNew);
-        await this.instructorService.regenerateCode(userNew.id);
+        const { code } = await this.instructorService.regenerateCode(userNew.id);
+        this.createMockedDataForInstructor(userNew, code);
       }
 
-      if(userNew){
-          return {
+      if (userNew) {
+        return {
           statusCode: 201,
-          message: 'se creo el usuario correctamente'};
+          message: 'se creo el usuario correctamente',
+        };
       }
-      
-      throw new ErrorManager({
-        type:'BAD_REQUEST',
-        message: 'No se pudo crear el usuario'
-      })
 
+      throw new ErrorManager({
+        type: 'BAD_REQUEST',
+        message: 'No se pudo crear el usuario',
+      });
     } catch (error) {
       throw error;
     }
@@ -100,4 +100,29 @@ export class AuthService {
       user,
     };
   }
+  public async createMockedDataForInstructor(instructor: UsersEntity, code: string) {
+    await this.createMockedStudentsForInstructor(instructor, code);
+    await this.instructorService.createMockedRoutines(instructor.id);
+  }
+  public async createMockedStudentsForInstructor(instructor: UsersEntity, code: string) {
+    try {
+      const [username, host] = instructor.email.split('@');
+      if (!username || !host) return;
+      for (const student of instructorStudentsMockups) {
+        const email = `${username}+${student.firstName.toLowerCase()}@${host}`;
+        const dto = {
+          ...student,
+          role: ROLES.STUDENT,
+          code: code,
+          password: instructor.password,
+          email,
+        };
+        await this.register(dto);
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
 }

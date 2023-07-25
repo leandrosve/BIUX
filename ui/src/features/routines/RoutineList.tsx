@@ -15,7 +15,7 @@ import {
   Tooltip,
   VisuallyHidden,
 } from '@chakra-ui/react';
-import { PlusSquareIcon, Search2Icon } from '@chakra-ui/icons';
+import { InfoIcon, PlusSquareIcon, Search2Icon } from '@chakra-ui/icons';
 import { ReducedRoutine } from '../../model/routines/Routine';
 import LinkButton from '../../components/common/LinkButton';
 import { useState, useEffect, Fragment, useMemo, useContext } from 'react';
@@ -57,9 +57,14 @@ const RoutineList = () => {
       <SimpleBreadcrumbs items={[{ title: 'Rutinas' }]} />
       <Flex justifyContent='space-between' marginY={3} alignItems='center'>
         <Heading>Rutinas</Heading>
+
         <LinkButton to='/rutinas/crear' colorScheme='primary' gap={2} size={['sm', 'md']} whiteSpace='initial'>
           <Icon as={PlusSquareIcon} /> Nueva Rutina
         </LinkButton>
+      </Flex>
+      <Flex mb={3} alignItems='center' color='text.300'>
+        <Icon as={InfoIcon} mr={2} />
+        <Text fontSize='sm'>Hemos creado automáticamente algunas rutinas para facilitar las pruebas.</Text>
       </Flex>
       <form
         onSubmit={(e) => {
