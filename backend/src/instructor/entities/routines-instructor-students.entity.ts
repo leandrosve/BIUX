@@ -1,4 +1,4 @@
-import { Entity, JoinColumn, ManyToOne } from "typeorm";
+import { DeleteDateColumn, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { BaseEntity } from '../../config/base.entity';
 import { UsersEntity } from "../../users/entities/users.entity";
 import { RoutinesEntity } from "../../routines/entities/routines.entity";
@@ -22,4 +22,8 @@ export class RoutineInstructorStudentEntity extends BaseEntity {
   @ManyToOne(() => UsersEntity)
   @JoinColumn({ name: 'instructor_id', referencedColumnName: 'id' })
   instructor: UsersEntity;
+
+    // Agrega la columna para el soft delete
+    @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
+    deletedAt: Date;
 }

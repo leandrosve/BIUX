@@ -129,19 +129,10 @@ export class RoutinesService {
     if(removedItems.length>=1){
       await Promise.all(
         removedItems.map( async (data)=>{
-          await this.routineInstructorStudentRepository
-          .createQueryBuilder()
-          .softDelete()
-          .where('student_id = :studentId', { studentId:data })
-          .execute();
+          await this.routineInstructorStudentRepository.deleteRoutineInstStudent(routineId,instructorId,data);
         })
       )
     }
-    console.log('newItems', newItems);
-
-    console.log('removedItems', removedItems)
-
-
 
     if (resultUpdated.affected == 0) {
       throw new ErrorManager({
