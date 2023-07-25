@@ -27,4 +27,14 @@ export class InstructorStudentRepository extends Repository<InstructorStudentEnt
   }
 
 
+  public async getStudent(instructorId: number, studentId: number): Promise<InstructorStudentEntity> {
+    return await this
+      .createQueryBuilder('instructor_students')
+      .leftJoinAndSelect('instructor_students.student', 'student')
+      .leftJoinAndSelect('routines_instructors_students', 'ris', 'ris.student_id = :studentId and ris.instructor_id = :instructorId')
+      .leftJoinAndSelect('routines', 'r', 'r.id = ris.routine_id')
+      .where('instructor_students.instructor_id = :instructorId and instructor_students.student_id = :studentId', { instructorId, studentId })
+      .getOne();
+  }
+
 }

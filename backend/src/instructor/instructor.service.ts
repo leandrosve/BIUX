@@ -15,6 +15,7 @@ import { InstructorStudentRepository } from './repository/instructorStudent.repo
 import { RoutineRepository } from 'src/routines/routines.repository';
 import InstructorStudentFullDTO from './dto/instructor-student-full.dto';
 import routineMockups from 'src/mockups/routine.mockups';
+import { RoutineReducedDTO } from 'src/routines/dto/routine.reduced.dto';
 
 @Injectable()
 export class InstructorService {
@@ -160,13 +161,7 @@ export class InstructorService {
   }
 
   public async getStudentDetail(instructorId: number, studentId: number): Promise<InstructorStudentFullDTO> {
-    const student = await this.instructorStudentRepository
-      .createQueryBuilder('instructor_students')
-      .leftJoinAndSelect('instructor_students.student', 'student')
-      .innerJoinAndSelect('routines_instructors_students', 'ris', 'ris.student_id = :studentId and ris.instructor_id = :instructorId')
-      .leftJoinAndSelect('routines', 'r', 'r.id = ris.routine_id')
-      .where('instructor_students.instructor_id = :instructorId and instructor_students.student_id = :studentId', { instructorId, studentId })
-      .getOne();
+    const student = await this.instructorStudentRepository.getStudent(instructorId, studentId);
     if (!student) throw new ErrorManager({ type: 'NOT_FOUND', message: 'student_not_found' });
     const routines = await this.routinesService.getReducedRoutinesForStudent(studentId);
     const user = student.student;
@@ -174,6 +169,13 @@ export class InstructorService {
       ...user,
       routines,
     };
+  }
+
+  public async updateStudentRoutines(instructorId: number, studentId: number, routineIds: number[]): Promise<RoutineReducedDTO[]> {
+    const student = await this.instructorStudentRepository.getStudent(instructorId, studentId);
+    if (!student) throw new ErrorManager({ type: 'NOT_FOUND', message: 'student_not_found' });
+    await this.routinesService.updateRoutinesForStudent(instructorId, studentId, routineIds);
+    return await this.routinesService.getReducedRoutinesForStudent(studentId);
   }
 
   public async createMockedRoutines(instructorId: number) {

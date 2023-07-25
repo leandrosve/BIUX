@@ -165,19 +165,19 @@ export const PastTrainingList = ({ showRoutineName, onOpenDetails }: { showRouti
       {pastTrainingsMock.map((item, index) => (
         <React.Fragment key={index}>
           <ListItem bg='bg.400' p={3} borderRadius='lg'>
-            <Flex direction='column' alignItems='stretch' justifyContent='center' gap={3}>
-              <Flex justifyContent='space-between'>
+            <Flex direction='column' alignItems='stretch' justifyContent='center' gap={3} wrap='wrap'>
+              <Flex justifyContent='space-between' gap={1}  wrap='wrap'>
                 <Text display='inline'>
                   <Tooltip hasArrow label='Comentario de tu instructor' placement='top'>
                     <Icon as={ChatIcon} boxSize={3} mt='-3px' mr={2} aria-label='Comentario de tu instructor' display='inline' />
                   </Tooltip>
                   {item.instructorComment}
                 </Text>
-                <Button onClick={onOpenDetails} size='sm' whiteSpace='normal' leftIcon={<Icon as={TrainingDetailIcon} boxSize={4} />}>
+                <Button onClick={onOpenDetails} marginLeft='auto' size='sm' whiteSpace='normal' leftIcon={<Icon as={TrainingDetailIcon} boxSize={4} />}>
                   Ver detalles
                 </Button>
               </Flex>
-              <Flex alignSelf='stretch' justifyContent='space-between'>
+              <Flex alignSelf='stretch' justifyContent='space-between'  wrap='wrap'>
                 <Flex gap={3}>
                   {showRoutineName && (
                     <Tag aria-label='nombre de la rutina' fontSize='sm' borderRadius='25px' justifyContent='center' gap={1}>

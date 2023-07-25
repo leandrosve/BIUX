@@ -13,9 +13,10 @@ interface Props {
   onEdit: (item: DraggableSegment) => void;
   displayOnly?: boolean;
   onChange: (func: (segments: DraggableSegment[]) => DraggableSegment[]) => void;
+  maxHeight?: string | number;
 }
 
-const RoutineSegmentList = ({ onRemove, onEdit, segments, displayOnly, onChange }: Props) => {
+const RoutineSegmentList = ({ onRemove, onEdit, segments, displayOnly, onChange, maxHeight= '50vh' }: Props) => {
   const handleOrderChange = (previousIndex: number, newIndex: number) => {
     onChange((prev) => RoutineUtils.insertAndReorderItems(prev, previousIndex, newIndex));
   };
@@ -46,7 +47,7 @@ const RoutineSegmentList = ({ onRemove, onEdit, segments, displayOnly, onChange 
 
       <Droppable droppableId='routine-items'>
         {(ul) => (
-          <List className='routine-items' {...ul.droppableProps} ref={ul.innerRef} maxHeight='50vh' overflowX='hidden' overflowY='auto'>
+          <List className='routine-items' {...ul.droppableProps} ref={ul.innerRef} maxHeight={maxHeight} overflowX='hidden' overflowY='auto'>
             {segments.map((s, i) => (
               <Draggable key={s.localId} draggableId={s.localId} index={i} isDragDisabled={orderMethod == 'buttons'}>
                 {(li) => {

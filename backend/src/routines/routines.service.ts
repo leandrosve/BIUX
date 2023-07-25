@@ -19,7 +19,7 @@ export class RoutinesService {
     private readonly routineRepository: RoutineRepository,
     private readonly userService: UsersService,
     private readonly routineInstructorStudentRepository: RoutineInstructorStudentRepository,
-    
+
     @InjectRepository(SegmentsEntity)
     private readonly segmentsRepository: Repository<SegmentsEntity>
   ) {}
@@ -78,7 +78,7 @@ export class RoutinesService {
   }
 
   public async update(instructorId: number, routineId: number, body: RoutineUpdateDTO) {
-    const { segments, students:studentsBody, ...routineData } = body;
+    const { segments, students: studentsBody, ...routineData } = body;
 
     const routine = await this.details(instructorId, routineId);
     await this.checkSegmentsOrder(body.segments);
@@ -114,24 +114,24 @@ export class RoutinesService {
     if (segmentIdsToRemove.length > 0) {
       await this.segmentsRepository.delete(segmentIdsToRemove);
     }
-    const oldStudentsIDs = (await this.routineInstructorStudentRepository.getStudentsByRoutineId(instructorId,routineId)).map((s) => s.id);
+    const oldStudentsIDs = (await this.routineInstructorStudentRepository.getStudentsByRoutineId(instructorId, routineId)).map((s) => s.id);
 
     // Alumnos asignados
-    const {newItems,removedItems}=CollectionUtils.getChangesInCollection(oldStudentsIDs,studentsBody);
-    if (newItems.length >=1){
+    const { newItems, removedItems } = CollectionUtils.getChangesInCollection(oldStudentsIDs, studentsBody);
+    if (newItems.length >= 1) {
       await Promise.all(
         newItems.map(async (data) => {
-           await this.routineInstructorStudentRepository.createRoutineInstructorStudent(routineId,instructorId,data);
+          await this.routineInstructorStudentRepository.createRoutineInstructorStudent(routineId, instructorId, data);
         })
       );
     }
 
-    if(removedItems.length>=1){
+    if (removedItems.length >= 1) {
       await Promise.all(
-        removedItems.map( async (data)=>{
-          await this.routineInstructorStudentRepository.deleteRoutineInstStudent(routineId,instructorId,data);
+        removedItems.map(async (data) => {
+          await this.routineInstructorStudentRepository.deleteRoutineInstStudent(routineId, instructorId, data);
         })
-      )
+      );
     }
 
     if (resultUpdated.affected == 0) {
@@ -164,5 +164,21 @@ export class RoutinesService {
 
   public async getReducedRoutinesForStudent(studentUserId: number): Promise<RoutineReducedDTO[]> {
     return await this.routineRepository.getReducedRoutinesForStudent(studentUserId);
+  }
+
+  public async updateRoutinesForStudent(instructorId:number, studentUserId: number, routineIds: number[]): Promise<void> {
+    const currentRoutines = await this.getReducedRoutinesForStudent(studentUserId);
+    const currentRoutineIds = currentRoutines.map((r) => r.id);
+    const { newItems, removedItems } = CollectionUtils.getChangesInCollection(currentRoutineIds, routineIds);
+    await Promise.all(
+      newItems.map(async (routineId) => {
+        await this.routineInstructorStudentRepository.createRoutineInstructorStudent(routineId, instructorId, studentUserId);
+      })
+    );
+    await Promise.all(
+      removedItems.map(async (routineId) => {
+        await this.routineInstructorStudentRepository.deleteRoutineInstStudent(routineId, instructorId, studentUserId);
+      })
+    );
   }
 }

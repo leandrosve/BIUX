@@ -95,8 +95,9 @@ const RoutineEditForm = ({ routine, segments, onSuccess }: RoutineEditProps) => 
             Planificación
           </RoutineDetailLabel>
           {!!newSegments?.length && (
-            <Box background='bg.400' borderRadius='lg' mb={5} maxHeight='300px' overflowY='auto'>
+            <Box background='bg.400' borderRadius='lg' mb={5}>
               <RoutineSegmentList
+                maxHeight='300px'
                 segments={newSegments}
                 onChange={(v) => setNewSegments(v)}
                 onRemove={(seg) => setNewSegments((prev) => RoutineUtils.removeAndReorderItems(prev, seg))}

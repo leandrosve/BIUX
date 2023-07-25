@@ -20,37 +20,6 @@ import usePagination from '../../hooks/usePagination';
 import Paginator from '../../components/common/Paginator';
 import SkeletonWrapper from '../../components/common/SkeletonWrapper';
 
-const columns = [
-  {
-    title: 'Nombre',
-    accesor: (s: ReducedStudent) => `${s.firstName} ${s.lastName}`,
-  },
-  {
-    title: 'Email',
-    accesor: (s: ReducedStudent) => s.email,
-  },
-  {
-    title: 'Performance',
-    accesor: (s: ReducedStudent) => (
-      <Tag variant='solid' colorScheme='green'>
-        {'-'}
-      </Tag>
-    ),
-  },
-  {
-    title: 'Acciones',
-    accesor: (s: ReducedStudent) => <Actions student={s} />,
-  },
-];
-
-const Actions = ({ student }: { student: ReducedStudent }) => (
-  <Flex>
-    <Button size='sm' onClick={() => null}>
-      Ver detalle
-    </Button>
-  </Flex>
-);
-
 const StudentList = () => {
   const [code, setCode] = useState('');
   const {
@@ -72,7 +41,7 @@ const StudentList = () => {
     return students.filter((u) => [u.email, u.firstName,u.lastName].find((v) => v?.toLowerCase().includes(sanitized)));
   }, [students, searchText]);
 
-  const pagination = usePagination(filteredStudents, 2, page, onPageChange);
+  const pagination = usePagination(filteredStudents, 5, page, onPageChange);
 
 
 
@@ -91,7 +60,7 @@ const StudentList = () => {
   }, []);
   return (
     <>
-      <ResponsiveCard defaultHeight='auto' paddingY={3} marginBottom={5} rounded='md'>
+      <ResponsiveCard defaultHeight='auto' paddingY={3} marginBottom={5} rounded='md' minHeight='auto'>
         <SimpleBreadcrumbs items={[{ title: 'Alumnos' }]} />
         <Flex justifyContent='space-between' alignItems='center'>
           <Box>
@@ -103,7 +72,7 @@ const StudentList = () => {
           <InstructorShareButton code={code} />
         </Flex>
       </ResponsiveCard>
-      <ResponsiveCard defaultHeight='auto'>
+      <ResponsiveCard defaultHeight='auto' minHeight='auto'>
       <Flex justifyContent='space-between' marginY={3} alignItems='center'>
         <Heading>Alumnos</Heading>
       </Flex>
@@ -120,7 +89,7 @@ const StudentList = () => {
                 <Search2Icon />
               </InputRightElement>
             </label>
-            <Input placeholder='Buscar' id='student-list-search' value={searchInputValue} onChange={(e) => setSearchInputValue(e.target.value)} />
+            <Input borderRadius='md' placeholder='Buscar' id='student-list-search' value={searchInputValue} onChange={(e) => setSearchInputValue(e.target.value)} />
           </InputGroup>
         </form>
         
@@ -143,9 +112,10 @@ const StudentList = () => {
           </Flex>
         )}
 
-        <SimpleGrid columns={{ sm: 1, md: 1 }} gap={4} mt={2}>
+        <SimpleGrid as='ul' columns={{ sm: 1, md: 1 }} gap={1} mt={2}>
             {pagination.paginatedItems.map((user) => (
               <Box
+                as='li'
                 position='relative'
                 bg='bg.400'
                 key={user.id}

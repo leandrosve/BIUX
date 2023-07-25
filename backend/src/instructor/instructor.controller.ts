@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Patch, Post, Req, UseGuards, UsePipes } from '@nestjs/common';
-import { ApiHeader, ApiParam, ApiProperty, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiHeader, ApiParam, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { PublicAccess } from 'src/auth/decorators/public.decorator';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { InstructorService } from './instructor.service';
@@ -11,6 +11,7 @@ import { RoutineUpdateDTO } from 'src/routines/dto/routine.update.dto';
 import { RoutineCreateDTO } from 'src/routines/dto/routine.create.dto';
 import { IsStudentsCodePipe } from './pipes/isStudents.pipe';
 import { RemoveFieldsRoutineUpdatePipe } from 'src/pipes/remove-fields-routine-update';
+import { UpdateStudentRoutinesDTO } from './dto/update-student-routines.dto';
 
 @ApiTags('Instructor')
 @Controller('instructor')
@@ -84,6 +85,14 @@ export class InstructorController {
     @Roles('INSTRUCTOR')
     public async studentDetails(@Req() request: Request,@Param('id_student') id_student: number){
       return await this.instructorService.getStudentDetail(request.idUser,id_student)
+    }
+
+    @Patch('/students/:id_student/routines')
+    @ApiProperty({name:'id_student'})
+    @ApiHeader({name:'token',required: true})
+    @Roles('INSTRUCTOR')
+    public async updateStudentRoutines(@Req() request: Request,@Param('id_student') id_student: number, @Body() body:UpdateStudentRoutinesDTO){
+      return await this.instructorService.updateStudentRoutines(request.idUser,id_student, body?.routineIds)
     }
 
 }

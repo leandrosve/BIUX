@@ -79,7 +79,13 @@ const RoutineList = () => {
               <Search2Icon />
             </InputRightElement>
           </label>
-          <Input placeholder='Buscar' id='routine-list-search' value={searchInputValue} onChange={(e) => setSearchInputValue(e.target.value)} />
+          <Input
+            borderRadius='md'
+            placeholder='Buscar'
+            id='routine-list-search'
+            value={searchInputValue}
+            onChange={(e) => setSearchInputValue(e.target.value)}
+          />
         </InputGroup>
       </form>
       <SkeletonWrapper repeat={7} height={50} loading={loading} marginBottom={2}>

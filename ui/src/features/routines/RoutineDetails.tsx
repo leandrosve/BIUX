@@ -221,8 +221,8 @@ const RoutineDetailsContent = ({ routine, segments }: RoutineDetailsContentProps
           )}
         </Flex>
         {!!segments?.length ? (
-          <Box background='bg.400' borderRadius='lg' mb={5} maxHeight='400px' overflowY='auto'>
-            <RoutineSegmentList displayOnly={true} segments={segments} onChange={() => {}} onRemove={() => {}} onEdit={() => {}} />
+          <Box background='bg.400' borderRadius='lg' mb={5} >
+            <RoutineSegmentList displayOnly={true} maxHeight='400px' segments={segments} onChange={() => {}} onRemove={() => {}} onEdit={() => {}} />
           </Box>
         ) : (
           <Text>

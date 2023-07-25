@@ -50,13 +50,6 @@ const routes = [
     role: Role.INSTRUCTOR
   },
   {
-    path: '/alumnos/9',
-    type: 'private',
-    title: 'Alumno',
-    element: <StudentDetail />,
-    role: Role.INSTRUCTOR
-  },
-  {
     path: '/alumno/rutinas',
     type: 'private',
     title: 'Rutinas',

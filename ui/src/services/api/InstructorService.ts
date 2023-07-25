@@ -1,7 +1,7 @@
 import { InstructorCode } from '../../model/instructor/InstructorCode';
 import Routine, { ReducedRoutine, RoutineCreateRequest } from '../../model/routines/Routine';
 import { ReducedStudent } from '../../model/student/Student';
-import Student, { StudentFullDetails } from '../../model/student/Student';
+import { StudentFullDetails } from '../../model/student/Student';
 import { User } from '../../model/user/User';
 import APIService from './APIService';
 
@@ -37,10 +37,13 @@ export default class InstructorService extends APIService {
   }
 
   static async getStudents() {
-    
     return await this.get<ReducedStudent[]>('/students');
   }
   static async getStudent(studentUserId: number) {
     return await this.get<StudentFullDetails>(`/students/${studentUserId}`);
+  }
+
+  static async updateStudentRoutines(studentUserId: number, routineIds: number[]) {
+    return await this.patch<ReducedRoutine[]>(`/students/${studentUserId}/routines`, {routineIds});
   }
 }

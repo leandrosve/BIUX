@@ -1,5 +1,5 @@
 import ResponsiveCard from '../../components/common/ResponsiveCard';
-import { Divider, Flex, Heading, Icon, List, ListItem, Tag, Text, Tooltip, Wrap, WrapItem } from '@chakra-ui/react';
+import { Divider, Flex, Heading, Icon, List, ListItem, Tag, Text, Tooltip } from '@chakra-ui/react';
 import { ReducedRoutine } from '../../model/routines/Routine';
 import LinkButton from '../../components/common/LinkButton';
 import { Fragment } from 'react';
@@ -47,43 +47,35 @@ const StudentRoutineList = ({ showBreadcrumbs }: Props) => {
 export const StudentRoutineListItem = ({ routine, role = Role.STUDENT }: { routine: ReducedRoutine; role?: Role }) => (
   <ListItem paddingY={2} paddingX={3} borderRadius='md' borderColor='chakra-border-color' bg='bg.400'>
     <Flex justifyContent='space-between' alignItems={{ base: 'start', lg: 'center' }} flexDirection={{ base: 'column', lg: 'row' }} overflow='hidden'>
-      <Flex direction='column' grow={1} shrink={0} alignSelf='start'>
+      <Flex direction='column' grow={1} shrink={1} alignSelf='start'>
         <Heading size='md' noOfLines={1} color='primary.700' _dark={{ color: 'primary.200' }}>
           {routine.name}
         </Heading>
         <Flex minHeight='1rem' overflow='hidden' minWidth={0}>
           {routine.description && (
-            <Text fontWeight='normal' aria-label='descripción' fontSize='md' noOfLines={1}>
+            <Text fontWeight='normal' aria-label='descripción' fontSize='sm' noOfLines={2}>
               {routine.description}
             </Text>
           )}
         </Flex>
       </Flex>
-      <Wrap justify='end' minWidth={0} marginLeft='auto' overflow='visible'>
+      <Flex justify='end' minWidth={0} marginLeft='auto' overflow='visible' wrap='wrap' gap={2}>
         {!!Number(routine.totalDuration) && (
-          <WrapItem>
-            <Tooltip hasArrow label={`Duracion total`}>
-              <Tag borderRadius='20px' colorScheme='blue' justifyContent='center' aria-label={`${10} minutos`}>
-                <Icon as={StopwatchIcon} mr={1} aria-hidden /> {routine.totalDuration} min
-              </Tag>
-            </Tooltip>
-          </WrapItem>
+          <Tooltip hasArrow label={`Duracion total`}>
+            <Tag borderRadius='20px' colorScheme='blue' justifyContent='center' aria-label={`${10} minutos`}>
+              <Icon as={StopwatchIcon} mr={1} aria-hidden /> {routine.totalDuration} min
+            </Tag>
+          </Tooltip>
         )}
         {role == Role.STUDENT && (
-          <WrapItem>
-            <LinkButton to={`#no-implementado`} size='sm' colorScheme='primary' whiteSpace='normal' leftIcon={<Icon as={BikeIcon} boxSize={4} />}>
-              Registrar Entrenamiento
-            </LinkButton>
-          </WrapItem>
+          <LinkButton to={`#no-implementado`} size='sm' colorScheme='primary' whiteSpace='normal' leftIcon={<Icon as={BikeIcon} boxSize={4} />}>
+            Registrar Entrenamiento
+          </LinkButton>
         )}
-        <WrapItem>
-          <Flex marginLeft='auto' gap={2}>
-            <LinkButton to={role == Role.INSTRUCTOR ? `/rutinas/${routine.id}` : `/alumno/rutinas/${routine.id}`} size='sm'>
-              Ver detalles
-            </LinkButton>
-          </Flex>
-        </WrapItem>
-      </Wrap>
+        <LinkButton marginLeft='auto' to={role == Role.INSTRUCTOR ? `/rutinas/${routine.id}` : `/alumno/rutinas/${routine.id}`} size='sm'>
+          Ver detalles
+        </LinkButton>
+      </Flex>
     </Flex>
   </ListItem>
 );
