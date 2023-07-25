@@ -45,6 +45,7 @@ const routes = [
     path: '/alumnos',
     type: 'private',
     title: 'Alumnos',
+    hasSubroutes: true,
     element: <StudentsPageForInstructor />,
     role: Role.INSTRUCTOR
   },

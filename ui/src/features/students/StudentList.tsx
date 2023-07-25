@@ -1,36 +1,24 @@
 import ResponsiveCard from '../../components/common/ResponsiveCard';
 import {
   Box,
-  Button,
-  Flex,
-  Heading,
-  Icon,
-  IconButton,
-  Input,
+  Button, Flex,
+  Heading, Input,
   InputGroup,
-  InputRightElement,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Table,
-  TableContainer,
-  Tag,
-  Tbody,
-  Td,
-  Text,
-  Th,
-  Thead,
-  Tr,
+  InputRightElement, SimpleGrid, TableContainer,
+  Tag, Text, Tooltip, VisuallyHidden
 } from '@chakra-ui/react';
-import AutoBreadcrumbs from '../../layout/AutoBreadcrumbs';
-import { PlusSquareIcon, Search2Icon } from '@chakra-ui/icons';
+import { Search2Icon } from '@chakra-ui/icons';
 import { InstructorStudentsContext } from '../../context/ListsProviders';
-import { useState, useEffect, Fragment, useMemo, useContext } from 'react';
+import { useState, useEffect, useContext, useMemo } from 'react';
 import { ReducedStudent } from '../../model/student/Student';
 import SimpleBreadcrumbs from '../../components/common/SimpleBreadcrumbs';
 import InstructorShareButton from '../instructor/InstructorShareButton';
 import InstructorService from '../../services/api/InstructorService';
+import BAvatar from '../../components/common/BAvatar';
+import LinkButton from '../../components/common/LinkButton';
+import usePagination from '../../hooks/usePagination';
+import Paginator from '../../components/common/Paginator';
+import SkeletonWrapper from '../../components/common/SkeletonWrapper';
 
 const columns = [
   {
@@ -65,7 +53,6 @@ const Actions = ({ student }: { student: ReducedStudent }) => (
 
 const StudentList = () => {
   const [code, setCode] = useState('');
-
   const {
     fetch: fetchStudents,
     initialized,
@@ -76,6 +63,18 @@ const StudentList = () => {
     searchText,
     onSearchTextChange,
   } = useContext(InstructorStudentsContext);
+
+  const [searchInputValue, setSearchInputValue] = useState<string>(searchText);
+
+  const filteredStudents = useMemo(() => {
+    if (!searchText) return students;
+    const sanitized = searchText.toLowerCase();
+    return students.filter((u) => [u.email, u.firstName,u.lastName].find((v) => v?.toLowerCase().includes(sanitized)));
+  }, [students, searchText]);
+
+  const pagination = usePagination(filteredStudents, 2, page, onPageChange);
+
+
 
   const retrieveCode = async () => {
     const res = await InstructorService.getCode();
@@ -99,50 +98,97 @@ const StudentList = () => {
             <Heading size='md' m={0}>
               Invita a un alumno
             </Heading>
-            <Text>Comparte una invitacion tus alumnos para que puedan unirse a tu grupo.</Text>
+            <Text fontSize={"sm"} color={"text.300"}>Te animamos a compartir una invitación con tus alumnos para que se unan a tu grupo.</Text>
           </Box>
           <InstructorShareButton code={code} />
         </Flex>
       </ResponsiveCard>
       <ResponsiveCard defaultHeight='auto'>
+      <Flex justifyContent='space-between' marginY={3} alignItems='center'>
         <Heading>Alumnos</Heading>
-
-        <TableContainer>
-          <Flex justifyContent='space-between' marginY={3}>
-            <InputGroup size='sm' maxWidth={300}>
-              <Input placeholder='Buscar' />
+      </Flex>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSearchTextChange(searchInputValue);
+          }}
+        >
+          <InputGroup size='sm' maxWidth={300} paddingBottom={3}>
+            <label htmlFor='student-list-search'>
+              <VisuallyHidden>Buscar alumnos</VisuallyHidden>
               <InputRightElement>
                 <Search2Icon />
               </InputRightElement>
-            </InputGroup>
-
-            <Menu placement='left'>
-              <MenuButton as={Button} variant='outline' paddingX={3} aria-label='Ordenar' size='small' children='Ordenar' />
-              <MenuList>
-                <MenuItem>Afabetico (A-Z)</MenuItem>
-                <MenuItem>Performance </MenuItem>
-              </MenuList>
-            </Menu>
+            </label>
+            <Input placeholder='Buscar' id='student-list-search' value={searchInputValue} onChange={(e) => setSearchInputValue(e.target.value)} />
+          </InputGroup>
+        </form>
+        
+        <SkeletonWrapper repeat={7} height={50} loading={loading} marginBottom={2}>
+        {!loading && !filteredStudents.length && (
+          <Flex direction='column' alignItems='center'>
+            <Text paddingY={5} textAlign='center'>
+            {students.length ? 'No se han encontrado alumnos' : 'Usted aún no tiene alumnos asociados'}
+            </Text>
+            {searchText && (
+              <Button
+                onClick={() => {
+                  setSearchInputValue('');
+                  onSearchTextChange('');
+                }}
+              >
+                Limpiar búsqueda
+              </Button>
+            )}
           </Flex>
-          <Table variant='simple' size='sm'>
-            <Thead>
-              <Tr>
-                {columns.map((c) => (
-                  <Th key={c.title}>{c.title}</Th>
-                ))}
-              </Tr>
-            </Thead>
-            <Tbody>
-              {students.map((s) => (
-                <Tr key={s.id}>
-                  {columns.map((c, index) => (
-                    <Td key={index}>{c.accesor(s)}</Td>
-                  ))}
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </TableContainer>
+        )}
+
+        <SimpleGrid columns={{ sm: 1, md: 1 }} gap={4} mt={2}>
+            {pagination.paginatedItems.map((user) => (
+              <Box
+                position='relative'
+                bg='bg.400'
+                key={user.id}
+                overflow='hidden'
+                borderRadius='lg'
+                padding={2}
+                borderColor='chakra-border-color'
+                borderWidth='1px'
+                display='flex'
+                gap={3}
+                alignItems='center'
+                justifyContent='space-between'
+              >
+                <Flex gap={3} alignItems='center'>
+                  <BAvatar aria-hidden size='sm' name={`${user.firstName} ${user.lastName}`} />
+                  <Flex direction='column' alignItems='start' justifyContent='start'>
+                    <Text noOfLines={1} textOverflow='ellipsis'>
+                      {user.firstName} {user.lastName}
+                    </Text>
+                    <Text fontSize='sm' fontWeight='light' aria-label='email' noOfLines={1} textOverflow='ellipsis' wordBreak='break-all'>
+                      {user.email}
+                    </Text>
+                  </Flex>
+                </Flex>
+                
+                  <div>
+                <LinkButton to={`/alumnos/${user.id}`} size='sm' float='right'>
+                  Ver detalles
+                </LinkButton>
+                  </div>
+                
+              </Box>
+            ))}
+        </SimpleGrid>
+
+      </SkeletonWrapper>
+      <br />
+      <Paginator
+        totalElements={filteredStudents.length}
+        pageSize={pagination.pageSize}
+        currentPage={pagination.currentPage}
+        onChange={pagination.onChange}
+      />
       </ResponsiveCard>
     </>
   );

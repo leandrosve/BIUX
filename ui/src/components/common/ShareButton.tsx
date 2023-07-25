@@ -20,11 +20,11 @@ const ShareButton = (props: Props) => {
     navigator.clipboard.writeText(props.body);
   };
   return (
-    <Menu placement='left-start'>
+    <Menu placement='left-start' >
       <Tooltip label={props.label || 'Compartir'} hasArrow>
       <MenuButton as={IconButton} aria-label={props.label || 'Compartir'} color='primary.700' _dark={{color: 'primary.200'}} icon={<ShareIcon width={30} height={30} />} />
       </Tooltip>
-      <MenuList>
+      <MenuList zIndex={2}>
         <MenuItem as='button' gap={2} onClick={handleWhatsApp}>
           <WhatsAppIcon fontSize='25px' aria-hidden='true' /> WhatsApp
         </MenuItem>
