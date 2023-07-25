@@ -57,7 +57,7 @@ export default class AccesibilityService {
   }
 
   static saveAndUpdate(settings: AccesibilitySettings, setColorMode: (colorMode: string) => void) {
-    settings = {...this.DEFAULT_SETTINGS, ...settings};
+    settings = { ...this.DEFAULT_SETTINGS, ...settings };
     AccesibilityService.saveLocalSettings(settings);
     AccesibilityService.updateFont(settings.fontFamily, settings.fontSize);
     AccesibilityService.updateColor(settings.color);
