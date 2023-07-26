@@ -19,7 +19,7 @@ const LandingPage = () => {
         </Heading>
 
         <Flex>
-          <LinkButton to={BRoutes.SIGNUP} colorScheme='primary' size='lg' as='span' className='register-button'>
+          <LinkButton to={BRoutes.SIGNUP} colorScheme='primary' size='lg'  className='register-button'>
               Registrarme
           </LinkButton>
         </Flex>

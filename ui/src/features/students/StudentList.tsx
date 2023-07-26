@@ -4,13 +4,11 @@ import {
   Button, Flex,
   Heading, Input,
   InputGroup,
-  InputRightElement, SimpleGrid, TableContainer,
-  Tag, Text, Tooltip, VisuallyHidden
+  InputRightElement, SimpleGrid, Text, VisuallyHidden
 } from '@chakra-ui/react';
-import { Search2Icon } from '@chakra-ui/icons';
+import { InfoIcon, Search2Icon } from '@chakra-ui/icons';
 import { InstructorStudentsContext } from '../../context/ListsProviders';
 import { useState, useEffect, useContext, useMemo } from 'react';
-import { ReducedStudent } from '../../model/student/Student';
 import SimpleBreadcrumbs from '../../components/common/SimpleBreadcrumbs';
 import InstructorShareButton from '../instructor/InstructorShareButton';
 import InstructorService from '../../services/api/InstructorService';
@@ -75,6 +73,10 @@ const StudentList = () => {
       <ResponsiveCard defaultHeight='auto' minHeight='auto'>
       <Flex justifyContent='space-between' marginY={3} alignItems='center'>
         <Heading>Alumnos</Heading>
+      </Flex>
+      <Flex mb={3} alignItems='center' color='text.300'>
+        <InfoIcon mr={2} />
+        <Text fontSize='sm'>Hemos creado automáticamente algunos alumnos para facilitar las pruebas.</Text>
       </Flex>
         <form
           onSubmit={(e) => {
