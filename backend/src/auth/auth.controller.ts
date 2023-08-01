@@ -13,6 +13,7 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() { email, password }: LoginAuthDto) {
+    email=email.toLowerCase();
     const userValidate = await this.authService.validateUser(
       email,
       password,
@@ -29,6 +30,7 @@ export class AuthController {
   @UsePipes(new StudentCodePipe())
   @Post('register')
   public async registerUser(@Body() body:RegisterUserDTO){
+    body.email=body.email.toLowerCase()
     return await this.authService.register(body)
   }
    
