@@ -11,8 +11,10 @@ interface Props extends InputProps {
 const TextField = ({ error, label, help, touched, labelProps, ...props }: Props) => {
   return (
     <FormControl isInvalid={!!error && touched}>
-      <FormLabel htmlFor={props.id} {...labelProps}>{label}</FormLabel>
-      <Input {...props} borderColor={!error && touched ? 'green.300' : undefined} />
+      <FormLabel htmlFor={props.id} {...labelProps}>
+        {label}
+      </FormLabel>
+      <Input {...props} borderColor={!error && touched ? 'green.300' : undefined} _focusVisible={{ borderColor: !error ? 'green.300' : undefined }} />
       {help && (
         <FormHelperText fontSize='xs'>
           <InfoOutlineIcon boxSize='12px' /> {help}

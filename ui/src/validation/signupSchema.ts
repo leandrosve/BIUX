@@ -12,7 +12,7 @@ let schema = Yup.object({
     .required('Este campo es obligatorio'),
   email: Yup.string().email('Introduce un email válido').max(250, 'Debe tener como máximo 250 caracteres').required('Este campo es obligatorio'),
   password: Yup.string()
-    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$/, 'La contraseña es demasiado insegura')
+    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$/, 'La contraseña es demasiado insegura, debe contener al menos ocho caracteres y un número o símbolo')
     .max(120, 'Debe tener como máximo 120 caracteres')
     .required('Este campo es obligatorio'),
   passwordConfirmation: Yup.string()

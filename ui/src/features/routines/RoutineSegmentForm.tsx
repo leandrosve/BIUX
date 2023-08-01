@@ -23,6 +23,7 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { DraggableSegment } from '../../model/routines/Routine';
+import { RequiredMark } from './RoutineForm';
 
 interface Props {
   isOpen: boolean;
@@ -62,7 +63,7 @@ const RoutineSegmentFormContent = ({ onCancel, onSubmit, index, segment }: Props
     onSubmit({
       id: segment?.id,
       localId: segment?.localId ?? '',
-      distance,
+      distance: z(distance),
       order: segment?.order ?? -1,
       duration: z(duration),
       cadence: z(cadence),
@@ -73,8 +74,8 @@ const RoutineSegmentFormContent = ({ onCancel, onSubmit, index, segment }: Props
 
   const disableSubmit = useMemo(() => {
     if (description.length > 120) return true;
-    return [duration, cadence, pulseRate].some((v) => v !== 0 && !v);
-  }, [description, duration, cadence, pulseRate]);
+    return [duration, distance, cadence, pulseRate].some((v) => v !== 0 && !v);
+  }, [description, duration, distance, cadence, pulseRate]);
 
   useEffect(() => {
     if (!segment) return;
@@ -131,11 +132,14 @@ const RoutineSegmentFormContent = ({ onCancel, onSubmit, index, segment }: Props
           {segment ? 'Editar' : 'Nuevo'} Segmento
         </Heading>
         <Text fontSize='sm'>
-          Los campos marcados con <b>*</b> son requeridos
+          Los campos marcados con <RequiredMark /> son requeridos
         </Text>
         <FormControl isInvalid={description.length > 120}>
           <FormLabel mt={2} fontSize='sm'>
-            Descripción breve
+            Descripción breve{' '}
+            <Text as='span' fontSize='xs'>
+              (opcional)
+            </Text>
           </FormLabel>
           <Input value={description} placeholder='Descripción breve' onChange={(e) => setDescription(e.target.value)} />
           {description.length > 120 && <FormErrorMessage>La cantidad máxima de caracteres es 120</FormErrorMessage>}
@@ -160,6 +164,7 @@ const RoutineSegmentFormContent = ({ onCancel, onSubmit, index, segment }: Props
                 <Text fontSize='xs' as='span'>
                   (metros)
                 </Text>
+                <b> *</b>
               </FormLabel>
               <BasicNumberInput value={distance} max={100000} placeholder='Distancia' onChange={(v) => setDistance(v)} />
             </FormControl>

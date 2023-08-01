@@ -7,6 +7,7 @@ import {
   FormHelperText,
   FormLabel,
   Heading,
+  Icon,
   Input,
   Step,
   StepDescription,
@@ -32,6 +33,7 @@ import useSimpleList from '../../hooks/useSimpleList';
 import { BRoutes } from '../../router/routes';
 import SimpleBreadcrumbs from '../../components/common/SimpleBreadcrumbs';
 import { ReducedStudent } from '../../model/student/Student';
+import { RequiredIcon } from '../../components/common/Icons';
 
 const breadcrumb = [
   { to: BRoutes.ROUTINES, title: 'Rutinas' },
@@ -44,7 +46,7 @@ const RoutineForm = () => {
     count: steps.length,
   });
 
-  const [routine, setRoutine] = useState<Routine>({ name: '', description: '', segments: [], students: []});
+  const [routine, setRoutine] = useState<Routine>({ name: '', description: '', segments: [], students: [] });
 
   const handleSubmitDetails = (name: string, description: string, students: ReducedStudent[]) => {
     setRoutine((prev) => ({ ...prev, name, description, students }));
@@ -68,9 +70,7 @@ const RoutineForm = () => {
             </LinkButton>
           )}
         </Flex>
-        <Heading as='h1'>
-          Nueva Rutina
-        </Heading>
+        <Heading as='h1'>Nueva Rutina</Heading>
         <Flex direction='column' position='relative' grow={1}>
           {activeStep === 0 && <Step1 initialData={routine} onSubmit={handleSubmitDetails} />}
           {activeStep === 1 && <RoutineFormSegmentsStep routine={routine} onPrevious={handlePrevious} />}
@@ -79,7 +79,14 @@ const RoutineForm = () => {
     </>
   );
 };
-const Step1 = (props: { initialData: Routine; onSubmit: (name: string, description: string, students:ReducedStudent[]) => void }) => {
+
+export const RequiredMark = () => (
+  <Text as='span' fontWeight='bold' color='red.300' _light={{ color: 'red.600' }} fontSize='xs'>
+    <Icon as={RequiredIcon} aria-label='*'/>
+  </Text>
+);
+
+const Step1 = (props: { initialData: Routine; onSubmit: (name: string, description: string, students: ReducedStudent[]) => void }) => {
   const [name, setName] = useState(props.initialData.name);
   const [description, setDescription] = useState(props.initialData.description ?? '');
   const students = useSimpleList<ReducedStudent>(props.initialData.students || [], (s) => s.id);
@@ -94,21 +101,27 @@ const Step1 = (props: { initialData: Routine; onSubmit: (name: string, descripti
         Detalles
       </Heading>
       <Text fontSize='sm'>
-        Los campos marcados con <b>*</b> son requeridos
+        Los campos marcados con <RequiredMark /> son requeridos
       </Text>
       <Flex as='form' direction='column' grow={1} onSubmit={() => props.onSubmit(name, description, students.items)}>
         <Flex grow={1} direction='column'>
           <FormControl isInvalid={name.length > 500}>
             <FormLabel mt={2} fontWeight='bold'>
-              Nombre de la rutina <b>*</b>
+              Nombre de la rutina <RequiredMark />
             </FormLabel>
             <Input value={name} type='text' boxShadow='sm' placeholder='Nombre' onChange={(e) => setName(e.target.value)} />
             {name.length > 120 && <FormErrorMessage>La cantidad máxima de caracteres es 120</FormErrorMessage>}
           </FormControl>
           <FormControl isInvalid={description.length > 500} display='flex' flexDirection='column' flexGrow={1}>
-            <FormLabel mt={2} fontWeight='bold'>
-              Descripción
+            <FormLabel mt={2} mb={0} fontWeight='bold'>
+              Descripción{' '}
+              <Text as='span' fontWeight='normal' fontSize='xs'>
+                (opcional)
+              </Text>
             </FormLabel>
+            <FormHelperText mb={2} mt={0} color='text.300'>
+              Si deseas, puedes incluir una breve descripción de la rutina
+            </FormHelperText>
             <Textarea
               value={description}
               boxShadow='sm'
@@ -121,7 +134,10 @@ const Step1 = (props: { initialData: Routine; onSubmit: (name: string, descripti
           </FormControl>
           <FormControl display='flex' flexDirection='column' flexGrow={1}>
             <FormLabel mt={2} mb={0} fontWeight='bold'>
-              Alumnos
+              Alumnos{' '}
+              <Text as='span' fontWeight='normal' fontSize='xs'>
+                (opcional)
+              </Text>
             </FormLabel>
             <FormHelperText mb={2} mt={0} color='text.300'>
               Puedes asignar alumnos a esta rutina ahora o en cualquier momento

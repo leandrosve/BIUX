@@ -1,5 +1,5 @@
 import { ArrowBackIcon, PlusSquareIcon } from '@chakra-ui/icons';
-import { Button, Flex, Heading, Text, useToast } from '@chakra-ui/react';
+import { Button, Flex, Heading, Text, Tooltip, useToast } from '@chakra-ui/react';
 import { useContext, useState } from 'react';
 import RoutineSegmentForm from './RoutineSegmentForm';
 import Routine, { DraggableSegment, RoutineSegment } from '../../model/routines/Routine';
@@ -102,7 +102,7 @@ const RoutineFormSegmentsStep = ({ routine, onPrevious, displayOnly, editMode }:
                 Aún no hay segmentos añadidos a esta rutina, comienza por agregar uno!
               </Text>
             )}
-            <Button leftIcon={<PlusSquareIcon />} flexGrow={0} onClick={() => setShowForm(true)}>
+            <Button colorScheme='primary' leftIcon={<PlusSquareIcon />} flexGrow={0} onClick={() => setShowForm(true)}>
               Agregar Segmento
             </Button>
           </Flex>
@@ -126,9 +126,11 @@ const RoutineFormSegmentsStep = ({ routine, onPrevious, displayOnly, editMode }:
               Atrás
             </Button>
           )}
+          <Tooltip hasArrow label='Debes agregar al menos un segmento' isDisabled={!!segments.length}>
           <Button colorScheme='primary' type='submit' onClick={handleSubmit} isLoading={isSubmitting} isDisabled={!segments.length}>
             Guardar
           </Button>
+          </Tooltip> 
         </Flex>
       )}
     </Flex>

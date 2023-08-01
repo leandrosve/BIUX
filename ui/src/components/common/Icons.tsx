@@ -35,6 +35,23 @@ export const CheckIcon = (props: Props) => {
   );
 };
 
+export const RequiredIcon = (props: Props) => {
+  return (
+    <svg
+      stroke='currentColor'
+      fill='currentColor'
+      strokeWidth='0'
+      viewBox='0 0 384 512'
+      height='1em'
+      width='1em'
+      xmlns='http://www.w3.org/2000/svg'
+      {...props}
+    >
+      <path d='M192 32c17.7 0 32 14.3 32 32V199.5l111.5-66.9c15.2-9.1 34.8-4.2 43.9 11s4.2 34.8-11 43.9L254.2 256l114.3 68.6c15.2 9.1 20.1 28.7 11 43.9s-28.7 20.1-43.9 11L224 312.5V448c0 17.7-14.3 32-32 32s-32-14.3-32-32V312.5L48.5 379.4c-15.2 9.1-34.8 4.2-43.9-11s-4.2-34.8 11-43.9L129.8 256 15.5 187.4c-15.2-9.1-20.1-28.7-11-43.9s28.7-20.1 43.9-11L160 199.5V64c0-17.7 14.3-32 32-32z'></path>
+    </svg>
+  );
+};
+
 export const UndoIcon = (props: Props) => {
   return (
     <svg
@@ -393,7 +410,16 @@ export const ThumbUpIcon = (props: Props) => {
 
 export const TrainingDetailIcon = (props: Props) => {
   return (
-    <svg stroke='currentColor' fill='currentColor' strokeWidth='0' viewBox='0 0 24 24' height='1em' width='1em' xmlns='http://www.w3.org/2000/svg' {...props}>
+    <svg
+      stroke='currentColor'
+      fill='currentColor'
+      strokeWidth='0'
+      viewBox='0 0 24 24'
+      height='1em'
+      width='1em'
+      xmlns='http://www.w3.org/2000/svg'
+      {...props}
+    >
       <path fill='none' d='M0 0h24v24H0z'></path>
       <path d='M9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4zm2.5 2.1h-15V5h15v14.1zm0-16.1h-15c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z'></path>
     </svg>

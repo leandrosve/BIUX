@@ -181,13 +181,14 @@ export class InstructorService {
   public async createMockedRoutines(instructorId: number) {
     const students = await this.getStudents(instructorId);
     const studentIds = students.map((s) => s.id);
-    routineMockups.forEach((routine, index) => {
-      const [start, end] = index > 1 ? [2, 4] : [0, 2];
+    for (let i = 0; i < routineMockups.length; i++) {
+      const routine = routineMockups[i];
+      const [start, end] = i > 1 ? [2, 4] : [0, 2];
       const dto: RoutineCreateDTO = {
         ...routine,
         students: studentIds.slice(start, end),
       };
-      this.createRoutine(instructorId, dto);
-    });
+      await this.createRoutine(instructorId, dto);
+    }
   }
 }

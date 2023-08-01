@@ -33,14 +33,26 @@ export class RoutinesService {
   }
   public async createdRoutine(userId: number, body: RoutineCreateDTO) {
     const user = await this.userService.findUserById(userId);
-
-    this.checkSegmentsOrder(body.segments);
+    const segments = body.segments;
+    delete body.segments;
+    this.checkSegmentsOrder(segments);
 
     const newRoutine = {
       ...body,
       instructor: user,
     };
+
+    //console.log({newRoutine})
     const result = await this.routineRepository.save(newRoutine);
+
+    await Promise.all(
+      segments.map(async (data) => {
+        // Segmento nuevo, crearlo y asociarlo a la rutina
+        const newSegment = await this.segmentsRepository.create(data);
+        newSegment.routine = result;
+        await this.segmentsRepository.save(newSegment);
+      })
+    );
     //console.log(user)
     return this.details(userId, result.id);
   }
@@ -166,7 +178,7 @@ export class RoutinesService {
     return await this.routineRepository.getReducedRoutinesForStudent(studentUserId);
   }
 
-  public async updateRoutinesForStudent(instructorId:number, studentUserId: number, routineIds: number[]): Promise<void> {
+  public async updateRoutinesForStudent(instructorId: number, studentUserId: number, routineIds: number[]): Promise<void> {
     const currentRoutines = await this.getReducedRoutinesForStudent(studentUserId);
     const currentRoutineIds = currentRoutines.map((r) => r.id);
     const { newItems, removedItems } = CollectionUtils.getChangesInCollection(currentRoutineIds, routineIds);
