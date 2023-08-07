@@ -1,19 +1,18 @@
-import { Badge, Button, Card, Flex, Heading, Icon, Image, Skeleton, Text, useMediaQuery, useToast } from '@chakra-ui/react';
+import { Badge, Button, Flex, Heading, Image, Skeleton, Text, useMediaQuery, useToast } from '@chakra-ui/react';
 import illustration from '../../assets/illustrations/bike-cut-recollored.png';
-import { BrandIcon } from '../../components/common/Icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { BRoutes } from '../../router/routes';
 import { useFormik } from 'formik';
 import signupSchema from '../../validation/signupSchema';
 import TextField from '../../components/common/forms/TextField';
 import AuthService from '../../services/api/AuthService';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import BAlert from '../../components/common/BAlert';
 import AlertToast from '../../components/common/alert-toast/AlertToast';
 import Role from '../../model/user/Role';
 
 type ID = 'firstName' | 'lastName' | 'email' | 'password' | 'passwordConfirmation';
-const fields: { label: string; help?: string; type?: string; id: ID }[] = [
+const fields: { label: string; help?: string; type?: string; id: ID, isPassword?: boolean }[] = [
   {
     label: 'Nombre',
     id: 'firstName',
