@@ -27,9 +27,9 @@ RUN npm ci --include=dev
 # Copy application code
 COPY --link . .
 
+RUN npm run wm:run
 # Build application
 RUN npm run build
-
 
 # Final stage for app image
 FROM base
