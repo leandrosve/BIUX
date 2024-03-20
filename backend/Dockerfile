@@ -27,7 +27,6 @@ RUN npm ci --include=dev
 # Copy application code
 COPY --link . .
 
-RUN npm run m:run
 # Build application
 RUN npm run build
 
